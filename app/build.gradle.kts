@@ -25,6 +25,10 @@ android {
 		vectorDrawables {
 			useSupportLibrary = true
 		}
+
+		val naverMapClientIdKey = properties.getProperty("naver-map-sdk-client-id")
+		buildConfigField("String", "NAVER_MAP_SDK_CLIENTID", "\"$naverMapClientIdKey\"")
+		manifestPlaceholders["NAVER_MAP_SDK_CLIENTID"] = naverMapClientIdKey
 	}
 
 	buildTypes {
@@ -52,6 +56,10 @@ android {
 			excludes += "/META-INF/{AL2.0,LGPL2.1}"
 		}
 	}
+	buildFeatures {
+		dataBinding = true
+		buildConfig = true
+	}
 }
 
 dependencies {
@@ -64,6 +72,13 @@ dependencies {
 	implementation(libs.androidx.ui.graphics)
 	implementation(libs.androidx.ui.tooling.preview)
 	implementation(libs.androidx.material3)
+	implementation(libs.androidx.appcompat)
+	implementation(libs.material)
+	implementation(libs.androidx.activity)
+	implementation(libs.androidx.constraintlayout)
+	implementation("com.naver.maps:map-sdk:3.18.0")
+	implementation("com.squareup.retrofit2:retrofit:2.11.0")
+
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)
