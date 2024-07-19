@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+	implementation(projects.presentation)
+
 	implementation(libs.androidx.compose.activity)
 	implementation(libs.androidx.appcompat)
 	implementation(libs.androidx.core.ktx)
