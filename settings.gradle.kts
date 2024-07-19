@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "Weski"
 include(":app")
 include(":presentation")
+include(":domain")

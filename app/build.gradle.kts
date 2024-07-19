@@ -30,6 +30,7 @@ android {
 
 dependencies {
 	implementation(projects.presentation)
+	implementation(projects.domain)
 
 	implementation(libs.androidx.compose.activity)
 	implementation(libs.androidx.appcompat)

@@ -9,6 +9,7 @@ android {
 }
 
 dependencies {
+	implementation(projects.domain)
 
 	implementation(libs.material)
 	implementation(libs.dagger.hilt.android)
