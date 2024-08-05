@@ -1,4 +1,4 @@
-package com.dieski.weski.presentation.main
+package com.dieski.weski.navigation
 
 import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable

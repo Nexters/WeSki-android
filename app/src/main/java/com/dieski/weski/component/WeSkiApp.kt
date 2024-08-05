@@ -1,4 +1,4 @@
-package com.dieski.weski.presentation.main
+package com.dieski.weski.component
 
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -6,28 +6,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dieski.weski.WeSkiAppState
+import com.dieski.weski.navigation.MainNavHost
+import com.dieski.weski.navigation.MainTab
 import com.dieski.weski.presentation.R
-import com.dieski.weski.presentation.main.component.MainBottomBar
-import com.dieski.weski.presentation.main.component.MainNavHost
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 
 @Composable
-internal fun MainScreen(
-    navigator: MainNavigator = rememberMainNavigator()
+internal fun WeSkiApp(
+    appState: WeSkiAppState
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
-    val coroutineScope = rememberCoroutineScope()
     val localContextResource = LocalContext.current.resources
     val onShowErrorSnackBar: (throwable: Throwable?) -> Unit = { throwable ->
-        coroutineScope.launch {
+        appState.coroutineScope.launch {
             snackBarHostState.showSnackbar(
                 when(throwable) {
                     is UnknownHostException -> localContextResource.getString(R.string.error_message_network)
@@ -38,37 +40,43 @@ internal fun MainScreen(
     }
 
     MainScreenContent(
-        navigator = navigator,
+        appState = appState,
+        snackBarHostState = snackBarHostState,
         onShowErrorSnackBar = onShowErrorSnackBar,
-        snackBarHostState = snackBarHostState
     )
 }
 
 @Composable
 private fun MainScreenContent(
+    appState: WeSkiAppState,
+    snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    navigator: MainNavigator,
     onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
-    snackBarHostState: SnackbarHostState
 ) {
+    val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+
+    LaunchedEffect(isOffline) {
+        if (isOffline) snackBarHostState.showSnackbar("offline 상태입니다.")
+    }
+
     Scaffold(
         modifier = modifier,
         content = { padding ->
             MainNavHost(
-                navigator = navigator,
+                navigator = appState.navigator,
                 padding = padding,
                 onShowErrorSnackBar = onShowErrorSnackBar
             )
         },
         bottomBar = {
             MainBottomBar(
+                visible = appState.navigator.shouldShowBottomBar(),
+                tabs = MainTab.entries.toPersistentList(),
+                currentTab = appState.navigator.currentTab,
+                onTabSelected = { appState.navigator.navigate(it) },
                 modifier = Modifier
                     .navigationBarsPadding()
                     .padding(start = 8.dp, end = 8.dp, bottom = 28.dp),
-                visible = navigator.shouldShowBottomBar(),
-                tabs = MainTab.entries.toPersistentList(),
-                currentTab = navigator.currentTab,
-                onTabSelected = { navigator.navigate(it) }
             )
         },
         snackbarHost = { SnackbarHost(snackBarHostState) }

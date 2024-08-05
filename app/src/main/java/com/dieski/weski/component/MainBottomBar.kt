@@ -1,4 +1,4 @@
-package com.dieski.weski.presentation.main.component
+package com.dieski.weski.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dieski.weski.presentation.main.MainTab
+import com.dieski.weski.navigation.MainTab
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toPersistentList

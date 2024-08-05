@@ -38,6 +38,7 @@ dependencies {
 	implementation(libs.androidx.core.ktx)
 	implementation(libs.material)
 	implementation(libs.bundles.androidx.compose.navigation)
+	implementation(libs.kotlin.collections.immutable)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
