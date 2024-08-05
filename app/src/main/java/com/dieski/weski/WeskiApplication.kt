@@ -1,7 +1,7 @@
 package com.dieski.weski
 
 import android.app.Application
-import com.dieski.weski.ui.DebugTimberTree
+import com.dieski.weski.util.DebugTimberTree
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 

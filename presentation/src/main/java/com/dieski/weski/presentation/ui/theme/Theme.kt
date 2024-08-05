@@ -1,4 +1,4 @@
-package com.dieski.weski.ui.theme
+package com.dieski.weski.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.dieski.weski.ui.theme
+package com.dieski.weski.presentation.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

@@ -1,4 +1,4 @@
-package com.dieski.weski.ui
+package com.dieski.weski.util
 
 import timber.log.Timber
 
