@@ -21,6 +21,11 @@ import androidx.compose.ui.tooling.preview.Preview
 annotation class ThemePreviews
 
 @Preview(
+    name = "Small",
+    device = "spec:shape=Normal,width=720,height=1600,unit=px,dpi=515",
+    showSystemUi = true
+)
+@Preview(
     name = "Normal",
     device = "spec:shape=Normal,width=1440,height=3200,unit=px,dpi=515",
     showSystemUi = true
