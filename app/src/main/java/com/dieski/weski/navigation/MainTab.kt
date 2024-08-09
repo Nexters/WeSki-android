@@ -1,11 +1,6 @@
 package com.dieski.weski.navigation
 
-import androidx.annotation.DrawableRes
-import androidx.compose.runtime.Composable
-import com.dieski.weski.presentation.R
-import com.dieski.weski.presentation.core.navigation.MainTabRoute
-import com.dieski.weski.presentation.core.navigation.Route
-
+/*
 internal enum class MainTab(
     @DrawableRes val iconResId: Int,
     val tabText: String,
@@ -42,4 +37,4 @@ internal enum class MainTab(
             return entries.map { it.route }.any { predicate(it) }
         }
     }
-}
+}*/

@@ -20,9 +20,23 @@ android {
 		versionName = "1.0"
 	}
 
+	signingConfigs {
+		create("release") {
+		}
+	}
+
 	buildTypes {
+		debug {
+			isMinifyEnabled = false
+			isDebuggable = true
+			proguardFiles(
+				getDefaultProguardFile("proguard-android-optimize.txt"),
+				"proguard-project.txt"
+			)
+		}
 		release {
 			isMinifyEnabled = false
+			signingConfig = signingConfigs.getByName("debug")
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
 	}

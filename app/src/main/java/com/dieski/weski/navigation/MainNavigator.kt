@@ -4,14 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hasRoute
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
-import com.dieski.weski.presentation.core.navigation.MainTabRoute
 import com.dieski.weski.presentation.core.navigation.Route
-import com.dieski.weski.presentation.weather.navigation.navigateWeather
+import com.dieski.weski.presentation.detail.navigation.navigateDetail
 
 internal class MainNavigator(
     val navController: NavHostController
@@ -20,14 +17,14 @@ internal class MainNavigator(
         @Composable get() = navController
             .currentBackStackEntryAsState().value?.destination
 
-    val startDestination = MainTab.WEATHER.route
+    val startDestination = Route.Home
 
-    val currentTab: MainTab?
+   /* val currentTab: MainTab?
         @Composable get() = MainTab.find { tab ->
             currentDestination?.hasRoute(tab::class) == true
-        }
+        }*/
 
-    fun navigate(tab: MainTab) {
+    /*fun navigate(tab: MainTab) {
         val navOptions = navOptions {
             popUpTo(navController.graph.findStartDestination().id) {
                 saveState = true
@@ -41,6 +38,10 @@ internal class MainNavigator(
             MainTab.HOME -> {}
             MainTab.CONGESTION -> {}
         }
+    }*/
+
+    fun navigateToDetail(skiResortName: String) {
+        navController.navigateDetail(skiResortName)
     }
 
     private fun popBackStack() {
@@ -48,7 +49,7 @@ internal class MainNavigator(
     }
 
     fun popBackStackIfNotHome() {
-        if (!isSameCurrentDestination<MainTabRoute.Weather>()) {
+        if (!isSameCurrentDestination<Route.Home>()) {
             popBackStack()
         }
     }
@@ -57,10 +58,10 @@ internal class MainNavigator(
         return navController.currentDestination?.hasRoute<T>() == true
     }
 
-    @Composable
+    /*@Composable
     fun shouldShowBottomBar() = MainTab.contains {
         currentDestination?.hasRoute(it::class) == true
-    }
+    }*/
 }
 
 @Composable

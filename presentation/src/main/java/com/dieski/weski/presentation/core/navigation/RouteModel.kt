@@ -5,10 +5,16 @@ import kotlinx.serialization.Serializable
 sealed interface Route {
 
     @Serializable
-    data class WeatherDetail(val place: String) : Route
+    data object Home : Route
+
+    @Serializable
+    data class Detail(
+        val skiResortName: String
+    ) :Route
 }
 
 
+/*
 sealed interface MainTabRoute : Route {
     @Serializable
     data object Weather : MainTabRoute
@@ -18,4 +24,4 @@ sealed interface MainTabRoute : Route {
 
     @Serializable
     data object Congestion : MainTabRoute
-}
+}*/

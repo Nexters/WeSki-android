@@ -8,8 +8,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.dieski.weski.presentation.detail.navigation.detailNavGraph
 import com.dieski.weski.presentation.home.navigation.homeNavGraph
-import com.dieski.weski.presentation.weather.navigation.weatherNavGraph
 
 @Composable
 internal fun MainNavHost(
@@ -29,10 +29,11 @@ internal fun MainNavHost(
         ) {
             homeNavGraph(
                 padding = padding,
+                navigateToDetail = { navigator.navigateToDetail(it.skiResortName) },
                 onShowErrorSnackBar = onShowErrorSnackBar
             )
 
-            weatherNavGraph(
+            detailNavGraph(
                 padding = padding,
                 onShowErrorSnackBar = onShowErrorSnackBar
             )

@@ -1,23 +1,21 @@
 package com.dieski.weski.component
 
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
+import android.webkit.WebView
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.weski.WeSkiAppState
 import com.dieski.weski.navigation.MainNavHost
-import com.dieski.weski.navigation.MainTab
 import com.dieski.weski.presentation.R
-import kotlinx.collections.immutable.toPersistentList
+import com.dieski.weski.presentation.core.LocalWebOwner
 import kotlinx.coroutines.launch
 import java.net.UnknownHostException
 
@@ -54,31 +52,25 @@ private fun MainScreenContent(
     onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
 ) {
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(isOffline) {
         if (isOffline) snackBarHostState.showSnackbar("offline 상태입니다.")
     }
 
-    Scaffold(
-        modifier = modifier,
-        content = { padding ->
-            MainNavHost(
-                navigator = appState.navigator,
-                padding = padding,
-                onShowErrorSnackBar = onShowErrorSnackBar
-            )
-        },
-        bottomBar = {
-            MainBottomBar(
-                visible = appState.navigator.shouldShowBottomBar(),
-                tabs = MainTab.entries.toPersistentList(),
-                currentTab = appState.navigator.currentTab,
-                onTabSelected = { appState.navigator.navigate(it) },
-                modifier = Modifier
-                    .navigationBarsPadding()
-                    .padding(start = 8.dp, end = 8.dp, bottom = 28.dp),
-            )
-        },
-        snackbarHost = { SnackbarHost(snackBarHostState) }
-    )
+    CompositionLocalProvider(
+        LocalWebOwner provides WebView(context)
+    ) {
+        Scaffold(
+            modifier = modifier,
+            content = { padding ->
+                MainNavHost(
+                    navigator = appState.navigator,
+                    padding = padding,
+                    onShowErrorSnackBar = onShowErrorSnackBar
+                )
+            },
+            snackbarHost = { SnackbarHost(snackBarHostState) }
+        )
+    }
 }
