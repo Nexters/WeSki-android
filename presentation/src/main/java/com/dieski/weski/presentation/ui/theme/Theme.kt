@@ -9,7 +9,10 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.platform.LocalContext
+import com.dieski.weski.presentation.core.designsystem.token.LocalWeSkiTypo
+import com.dieski.weski.presentation.core.designsystem.token.WeskiTypography
 
 private val DarkColorScheme = darkColorScheme(
 	primary = Purple80,
@@ -55,4 +58,11 @@ fun WeskiTheme(
 		typography = Typography,
 		content = content
 	)
+}
+
+object WeskiTheme {
+	val typography: WeskiTypography
+		@Composable
+		@ReadOnlyComposable
+		get() = LocalWeSkiTypo.current
 }
