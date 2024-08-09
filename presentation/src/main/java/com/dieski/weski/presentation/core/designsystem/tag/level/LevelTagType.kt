@@ -26,5 +26,9 @@ enum class LevelTagType(
     ADVANCED(
         text = "상급",
         bgColor = WeskiColor.Gray70
+    ),
+    UPPER_ADVANCED(
+        text = "최상급",
+        bgColor = WeskiColor.Gray70
     )
 }

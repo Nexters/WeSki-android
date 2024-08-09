@@ -23,9 +23,8 @@ fun LevelTag(
 ) {
     Box(
         modifier = modifier
-            .widthIn(min = 56.dp)
+            .width(56.dp)
             .background(color = tagType.bgColor, shape = RoundedCornerShape(6.dp))
-            .padding(vertical = 2.5.dp, horizontal = 10.dp)
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
@@ -45,5 +44,6 @@ private fun LevelTagPreview() {
         LevelTag(tagType = LevelTagType.INTERMEDIATE)
         LevelTag(tagType = LevelTagType.UPPER_INTERMEDIATE)
         LevelTag(tagType = LevelTagType.ADVANCED)
+        LevelTag(tagType = LevelTagType.UPPER_ADVANCED)
     }
 }
