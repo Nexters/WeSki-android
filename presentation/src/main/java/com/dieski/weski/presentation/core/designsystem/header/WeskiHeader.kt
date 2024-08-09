@@ -20,7 +20,7 @@ import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 
 @Composable
-fun Header(
+fun WeskiHeader(
     showBackButton: Boolean,
     showShareButton: Boolean,
     modifier: Modifier = Modifier
@@ -68,6 +68,6 @@ fun Header(
 @Composable
 private fun HeaderPreview() {
     WeskiTheme {
-        Header(showBackButton = true, showShareButton = true)
+        WeskiHeader(showBackButton = true, showShareButton = true)
     }
 }
