@@ -15,7 +15,8 @@ dependencies {
 	implementation(libs.dagger.hilt.android)
 	implementation(libs.bundles.androidx.compose.navigation)
 	implementation(libs.kotlin.collections.immutable)
-	implementation("io.coil-kt:coil-compose:2.7.0")
+	debugImplementation(libs.bundles.androidx.compose.debug)
+	implementation(libs.coil.compose)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
