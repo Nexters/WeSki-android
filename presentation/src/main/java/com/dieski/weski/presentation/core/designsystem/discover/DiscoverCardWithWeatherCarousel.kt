@@ -2,6 +2,7 @@ package com.dieski.weski.presentation.core.designsystem.discover
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
+import com.dieski.weski.presentation.core.util.debounceClickable
 
 /**
  *
@@ -23,6 +25,7 @@ import com.dieski.weski.presentation.core.util.ThemePreviews
  */
 @Composable
 fun DiscoverCardWithWeatherCarousel(
+	onClick: () -> Unit,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
 	cornerDp: Dp = 15.dp
@@ -30,13 +33,16 @@ fun DiscoverCardWithWeatherCarousel(
 	Column(
 		modifier = modifier
 			.background(color = bgColor, shape = RoundedCornerShape(cornerDp))
+			.debounceClickable { onClick() }
+			.padding(top = 12.dp, bottom = 16.dp)
 	) {
 		DiscoverCard(
 			bgColor = bgColor,
-			cornerDp = cornerDp
+			cornerDp = cornerDp,
+			paddingValues = PaddingValues(top = 23.dp, bottom = 23.dp, start = 30.dp,  end = 24.dp)
 		)
 		
-		Spacer(modifier = Modifier.height(23.dp))
+		Spacer(modifier = Modifier.height(1.dp))
 
 		Spacer(
 			modifier = Modifier
@@ -59,5 +65,7 @@ fun DiscoverCardWithWeatherCarousel(
 @DevicePreviews
 @Composable
 private fun DiscoverCardWithWeatherCarouselPreview() {
-	DiscoverCardWithWeatherCarousel()
+	DiscoverCardWithWeatherCarousel(
+		onClick = {}
+	)
 }

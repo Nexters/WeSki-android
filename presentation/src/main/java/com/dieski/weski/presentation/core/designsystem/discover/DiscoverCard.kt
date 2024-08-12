@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,13 +35,14 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 fun DiscoverCard(
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
-	cornerDp: Dp = 15.dp
+	cornerDp: Dp = 15.dp,
+	paddingValues: PaddingValues = PaddingValues(top = 34.dp, bottom = 34.dp, start = 30.dp, end = 24.dp)
 ) {
 	Row(
 		modifier = modifier
 			.fillMaxWidth()
 			.background(color = bgColor, shape = RoundedCornerShape(cornerDp))
-			.padding(start = 30.dp, end = 24.dp)
+			.padding(paddingValues)
 	) {
 		Column(
 			modifier = Modifier
@@ -91,7 +93,7 @@ private fun DiscoverTemperatureWithIcon(
 	) {
 		Image(
 			modifier = Modifier.size(37.dp),
-			painter = painterResource(id = R.drawable.ic_launcher_background),
+			painter = painterResource(id = R.drawable.icn_snow),
 			contentDescription = "Weather Icon"
 		)
 
@@ -101,13 +103,6 @@ private fun DiscoverTemperatureWithIcon(
 			color = WeskiColor.Gray100
 		)
 	}
-}
-
-@ThemePreviews
-@DevicePreviews
-@Composable
-private fun DiscoverTemperatureWithIconPreview() {
-	DiscoverTemperatureWithIcon()
 }
 
 
