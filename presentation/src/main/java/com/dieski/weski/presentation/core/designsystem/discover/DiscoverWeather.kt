@@ -23,7 +23,6 @@ import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 
 /**
  *
@@ -60,7 +59,7 @@ fun DiscoverWeather(
 
 		Image(
 			modifier = Modifier.size(32.dp),
-			painter = painterResource(id = R.drawable.ic_launcher_background),
+			painter = painterResource(id = R.drawable.icn_day_night),
 			contentDescription = "weather icon"
 		)
 
