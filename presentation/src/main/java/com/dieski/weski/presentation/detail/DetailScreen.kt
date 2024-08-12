@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
-import com.dieski.weski.presentation.core.designsystem.component.LogoBar
+import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
+import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
 import com.dieski.weski.presentation.detail.component.DetailViewPagerWithTab
-import com.dieski.weski.presentation.detail.component.DetailWeatherCard
 
 /**
  *
@@ -53,15 +52,26 @@ internal fun DetailScreen(
 	state: DetailContract.State = DetailContract.State.Loading,
 	onShowErrorSnackBar: (throwable: Throwable?) -> Unit = {}
 ) {
-	Box(
-		modifier = modifier.fillMaxSize()
+	Column(
+		modifier = modifier
 	) {
-		if (state is DetailContract.State.Success) {
-			DetailContent()
-		} else {
-			LoadingIndicator()
+		WeskiHeader(
+			showBackButton = true,
+			showShareButton = true
+		)
+
+		Box(
+			modifier = modifier.fillMaxSize()
+		) {
+			if (state is DetailContract.State.Success) {
+				DetailContent()
+			} else {
+				LoadingIndicator()
+			}
 		}
+
 	}
+
 }
 
 @Composable
@@ -72,23 +82,12 @@ internal fun DetailContent(
 		modifier = modifier
 			.fillMaxSize()
 	) {
-		LogoBar(
-			onBackButtonShow = true,
-			onShareButtonShow = true,
-			share = {},
-			navigateUp = {}
-		)
-
 		Box(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(horizontal = 24.dp, vertical = 20.dp)
+			modifier = Modifier.padding(vertical = 28.dp, horizontal = 21.dp)
 		) {
-			DetailWeatherCard(
-				skiResortName = "하이윈 리조트"
-			)
+			DiscoverCard()
 		}
-
+		
 		DetailViewPagerWithTab()
 
 		DetailSnowQualitySurvey()

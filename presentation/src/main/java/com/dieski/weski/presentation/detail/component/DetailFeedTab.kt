@@ -1,5 +1,6 @@
 package com.dieski.weski.presentation.detail.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
@@ -17,6 +18,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
+import com.dieski.weski.presentation.ui.theme.WeskiTheme
 
 @Composable
 internal fun DetailFeedTab(
@@ -42,17 +45,19 @@ internal fun DetailFeedTab(
         indicator = { tabPositions ->
             TabRowDefaults.Indicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[tabIdx]),
-                color = Color.Red
+                color = WeskiColor.Gray90
             )
         }
     ) {
         tabs.forEachIndexed { index, item ->
             Tab(
-                modifier = Modifier.width(tabWidth),
+                modifier = Modifier.width(tabWidth)
+                    .background(WeskiColor.White),
                 text = {
                     Text(
                         modifier = Modifier,
                         text = item.text,
+                        style = WeskiTheme.typography.title3SemiBold,
                         color = getTabTextColor(tabIdx, index),
                         textAlign = TextAlign.Center
                     )
@@ -68,9 +73,9 @@ private fun getTabTextColor(
     currentPage: Int,
     tabIdx: Int
 ) = if (isCurrentTab(currentPage, tabIdx)) {
-    Color.Red
+    WeskiColor.Gray90
 } else {
-    Color.LightGray
+    WeskiColor.Gray40
 }
 
 private fun isCurrentTab(currentPage: Int, tabIdx: Int) = currentPage == tabIdx

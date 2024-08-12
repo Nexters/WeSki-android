@@ -8,6 +8,8 @@ android {
 }
 
 dependencies {
+	implementation(project(":domain"))
+
 	implementation(libs.kotlin.serialization.json)
 	implementation(libs.kotlin.serialization.converter)
 	implementation(libs.retrofit)

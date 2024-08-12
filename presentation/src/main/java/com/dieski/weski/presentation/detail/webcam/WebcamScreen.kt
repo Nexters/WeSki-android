@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
 import com.dieski.weski.presentation.detail.component.WeskiWebView
 
 @Composable
@@ -34,6 +35,8 @@ internal fun WebcamScreen(
                 webViewUrl = "https://www.naver.com",
                 startRenderingNow = isCurrentPage
             )
+
+            DetailSnowQualitySurvey()
         }
     }
 }
