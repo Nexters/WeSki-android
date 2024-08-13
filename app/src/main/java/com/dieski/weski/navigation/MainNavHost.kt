@@ -29,7 +29,7 @@ internal fun MainNavHost(
         ) {
             homeNavGraph(
                 padding = padding,
-                navigateToDetail = { navigator.navigateToDetail(it.skiResortName) },
+                navigateToDetail = { navigator.navigateToDetail(it.name) },
                 onShowErrorSnackBar = onShowErrorSnackBar
             )
 

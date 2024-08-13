@@ -31,19 +31,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.dieski.domain.model.ResortDailyWeatherInfo
 import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.button.scroll.ScrollFloatButton
 import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCardWithWeatherCarousel
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
-import com.dieski.weski.presentation.home.model.HomeWeatherUiModel
+import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.weski.presentation.home.model.HomeResortWeatherInfo
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
 
 @Composable
 internal fun HomeRouter(
 	padding: PaddingValues,
-	navigateToDetail: (HomeWeatherUiModel) -> Unit,
+	navigateToDetail: (HomeResortWeatherInfo) -> Unit,
 	onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
 	viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -67,62 +71,59 @@ internal fun HomeRouter(
 private fun HomeScreen(
 	state: HomeContract.State,
 	modifier: Modifier = Modifier,
-	navigateToDetail: (HomeWeatherUiModel) -> Unit = {},
+	navigateToDetail: (HomeResortWeatherInfo) -> Unit = {},
 	onShowErrorSnackBar: (throwable: Throwable?) -> Unit = {},
 ) {
 	val lazyListState = rememberLazyListState()
 	val coroutineScope = rememberCoroutineScope()
 	val isTop by remember { derivedStateOf {  lazyListState.canScrollBackward }}
 
-	Box(
-		modifier = modifier.fillMaxSize()
+	Column(
+		modifier = modifier
+			.fillMaxSize()
+			.background(WeskiColor.Main05)
 	) {
-		Column(
+		WeskiHeader(
+			showBackButton = false,
+			showShareButton = false
+		)
+
+		Spacer(modifier = Modifier.height(19.dp))
+
+		Box(
 			modifier = Modifier.fillMaxSize()
-				.background(WeskiColor.Main05)
 		) {
-			WeskiHeader(
-				showBackButton = false,
-				showShareButton = false
-			)
+			if (state is HomeContract.State.Success) {
+				HomeContent(
+					resortWeatherInfoList = state.resortWeatherInfoList,
+					onCardClick = navigateToDetail,
+					modifier = Modifier.fillMaxSize(),
+					lazyListState = lazyListState
+				)
+			} else {
+				LoadingIndicator()
+			}
 
-			Spacer(modifier = Modifier.height(19.dp))
-
-			Box(
-				modifier = Modifier.fillMaxSize()
-			) {
-				if (state is HomeContract.State.Success) {
-					HomeContent(
-						weatherList = state.weatherList,
-						onCardClick = navigateToDetail,
-						modifier = Modifier.fillMaxSize(),
-						lazyListState = lazyListState
-					)
-				} else {
-					LoadingIndicator()
-				}
-
-				if (isTop) {
-					ScrollFloatButton(
-						modifier = Modifier
-							.zIndex(1f)
-							.align(Alignment.BottomEnd)
-							.offset(x = (-20).dp, y = (-20).dp),
-						onClick = {
-							coroutineScope.launch {
-								lazyListState.animateScrollToItem(0)
-							}
+			if (isTop) {
+				ScrollFloatButton(
+					modifier = Modifier
+						.zIndex(1f)
+						.align(Alignment.BottomEnd)
+						.offset(x = (-20).dp, y = (-20).dp),
+					onClick = {
+						coroutineScope.launch {
+							lazyListState.animateScrollToItem(0)
 						}
-					) {
-						Icon(
-							modifier = Modifier
-								.padding(12.dp)
-								.size(18.dp),
-							painter = painterResource(id = R.drawable.ic_arrow_up),
-							contentDescription = "위로 가기",
-							tint = WeskiColor.Gray60
-						)
 					}
+				) {
+					Icon(
+						modifier = Modifier
+							.padding(12.dp)
+							.size(18.dp),
+						painter = painterResource(id = R.drawable.ic_arrow_up),
+						contentDescription = "위로 가기",
+						tint = WeskiColor.Gray60
+					)
 				}
 			}
 		}
@@ -131,9 +132,9 @@ private fun HomeScreen(
 
 @Composable
 internal fun HomeContent(
-	weatherList: List<HomeWeatherUiModel>,
+	resortWeatherInfoList: List<HomeResortWeatherInfo>,
 	modifier: Modifier = Modifier,
-	onCardClick: (HomeWeatherUiModel) -> Unit = {},
+	onCardClick: (HomeResortWeatherInfo) -> Unit = {},
 	lazyListState: LazyListState = rememberLazyListState()
 ) {
 	LazyColumn(
@@ -144,11 +145,17 @@ internal fun HomeContent(
 		state = lazyListState
 	) {
 		items(
-			weatherList
-		) { weather ->
-			key(weather.id) {
+			resortWeatherInfoList
+		) { resortWeatherInfo ->
+			key(resortWeatherInfo) {
 				DiscoverCardWithWeatherCarousel(
-					onClick = { onCardClick(weather) }
+					resortName = resortWeatherInfo.name,
+					operatingSlopeCount = resortWeatherInfo.operatingSlopeCount,
+					weatherType = resortWeatherInfo.weatherType,
+					currentTemperature = resortWeatherInfo.currentTemperature,
+					weatherDescription = resortWeatherInfo.weatherDescription,
+					weekWeatherInfoList = resortWeatherInfo.weekWeatherInfo,
+					onClick = { onCardClick(resortWeatherInfo) }
 				)
 			}
 		}
@@ -158,25 +165,83 @@ internal fun HomeContent(
 @Preview
 @Composable
 private fun HomeScreenPreview() {
-    val homeWeatherUiModelList = listOf(
-        HomeWeatherUiModel(
-            id = 1L,
-            skiResortName = "리조트1"
-        ),
-        HomeWeatherUiModel(
-            id = 2L,
-            skiResortName = "리조트1"
-        ),
-        HomeWeatherUiModel(
-            id = 3L,
-            skiResortName = "리조트1"
-        ),
-        HomeWeatherUiModel(
-            id = 4L,
-            skiResortName = "리조트1"
-        )
-    )
+	val resortDailyWeatherInfoList = persistentListOf(
+		ResortDailyWeatherInfo(day = "월요일",  weatherType = "normal", avgTemperature = 2,  minTemperature =  -7),
+		ResortDailyWeatherInfo(day ="화요일", weatherType = "snow", avgTemperature = 0,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="수요일", weatherType = "cloudy", avgTemperature = -5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="목요일", weatherType = "rain", avgTemperature = -5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="금요일", weatherType = "normal", avgTemperature = 5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="일요일", weatherType = "normal", avgTemperature = 6,  minTemperature = -7)
+	)
+
+	val resortWeatherInfoList = listOf(
+		HomeResortWeatherInfo(
+			name = "용평스키장 모나",
+			operatingSlopeCount = 5,
+			currentTemperature = 7,
+			weatherType = WeatherType.SNOW,
+			weatherDescription = "흐리고 눈",
+			weekWeatherInfo = resortDailyWeatherInfoList,
+		),
+		HomeResortWeatherInfo(
+			name = "휘닉스 파크",
+			operatingSlopeCount = 5,
+			currentTemperature =7,
+			weatherType = WeatherType.NORMAL,
+			weatherDescription = "맑음",
+			weekWeatherInfo = resortDailyWeatherInfoList
+		),
+		HomeResortWeatherInfo(
+			name = "곤지암 리조트",
+			 operatingSlopeCount = 5,
+			currentTemperature = 7,
+			weatherType = WeatherType.CLOUDY,
+			weatherDescription = "흐림",
+			weekWeatherInfo = resortDailyWeatherInfoList
+		),
+		HomeResortWeatherInfo(
+			name = "비발디 파크",
+			operatingSlopeCount = 5,
+			currentTemperature = 7,
+			weatherType = WeatherType.RAIN,
+			weatherDescription = "폭우",
+			weekWeatherInfo = resortDailyWeatherInfoList
+		),
+		HomeResortWeatherInfo(
+			name = "용평스키장 모나",
+			operatingSlopeCount = 5,
+			currentTemperature = 7,
+			weatherType = WeatherType.SNOW,
+			weatherDescription = "흐리고 눈",
+			weekWeatherInfo = resortDailyWeatherInfoList,
+		),
+		HomeResortWeatherInfo(
+			name = "휘닉스 파크",
+			operatingSlopeCount = 5,
+			currentTemperature =7,
+			weatherType = WeatherType.NORMAL,
+			weatherDescription = "맑음",
+			weekWeatherInfo = resortDailyWeatherInfoList
+		),
+		HomeResortWeatherInfo(
+			name = "곤지암 리조트",
+			operatingSlopeCount = 5,
+			currentTemperature = 7,
+			weatherType = WeatherType.CLOUDY,
+			weatherDescription = "흐림",
+			weekWeatherInfo = resortDailyWeatherInfoList
+		),
+		HomeResortWeatherInfo(
+			name = "비발디 파크",
+			operatingSlopeCount = 5,
+			currentTemperature = 7,
+			weatherType = WeatherType.RAIN,
+			weatherDescription = "폭우",
+			weekWeatherInfo = resortDailyWeatherInfoList
+		)
+	)
+
 	HomeScreen(
-        state = HomeContract.State.Success(homeWeatherUiModelList)
+        state = HomeContract.State.Success(resortWeatherInfoList.toPersistentList())
     )
 }

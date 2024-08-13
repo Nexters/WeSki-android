@@ -3,7 +3,8 @@ package com.dieski.weski.presentation.home
 import com.dieski.weski.presentation.core.base.UiEffect
 import com.dieski.weski.presentation.core.base.UiEvent
 import com.dieski.weski.presentation.core.base.UiState
-import com.dieski.weski.presentation.home.model.HomeWeatherUiModel
+import com.dieski.weski.presentation.home.model.HomeResortWeatherInfo
+import kotlinx.collections.immutable.PersistentList
 
 class HomeContract {
 
@@ -15,7 +16,7 @@ class HomeContract {
 
         data object Loading : State
 
-        data class Success(val weatherList: List<HomeWeatherUiModel>) : State
+        data class Success(val resortWeatherInfoList: PersistentList<HomeResortWeatherInfo>) : State
     }
 
     sealed class Effect : UiEffect {

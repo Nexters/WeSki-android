@@ -13,10 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.dieski.domain.model.ResortDailyWeatherInfo
+import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.debounceClickable
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toPersistentList
 
 /**
  *
@@ -25,6 +29,12 @@ import com.dieski.weski.presentation.core.util.debounceClickable
  */
 @Composable
 fun DiscoverCardWithWeatherCarousel(
+	resortName: String,
+	operatingSlopeCount: Int,
+	weatherType: WeatherType,
+	currentTemperature: Int,
+	weatherDescription: String,
+	weekWeatherInfoList: ImmutableList<ResortDailyWeatherInfo>,
 	onClick: () -> Unit,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
@@ -37,6 +47,11 @@ fun DiscoverCardWithWeatherCarousel(
 			.padding(top = 12.dp, bottom = 16.dp)
 	) {
 		DiscoverCard(
+			resortName = resortName,
+			operatingSlopeCount = operatingSlopeCount,
+			weatherType = weatherType,
+			currentTemperature = currentTemperature,
+			weatherDescription = weatherDescription,
 			bgColor = bgColor,
 			cornerDp = cornerDp,
 			paddingValues = PaddingValues(top = 23.dp, bottom = 23.dp, start = 30.dp,  end = 24.dp)
@@ -55,6 +70,7 @@ fun DiscoverCardWithWeatherCarousel(
 		Spacer(modifier = Modifier.height(14.dp))
 
 		DiscoverWeatherCarousel(
+			weekWeatherInfoList =weekWeatherInfoList,
 			modifier = Modifier.padding(start = 14.dp)
 		)
 	}
@@ -65,7 +81,22 @@ fun DiscoverCardWithWeatherCarousel(
 @DevicePreviews
 @Composable
 private fun DiscoverCardWithWeatherCarouselPreview() {
+	val resortDailyWeatherInfoList = listOf(
+		ResortDailyWeatherInfo(day = "월요일",  weatherType = "normal", avgTemperature = 2,  minTemperature =  -7),
+		ResortDailyWeatherInfo(day ="화요일", weatherType = "snow", avgTemperature = 0,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="수요일", weatherType = "cloudy", avgTemperature = -5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="목요일", weatherType = "rain", avgTemperature = -5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="금요일", weatherType = "normal", avgTemperature = 5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="일요일", weatherType = "normal", avgTemperature = 6,  minTemperature = -7)
+	)
+
 	DiscoverCardWithWeatherCarousel(
+		resortName = "용평스키장 모나",
+		operatingSlopeCount = 5,
+		currentTemperature = 7,
+		weatherType = WeatherType.SNOW,
+		weatherDescription = "흐리고 눈",
+		weekWeatherInfoList = resortDailyWeatherInfoList.toPersistentList(),
 		onClick = {}
 	)
 }

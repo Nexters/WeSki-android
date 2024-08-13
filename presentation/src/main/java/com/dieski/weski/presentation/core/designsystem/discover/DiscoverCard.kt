@@ -19,8 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
+import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -33,6 +33,11 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 // TODO 배경색 추후 수정필요 - 디자인 확정 시
 @Composable
 fun DiscoverCard(
+	resortName: String,
+	operatingSlopeCount: Int,
+	weatherType: WeatherType,
+	currentTemperature: Int,
+	weatherDescription: String,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
 	cornerDp: Dp = 15.dp,
@@ -51,13 +56,13 @@ fun DiscoverCard(
 			verticalArrangement = Arrangement.spacedBy(5.dp)
 		) {
 			Text(
-				text = "스키장 명",
+				text = resortName,
 				style = WeskiTheme.typography.title1Bold,
 				color = WeskiColor.Gray90
 			)
 
 			Text(
-				text = "운행중인 슬로프 -개",
+				text = "운행중인 슬로프 ${operatingSlopeCount}개",
 				style = WeskiTheme.typography.body1Medium,
 				color = WeskiColor.Gray60
 			)
@@ -69,11 +74,14 @@ fun DiscoverCard(
 			verticalArrangement = Arrangement.spacedBy(8.dp),
 			horizontalAlignment = Alignment.End
 		) {
-			DiscoverTemperatureWithIcon()
+			DiscoverTemperatureWithIcon(
+				temperature = currentTemperature,
+				weatherType = weatherType
+			)
 
 			Text(
 				modifier = Modifier,
-				text = "흐리고 비",
+				text = weatherDescription,
 				style = WeskiTheme.typography.body1SemiBold,
 				color = WeskiColor.Gray60,
 				textAlign = TextAlign.End
@@ -84,6 +92,8 @@ fun DiscoverCard(
 
 @Composable
 private fun DiscoverTemperatureWithIcon(
+	temperature: Int,
+	weatherType: WeatherType,
 	modifier: Modifier = Modifier
 ) {
 	Row(
@@ -93,12 +103,12 @@ private fun DiscoverTemperatureWithIcon(
 	) {
 		Image(
 			modifier = Modifier.size(37.dp),
-			painter = painterResource(id = R.drawable.icn_snow),
+			painter = painterResource(id = weatherType.getIcon()),
 			contentDescription = "Weather Icon"
 		)
 
 		Text(
-			text = "25°",
+			text = "${temperature}°",
 			style = WeskiTheme.typography.heading1SemiBold,
 			color = WeskiColor.Gray100
 		)
@@ -110,6 +120,12 @@ private fun DiscoverTemperatureWithIcon(
 @DevicePreviews
 @Composable
 private fun DiscoverCardPreview() {
-	DiscoverCard()
+	DiscoverCard(
+		resortName = "용평스키장 모나",
+		operatingSlopeCount = 5,
+		currentTemperature = 7,
+		weatherType = WeatherType.SNOW,
+		weatherDescription = "흐리고 눈"
+	)
 }
 

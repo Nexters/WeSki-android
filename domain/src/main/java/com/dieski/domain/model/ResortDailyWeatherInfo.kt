@@ -7,7 +7,7 @@ package com.dieski.domain.model
  */
 data class ResortDailyWeatherInfo(
 	val day: String,
-	val weatherType: WeatherType,
-	val avgTemperature: Float,
-	val minTemperature: Float,
+	val weatherType: String,
+	val avgTemperature: Int,
+	val minTemperature: Int,
 )

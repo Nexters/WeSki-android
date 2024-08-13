@@ -18,8 +18,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
+import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -31,6 +31,10 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
  */
 @Composable
 fun DiscoverWeather(
+	day: String,
+	weatherType: WeatherType,
+	avgTemperature: Int,
+	minTemperature: Int,
 	isToday: Boolean,
 	modifier: Modifier = Modifier,
 	defaultBgColor: Color = Color.Transparent,
@@ -50,7 +54,7 @@ fun DiscoverWeather(
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		Text(
-			text = "토요일",
+			text = day,
 			style = WeskiTheme.typography.body3Regular,
 			color = WeskiColor.Gray60
 		)
@@ -59,20 +63,20 @@ fun DiscoverWeather(
 
 		Image(
 			modifier = Modifier.size(32.dp),
-			painter = painterResource(id = R.drawable.icn_day_night),
+			painter = painterResource(id = weatherType.getIcon()),
 			contentDescription = "weather icon"
 		)
 
 		Spacer(modifier = Modifier.height(12.dp))
 
 		Text(
-			text = "0°",
+			text = "${minTemperature}°",
 			style = WeskiTheme.typography.title3SemiBold,
 			color = WeskiColor.Gray90
 		)
 
 		Text(
-			text = "0°",
+			text = "${avgTemperature}°",
 			style = WeskiTheme.typography.body3Regular,
 			color = WeskiColor.Gray60
 		)
@@ -85,9 +89,17 @@ fun DiscoverWeather(
 private fun DiscoverWeatherPreview() {
 	Row {
 		DiscoverWeather(
+			day = "월요일",
+			weatherType = WeatherType.NORMAL,
+			avgTemperature = 2,
+			minTemperature = -7,
 			isToday = false
 		)
 		DiscoverWeather(
+			day = "화요일",
+			weatherType = WeatherType.SNOW,
+			avgTemperature = 2,
+			minTemperature = -7,
 			isToday = true
 		)
 	}

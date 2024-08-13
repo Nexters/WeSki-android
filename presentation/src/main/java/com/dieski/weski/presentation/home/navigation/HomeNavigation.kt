@@ -7,7 +7,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import com.dieski.weski.presentation.core.navigation.Route
 import com.dieski.weski.presentation.home.HomeRouter
-import com.dieski.weski.presentation.home.model.HomeWeatherUiModel
+import com.dieski.weski.presentation.home.model.HomeResortWeatherInfo
 
 fun NavController.navigateHome(navOptions: NavOptions) {
     navigate(Route.Home, navOptions)
@@ -15,7 +15,7 @@ fun NavController.navigateHome(navOptions: NavOptions) {
 
 fun NavGraphBuilder.homeNavGraph(
     padding: PaddingValues,
-    navigateToDetail: (HomeWeatherUiModel) -> Unit,
+    navigateToDetail: (HomeResortWeatherInfo) -> Unit,
     onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
 ) {
     composable<Route.Home> {
