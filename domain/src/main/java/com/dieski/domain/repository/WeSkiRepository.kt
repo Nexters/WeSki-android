@@ -1,6 +1,7 @@
 package com.dieski.domain.repository
 
-import com.dieski.domain.model.Resort
+import com.dieski.domain.model.ResortWeatherInfo
+import kotlinx.coroutines.flow.Flow
 
 /**
  *
@@ -9,5 +10,5 @@ import com.dieski.domain.model.Resort
  */
 interface WeSkiRepository {
 
-	fun fetchResortWeatherInfoList() : List<Resort>
+	fun fetchResortWeatherInfoList() : Flow<List<ResortWeatherInfo>>
 }
