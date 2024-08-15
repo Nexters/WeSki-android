@@ -41,7 +41,7 @@ fun DiscoverCard(
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
 	cornerDp: Dp = 15.dp,
-	paddingValues: PaddingValues = PaddingValues(top = 34.dp, bottom = 34.dp, start = 30.dp, end = 24.dp)
+	paddingValues: PaddingValues = PaddingValues(top = 34.dp, bottom = 35.dp, start = 30.dp, end = 24.dp)
 ) {
 	Row(
 		modifier = modifier
@@ -51,8 +51,7 @@ fun DiscoverCard(
 	) {
 		Column(
 			modifier = Modifier
-				.weight(1f)
-				.padding(top = 4.dp, bottom = 8.dp),
+				.weight(1f),
 			verticalArrangement = Arrangement.spacedBy(5.dp)
 		) {
 			Text(
@@ -69,8 +68,7 @@ fun DiscoverCard(
 		}
 
 		Column(
-			modifier = Modifier
-				.padding(top = 4.dp, bottom = 8.dp),
+			modifier = Modifier,
 			verticalArrangement = Arrangement.spacedBy(8.dp),
 			horizontalAlignment = Alignment.End
 		) {

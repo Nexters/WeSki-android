@@ -1,7 +1,7 @@
 package com.dieski.weski.presentation.core.designsystem.button.vote
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,10 +12,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -26,7 +23,6 @@ import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
-import com.dieski.weski.presentation.core.util.debounceNoRippleClickable
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 
 @Composable
@@ -47,8 +43,9 @@ fun VoteButton(
             .fillMaxWidth()
             .clip(RoundedCornerShape(cornerDp))
             .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(cornerDp))
-            .debounceNoRippleClickable { onClick() }
-            .padding(vertical = 10.dp, horizontal = 16.dp)
+            .clickable { onClick() }
+            .padding(vertical = 10.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
 
         Text(

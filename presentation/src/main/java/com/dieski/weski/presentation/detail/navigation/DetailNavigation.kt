@@ -19,15 +19,17 @@ fun NavController.navigateDetail(skiResortName: String) {
 
 fun NavGraphBuilder.detailNavGraph(
 	padding: PaddingValues,
-	onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
-) {
+	onNavigateUp: () -> Unit,
+	onShowSnackBar: (String, String?) -> Unit,
+	) {
 	composable<Route.Detail> { navBackStackEntry ->
 		val skiResortName = navBackStackEntry.toRoute<Route.Detail>().skiResortName
 
 		DetailRouter(
 			skiResortName = skiResortName,
 			padding = padding,
-			onShowErrorSnackBar = onShowErrorSnackBar
+			onNavigateUp = onNavigateUp,
+			onShowSnackBar = onShowSnackBar
 		)
 	}
 }

@@ -1,6 +1,7 @@
 package com.dieski.domain.repository
 
 import com.dieski.domain.model.ResortWeatherInfo
+import com.dieski.domain.model.TodayForecast
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -11,4 +12,6 @@ import kotlinx.coroutines.flow.Flow
 interface WeSkiRepository {
 
 	fun fetchResortWeatherInfoList() : Flow<List<ResortWeatherInfo>>
+
+	fun fetchTodayForecast(): Flow<TodayForecast>
 }

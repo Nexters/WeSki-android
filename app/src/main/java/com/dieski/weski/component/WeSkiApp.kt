@@ -2,6 +2,7 @@ package com.dieski.weski.component
 
 import android.webkit.WebView
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration.Short
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
@@ -14,10 +15,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.weski.WeSkiAppState
 import com.dieski.weski.navigation.MainNavHost
-import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.LocalWebOwner
 import kotlinx.coroutines.launch
-import java.net.UnknownHostException
 
 @Composable
 internal fun WeSkiApp(
@@ -26,13 +25,12 @@ internal fun WeSkiApp(
     val snackBarHostState = remember { SnackbarHostState() }
 
     val localContextResource = LocalContext.current.resources
-    val onShowErrorSnackBar: (throwable: Throwable?) -> Unit = { throwable ->
+    val onShowSnackBar: (String, String?) -> Unit = { message, action ->
         appState.coroutineScope.launch {
             snackBarHostState.showSnackbar(
-                when(throwable) {
-                    is UnknownHostException -> localContextResource.getString(R.string.error_message_network)
-                    else -> localContextResource.getString(R.string.error_message_unknown)
-                }
+                message = message,
+                actionLabel = action,
+                duration = Short
             )
         }
     }
@@ -40,7 +38,7 @@ internal fun WeSkiApp(
     MainScreenContent(
         appState = appState,
         snackBarHostState = snackBarHostState,
-        onShowErrorSnackBar = onShowErrorSnackBar,
+        onShowSnackBar = onShowSnackBar,
     )
 }
 
@@ -49,7 +47,7 @@ private fun MainScreenContent(
     appState: WeSkiAppState,
     snackBarHostState: SnackbarHostState,
     modifier: Modifier = Modifier,
-    onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
+    onShowSnackBar: (String, String?) -> Unit,
 ) {
     val isOffline by appState.isOffline.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -67,7 +65,7 @@ private fun MainScreenContent(
                 MainNavHost(
                     navigator = appState.navigator,
                     padding = padding,
-                    onShowErrorSnackBar = onShowErrorSnackBar
+                    onShowSnackBar = onShowSnackBar
                 )
             },
             snackbarHost = { SnackbarHost(snackBarHostState) }

@@ -48,7 +48,7 @@ import kotlinx.coroutines.launch
 internal fun HomeRouter(
 	padding: PaddingValues,
 	navigateToDetail: (HomeResortWeatherInfo) -> Unit,
-	onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
+	onShowSnackBar: (message: String, action: String?) -> Unit,
 	viewModel: HomeViewModel = hiltViewModel()
 ) {
 	val state: HomeContract.State by viewModel.uiState.collectAsStateWithLifecycle()
@@ -58,7 +58,7 @@ internal fun HomeRouter(
 	}
 
 	HomeScreen(
-		onShowErrorSnackBar = onShowErrorSnackBar,
+		onShowSnackBar = onShowSnackBar,
 		state = state,
 		navigateToDetail = navigateToDetail,
 		modifier = Modifier
@@ -72,7 +72,7 @@ private fun HomeScreen(
 	state: HomeContract.State,
 	modifier: Modifier = Modifier,
 	navigateToDetail: (HomeResortWeatherInfo) -> Unit = {},
-	onShowErrorSnackBar: (throwable: Throwable?) -> Unit = {},
+	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> },
 ) {
 	val lazyListState = rememberLazyListState()
 	val coroutineScope = rememberCoroutineScope()

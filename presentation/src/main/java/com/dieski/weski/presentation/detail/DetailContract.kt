@@ -3,6 +3,7 @@ package com.dieski.weski.presentation.detail
 import com.dieski.weski.presentation.core.base.UiEffect
 import com.dieski.weski.presentation.core.base.UiEvent
 import com.dieski.weski.presentation.core.base.UiState
+import com.dieski.weski.presentation.detail.model.ResortBriefData
 
 class DetailContract {
 
@@ -16,7 +17,7 @@ class DetailContract {
 
         data object Loading : State
 
-        data object Success : State
+        data object Success: State
     }
 
     sealed class Effect : UiEffect
