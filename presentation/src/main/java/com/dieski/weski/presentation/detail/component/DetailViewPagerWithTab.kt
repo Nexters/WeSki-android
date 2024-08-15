@@ -1,9 +1,11 @@
 package com.dieski.weski.presentation.detail.component
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -28,14 +30,15 @@ data class TabItem(
 @Composable
 internal fun DetailViewPagerWithTab(
     modifier: Modifier = Modifier,
+    onShowSnackBar: (message: String, code: String?) -> Unit = { _, _ ->}
 ) {
     val density = LocalDensity.current
     var pagerFirstHeight by remember { mutableStateOf(0.dp) }
 
     val tabItemList = listOf(
-        TabItem("test"),
-        TabItem("test2"),
-        TabItem("test3"),
+        TabItem("웹캠 정보"),
+        TabItem("날씨"),
+        TabItem("슬로프"),
     )
 
     val coroutineScope = rememberCoroutineScope()
@@ -79,10 +82,14 @@ internal fun DetailViewPagerWithTab(
             when (page) {
                 0 -> WebcamScreen(
                     isCurrentPage = pagerState.currentPage == 0,
+                    onShowSnackBar = onShowSnackBar
                 )
-                1 -> WeatherScreen()
+                1 -> WeatherScreen(
+                    onShowSnackBar = onShowSnackBar
+                )
                 2 -> CongestionScreen(
                     isCurrentPage = pagerState.currentPage == 2,
+                    onShowSnackBar = onShowSnackBar
                 )
             }
         }

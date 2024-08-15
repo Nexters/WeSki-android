@@ -1,5 +1,6 @@
 package com.dieski.weski.presentation.core.designsystem.header
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,30 +18,35 @@ import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
+import com.dieski.weski.presentation.core.util.noRippleClickable
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 
 @Composable
 fun WeskiHeader(
+    modifier: Modifier = Modifier,
     showBackButton: Boolean,
     showShareButton: Boolean,
-    modifier: Modifier = Modifier
+    bgColor: Color = Color.Transparent,
+    onClickBackButton: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 11.dp, horizontal = 12.dp)
+            .background(bgColor)
+            .padding(vertical = 14.dp, horizontal = 12.dp)
     ) {
         if (showBackButton) {
             Icon(
                 modifier = Modifier
                     .size(26.dp)
-                    .align(Alignment.CenterStart),
+                    .align(Alignment.CenterStart)
+                    .noRippleClickable { onClickBackButton() },
                 painter = painterResource(id = R.drawable.icn_chevron_left),
                 tint = Color.Black,
                 contentDescription = "뒤로가기"
             )
-        }
 
+        }
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = "WeSki",

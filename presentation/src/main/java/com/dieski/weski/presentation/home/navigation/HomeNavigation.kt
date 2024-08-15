@@ -16,13 +16,13 @@ fun NavController.navigateHome(navOptions: NavOptions) {
 fun NavGraphBuilder.homeNavGraph(
     padding: PaddingValues,
     navigateToDetail: (HomeResortWeatherInfo) -> Unit,
-    onShowErrorSnackBar: (throwable: Throwable?) -> Unit,
-) {
+    onShowSnackBar: (String, String?) -> Unit,
+    ) {
     composable<Route.Home> {
         HomeRouter(
             padding = padding,
             navigateToDetail = navigateToDetail,
-            onShowErrorSnackBar = onShowErrorSnackBar
+            onShowSnackBar = onShowSnackBar
         )
     }
 }

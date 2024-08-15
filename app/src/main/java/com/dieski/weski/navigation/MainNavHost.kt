@@ -16,8 +16,8 @@ internal fun MainNavHost(
     modifier: Modifier = Modifier,
     navigator: MainNavigator,
     padding: PaddingValues,
-    onShowErrorSnackBar: (throwable: Throwable?) -> Unit
-) {
+    onShowSnackBar: (String, String?) -> Unit,
+    ) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -30,12 +30,13 @@ internal fun MainNavHost(
             homeNavGraph(
                 padding = padding,
                 navigateToDetail = { navigator.navigateToDetail(it.name) },
-                onShowErrorSnackBar = onShowErrorSnackBar
+                onShowSnackBar = onShowSnackBar
             )
 
             detailNavGraph(
                 padding = padding,
-                onShowErrorSnackBar = onShowErrorSnackBar
+                onNavigateUp = navigator::popBackStackIfNotHome,
+                onShowSnackBar = onShowSnackBar
             )
         }
     }
