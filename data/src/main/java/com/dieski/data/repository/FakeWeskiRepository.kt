@@ -4,8 +4,10 @@ import com.dieski.data.dispatchers.Dispatcher
 import com.dieski.data.dispatchers.WeSkiDispatchers
 import com.dieski.domain.model.ResortDailyWeatherInfo
 import com.dieski.domain.model.ResortWeatherInfo
+import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.repository.WeSkiRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
@@ -97,5 +99,67 @@ internal class FakeWeskiRepository  @Inject constructor(
 		)
 
 		emit(resortWeatherInfoList)
+	}.flowOn(ioDispatcher)
+
+	override fun fetchTodayForecast() = flow {
+		val todayForecast = TodayForecast(
+			currentTemperature = 7,
+			perceivedTemperature = 5,
+			weatherDescription = "흐리고 눈",
+			highestTemperature = 10,
+			lowestTemperature = 3,
+			hourlyForecastWeatherInfoList = listOf(
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오전 8시",
+					weatherType = "snow",
+					temperature = -5,
+					chanceOfRain = 20
+				),
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오전 10시",
+					weatherType = "snow",
+					temperature = -4,
+					chanceOfRain = 30
+				),
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오후 12시",
+					weatherType = "snow",
+					temperature = -3,
+					chanceOfRain = 30
+				),
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오후 2시",
+					weatherType = "snow",
+					temperature = -2,
+					chanceOfRain = 30
+				),
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오후 4시",
+					weatherType = "snow",
+					temperature = -1,
+					chanceOfRain = 30
+				),
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오후 6시",
+					weatherType = "snow",
+					temperature = 0,
+					chanceOfRain = 30
+				),
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오후 8시",
+					weatherType = "snow",
+					temperature = 1,
+					chanceOfRain = 30
+				),
+				TodayForecast.HourlyForecastWeatherInfo(
+					time = "오후 10시",
+					weatherType = "snow",
+					temperature = -2,
+					chanceOfRain = 30
+				)
+			)
+		)
+
+		emit(todayForecast)
 	}.flowOn(ioDispatcher)
 }

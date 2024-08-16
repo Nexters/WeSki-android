@@ -3,6 +3,7 @@ package com.dieski.data.repository
 import com.dieski.data.dispatchers.Dispatcher
 import com.dieski.data.dispatchers.WeSkiDispatchers
 import com.dieski.domain.model.ResortWeatherInfo
+import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.repository.WeSkiRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -21,5 +22,9 @@ internal class DefaultWeskiRepository @Inject constructor(
 
 	override fun fetchResortWeatherInfoList(): Flow<List<ResortWeatherInfo>> {
 		return flowOf<List<ResortWeatherInfo>>(emptyList()).flowOn(ioDispatcher)
+	}
+
+	override fun fetchTodayForecast(): Flow<TodayForecast> {
+		return flowOf()
 	}
 }

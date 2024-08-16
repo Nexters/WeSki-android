@@ -1,6 +1,7 @@
 package com.dieski.weski.presentation.detail.weather
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,9 +31,9 @@ internal fun WeatherScreen(
 ) {
 	Column(
 		modifier = modifier
-            .fillMaxSize()
-            .background(WeskiColor.White)
-            .verticalScroll(rememberScrollState())
+			.fillMaxSize()
+			.background(WeskiColor.White)
+			.verticalScroll(rememberScrollState())
 	) {
 		WeatherScreenWeatherInfoTextBox()
 
@@ -55,15 +56,16 @@ internal fun WeatherScreen(
         WeatherDividerLine()
 
         Column(
-            modifier = Modifier.padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 40.dp)
+            modifier = Modifier.fillMaxWidth()
+				.padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 40.dp),
+			verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            WeatherWeek()
-            WeatherWeek()
-            WeatherWeek()
-            WeatherWeek()
-            WeatherWeek()
-            WeatherWeek()
-            WeatherWeek()
+			Text(
+				text = "주간 예보",
+				style = WeskiTheme.typography.title3SemiBold,
+				color = WeskiColor.Gray90
+			)
+
             WeatherWeek()
         }
 
