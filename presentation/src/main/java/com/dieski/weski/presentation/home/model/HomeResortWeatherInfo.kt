@@ -1,7 +1,7 @@
 package com.dieski.weski.presentation.home.model
 
-import com.dieski.domain.model.ResortDailyWeatherInfo
 import com.dieski.domain.model.ResortWeatherInfo
+import com.dieski.domain.model.ResortWeatherInfo.ResortDailyWeatherInfo
 import com.dieski.weski.presentation.core.model.WeatherType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
@@ -23,10 +23,10 @@ data class HomeResortWeatherInfo(
 )
 
 fun ResortWeatherInfo.toUiModel() = HomeResortWeatherInfo(
-	name = this.name,
+	name = this.resortName,
 	operatingSlopeCount = this.operatingSlopeCount,
 	currentTemperature = this.currentTemperature,
 	weatherDescription = this.weatherDescription,
 	weatherType = WeatherType.findByName(weatherType),
-	weekWeatherInfo = this.weekWeatherInfo.toPersistentList()
+	weekWeatherInfo = this.resortDailyWeatherInfoList.toPersistentList()
 )

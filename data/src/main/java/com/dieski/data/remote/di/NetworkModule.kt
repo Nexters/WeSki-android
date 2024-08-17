@@ -4,6 +4,7 @@ import com.dieski.data.BuildConfig
 import com.dieski.data.remote.network.adapter.NetworkResultCallAdapterFactory
 import com.dieski.data.remote.network.monitor.NetworkMonitor
 import com.dieski.data.remote.network.monitor.NetworkMonitorImpl
+import com.dieski.data.remote.network.service.WeSkiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Binds
 import dagger.Module
@@ -77,5 +78,13 @@ internal abstract class NetworkModule {
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .addCallAdapterFactory(networkResultCallAdapterFactory)
             .build()
+
+        @Provides
+        @Singleton
+        fun provideWeSkiApi(
+            @DefaultApi retrofit: Retrofit
+        ): WeSkiService {
+            return retrofit.create(WeSkiService::class.java)
+        }
     }
 }

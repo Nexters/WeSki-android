@@ -21,6 +21,7 @@ internal abstract class RepositoryModule {
 
 	@Binds
 	@Singleton
+	@Named("weski")
 	abstract fun bindsWeSkiRepository(
 		defaultWeskiRepository: DefaultWeskiRepository
 	): WeSkiRepository

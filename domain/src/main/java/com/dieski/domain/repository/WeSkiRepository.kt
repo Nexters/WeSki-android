@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface WeSkiRepository {
 
-	fun fetchResortWeatherInfoList() : Flow<List<ResortWeatherInfo>>
+	suspend fun fetchResortWeatherInfoList() : List<ResortWeatherInfo>
 
-	fun fetchTodayForecast(): Flow<TodayForecast>
+	suspend fun fetchTodayForecast(): Flow<TodayForecast>
 }

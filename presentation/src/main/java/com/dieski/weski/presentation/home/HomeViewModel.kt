@@ -11,39 +11,42 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getResortWeatherInfoListUseCase: GetResortWeatherInfoListUseCase
+	private val getResortWeatherInfoListUseCase: GetResortWeatherInfoListUseCase
 ) : BaseViewModel<HomeContract.Event, HomeContract.State, HomeContract.Effect>() {
 
-    /**
-     * Create initial State of Views
-     */
-    override fun createInitialState(): HomeContract.State {
-        return HomeContract.State.Loading
-    }
+	/**
+	 * Create initial State of Views
+	 */
+	override fun createInitialState(): HomeContract.State {
+		return HomeContract.State.Loading
+	}
 
-    /**
-     * Handle each event
-     */
-    override fun handleEvent(event: HomeContract.Event) {
-        when (event) {
-            is HomeContract.Event.FetchingHomeData -> { fetchHomeData() }
-        }
-    }
+	/**
+	 * Handle each event
+	 */
+	override fun handleEvent(event: HomeContract.Event) {
+		when (event) {
+			is HomeContract.Event.FetchingHomeData -> {
+				fetchHomeData()
+			}
+		}
+	}
 
-    private fun fetchHomeData() {
-        viewModelScope.launch {
-            // Set Loading
-            setState { HomeContract.State.Loading }
-            delay(500L)
-            getResortWeatherInfoListUseCase().collect {
-                setState {
-                    HomeContract.State.Success(it.map(ResortWeatherInfo::toUiModel).toPersistentList())
-                }
-            }
-        }
-    }
+	private fun fetchHomeData() {
+		viewModelScope.launch {
+			// Set Loading
+			setState { HomeContract.State.Loading }
+			delay(500L)
+
+			val resortWeatherInfo = getResortWeatherInfoListUseCase()
+			setState {
+				HomeContract.State.Success(resortWeatherInfo.map(ResortWeatherInfo::toUiModel).toPersistentList())
+			}
+		}
+	}
 }

@@ -19,7 +19,7 @@ class HomeContract {
         data class Success(val resortWeatherInfoList: PersistentList<HomeResortWeatherInfo>) : State
     }
 
-    sealed class Effect : UiEffect {
-
+    sealed interface Effect : UiEffect {
+        data class ShowSnackBar(val message: String) : Effect
     }
 }

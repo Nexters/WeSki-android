@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dieski.domain.model.ResortDailyWeatherInfo
+import com.dieski.domain.model.ResortWeatherInfo.ResortDailyWeatherInfo
 import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.button.scroll.ScrollFloatButton
 import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
@@ -166,12 +166,12 @@ internal fun HomeContent(
 @Composable
 private fun HomeScreenPreview() {
 	val resortDailyWeatherInfoList = persistentListOf(
-		ResortDailyWeatherInfo(day = "월요일",  weatherType = "normal", avgTemperature = 2,  minTemperature =  -7),
-		ResortDailyWeatherInfo(day ="화요일", weatherType = "snow", avgTemperature = 0,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="수요일", weatherType = "cloudy", avgTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="목요일", weatherType = "rain", avgTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="금요일", weatherType = "normal", avgTemperature = 5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="일요일", weatherType = "normal", avgTemperature = 6,  minTemperature = -7)
+		ResortDailyWeatherInfo(day = "월요일",  weatherType = "normal", maxTemperature = 2,  minTemperature =  -7),
+		ResortDailyWeatherInfo(day = "화요일", weatherType = "snow", maxTemperature = 0, minTemperature = -7),
+		ResortDailyWeatherInfo(day ="수요일", weatherType = "cloudy", maxTemperature = -5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="목요일", weatherType = "rain", maxTemperature = -5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="금요일", weatherType = "normal", maxTemperature = 5,  minTemperature = -7),
+		ResortDailyWeatherInfo(day ="일요일", weatherType = "normal", maxTemperature = 6,  minTemperature = -7)
 	)
 
 	val resortWeatherInfoList = listOf(
