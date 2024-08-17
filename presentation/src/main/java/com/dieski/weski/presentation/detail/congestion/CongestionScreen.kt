@@ -26,7 +26,11 @@ import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
+import com.dieski.weski.presentation.detail.congestion.component.CongestionGraph
+import com.dieski.weski.presentation.detail.congestion.model.CongestionData
+import com.dieski.weski.presentation.detail.congestion.model.CongestionLevel
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 internal fun CongestionScreen(
@@ -80,23 +84,43 @@ internal fun CongestionScreen(
 
                 Spacer(modifier = Modifier.height(26.dp))
 
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Image(
-                        modifier = Modifier.fillMaxWidth(),
-                        painter = painterResource(id = R.drawable.img_temp_congestion),
-                        contentDescription = "혼잡도 임시 이미지",
-                        contentScale = ContentScale.FillWidth
-                    )
+//                Box(
+//                    modifier = Modifier.fillMaxWidth()
+//                ) {
+//                    Image(
+//                        modifier = Modifier.fillMaxWidth(),
+//                        painter = painterResource(id = R.drawable.img_temp_congestion),
+//                        contentDescription = "혼잡도 임시 이미지",
+//                        contentScale = ContentScale.FillWidth
+//                    )
+//
+//                    Text(
+//                        modifier = Modifier.align(Alignment.Center),
+//                        text = "인기 시간대는 개장일 이후부터 확인할 수 있어요",
+//                        style = WeskiTheme.typography.title3SemiBold,
+//                        color = WeskiColor.Main01
+//                    )
+//                }
 
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "인기 시간대는 개장일 이후부터 확인할 수 있어요",
-                        style = WeskiTheme.typography.title3SemiBold,
-                        color = WeskiColor.Main01
+                CongestionGraph(
+                    congestionDataList = persistentListOf(
+                        CongestionData(
+                            time = 8,
+                            level = CongestionLevel.LOW,
+                            isPast = false
+                        ),
+                        CongestionData(
+                            time = 10,
+                            level = CongestionLevel.MAX,
+                            isPast = false
+                        ),
+                        CongestionData(
+                            time = 12,
+                            level = CongestionLevel.MID,
+                            isPast = false
+                        ),
                     )
-                }
+                )
             }
 
             Spacer(modifier = Modifier

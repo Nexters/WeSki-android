@@ -17,9 +17,7 @@ class DetailContract {
 
         data object Loading : State
 
-        data class Success(
-            val resortBriefData: ResortBriefData
-        ) : State
+        data object Success : State
     }
 
     sealed class Effect : UiEffect

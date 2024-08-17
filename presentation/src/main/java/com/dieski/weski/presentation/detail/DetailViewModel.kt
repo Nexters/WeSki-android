@@ -5,13 +5,14 @@ import com.dieski.domain.usecase.GetResortWeatherInfoListUseCase
 import com.dieski.domain.usecase.GetTodayForecastUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val getResortWeatherInfoListUseCase: GetResortWeatherInfoListUseCase
+    private val getTodayForecastUseCase: GetTodayForecastUseCase
 ) : BaseViewModel<DetailContract.Event, DetailContract.State, DetailContract.Effect>() {
 
     override fun createInitialState() = DetailContract.State.Loading
@@ -27,7 +28,7 @@ class DetailViewModel @Inject constructor(
             setState { DetailContract.State.Loading }
             delay(500L)
 
-            getResortWeatherInfoListUseCase().collect {
+            getTodayForecastUseCase().collect {
                 setState { DetailContract.State.Success }
             }
         }
