@@ -1,12 +1,10 @@
 package com.dieski.weski.presentation.core.designsystem.weather
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,113 +31,65 @@ fun WeatherWeek(
 		modifier = modifier.fillMaxWidth(),
 		verticalAlignment = Alignment.CenterVertically
 	) {
+		Text(
+			text = "오늘",
+			style = WeskiTheme.typography.body1SemiBold,
+			color = WeskiColor.Gray80
+		)
+
+		Spacer(modifier = Modifier.width(5.dp))
+
+		Text(
+			text = "7.26",
+			style = WeskiTheme.typography.body3Regular,
+			color = WeskiColor.Gray50
+		)
+
+		Spacer(Modifier.weight(1f))
+
+		Icon(
+			painter = painterResource(id = R.drawable.icn_day_night),
+			contentDescription = "weather_icon"
+		)
+
+		Spacer(modifier = Modifier.width(12.dp))
+
 		Column {
 			Text(
-				text = "오늘",
-				style = WeskiTheme.typography.body1SemiBold,
-				color = WeskiColor.Gray80
-			)
-
-			Text(
-				text = "7.26",
-				style = WeskiTheme.typography.body3Regular,
-				color = WeskiColor.Gray40
-			)
-		}
-		
-		Spacer(modifier = Modifier.width(20.dp))
-
-		CenterWeatherIconWithTemperature(
-			modifier = Modifier.weight(1f)
-		)
-
-		Spacer(modifier = Modifier.width(20.dp))
-
-		Row {
-			Text(
-				text = "3°",
-				style = WeskiTheme.typography.title2Regular,
-				color = WeskiColor.Gray70
-			)
-
-			Spacer(modifier = Modifier.width(5.dp))
-
-			Text(
-				text = "/",
-				style = WeskiTheme.typography.title2Regular,
-				color = WeskiColor.Gray50
-			)
-
-			Spacer(modifier = Modifier.width(3.dp))
-
-			Text(
-				text = "-2°",
-				style = WeskiTheme.typography.title2SemiBold,
-				color = WeskiColor.Main01
-			)
-		}
-	}
-}
-
-@Composable
-private fun CenterWeatherIconWithTemperature(
-	modifier: Modifier = Modifier
-) {
-	Row(
-		modifier = modifier.fillMaxWidth(),
-		verticalAlignment = Alignment.CenterVertically,
-		horizontalArrangement = Arrangement.Center
-	) {
-		Column(
-			modifier = Modifier.wrapContentWidth(),
-			horizontalAlignment = Alignment.End
-		) {
-			Text(
-				text = "오전",
+				text = "강수",
 				style = WeskiTheme.typography.body3Regular,
 				color = WeskiColor.Gray60
 			)
-
 			Text(
-				text = "30%",
+				text = "50%",
 				style = WeskiTheme.typography.body2SemiBold,
 				color = WeskiColor.Gray70
 			)
 		}
 
-		Spacer(modifier = Modifier.width(11.dp))
+		Spacer(modifier = Modifier.width(21.dp))
 
-		Icon(
-			painter = painterResource(R.drawable.icn_snow),
-			contentDescription = "snow"
+		Text(
+			text = "3°",
+			style = WeskiTheme.typography.title2Regular,
+			color = WeskiColor.Gray70
 		)
 
-		Spacer(modifier = Modifier.width(17.dp))
+		Spacer(modifier = Modifier.width(5.dp))
 
-
-		Icon(
-			painter = painterResource(R.drawable.icn_snow),
-			contentDescription = "snow"
+		Text(
+			text = "/",
+			style = WeskiTheme.typography.title2Regular,
+			color = WeskiColor.Gray50
 		)
 
-		Spacer(modifier = Modifier.width(11.dp))
+		Spacer(modifier = Modifier.width(3.dp))
 
-		Column(
-			modifier = Modifier.wrapContentWidth(),
-			horizontalAlignment = Alignment.Start
-		) {
-			Text(
-				text = "오전",
-				style = WeskiTheme.typography.body3Regular,
-				color = WeskiColor.Gray60
-			)
-
-			Text(
-				text = "30%",
-				style = WeskiTheme.typography.body2SemiBold,
-				color = WeskiColor.Gray70
-			)
-		}
+		Text(
+			text = "-2°",
+			style = WeskiTheme.typography.title2SemiBold,
+			color = WeskiColor.Main01
+		)
 	}
 }
 
@@ -147,8 +97,5 @@ private fun CenterWeatherIconWithTemperature(
 @ThemePreviews
 @Composable
 private fun WeatherWeekPreview() {
-	Column {
-		CenterWeatherIconWithTemperature()
-		WeatherWeek()
-	}
+	WeatherWeek()
 }
