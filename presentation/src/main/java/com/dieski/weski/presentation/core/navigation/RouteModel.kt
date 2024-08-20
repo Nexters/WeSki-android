@@ -1,5 +1,6 @@
 package com.dieski.weski.presentation.core.navigation
 
+import com.dieski.weski.presentation.core.model.WeatherType
 import kotlinx.serialization.Serializable
 
 sealed interface Route {
@@ -9,7 +10,12 @@ sealed interface Route {
 
     @Serializable
     data class Detail(
-        val skiResortName: String
+        val resortId: Int,
+        val resortName: String,
+        val resortWebKey: String,
+        val temperature: Int,
+        val weatherType: String,
+        val weatherDescription: String
     ) :Route
 }
 

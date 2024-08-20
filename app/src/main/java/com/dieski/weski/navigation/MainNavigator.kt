@@ -7,6 +7,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.navigation.Route
 import com.dieski.weski.presentation.detail.navigation.navigateDetail
 
@@ -40,8 +41,15 @@ internal class MainNavigator(
         }
     }*/
 
-    fun navigateToDetail(skiResortName: String) {
-        navController.navigateDetail(skiResortName)
+    fun navigateToDetail(
+        resortId: Int,
+        resortName: String,
+        resortWebKey: String,
+        temperature: Int,
+        weatherType: String,
+        weatherDescription: String
+    ) {
+        navController.navigateDetail(resortId, resortName, resortWebKey, temperature, weatherType, weatherDescription)
     }
 
     private fun popBackStack() {

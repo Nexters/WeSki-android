@@ -1,9 +1,12 @@
 package com.dieski.weski.presentation.core.designsystem.weather
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -14,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
+import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -25,71 +29,92 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
  */
 @Composable
 fun WeatherWeek(
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	day: String,
+	date: String,
+	weatherType: WeatherType,
+	chanceOfRain: Int,
+	highestTemperature: Int,
+	lowestTemperature: Int
 ) {
 	Row(
 		modifier = modifier.fillMaxWidth(),
-		verticalAlignment = Alignment.CenterVertically
+		verticalAlignment = Alignment.CenterVertically,
+		horizontalArrangement = Arrangement.SpaceBetween
 	) {
-		Text(
-			text = "오늘",
-			style = WeskiTheme.typography.body1SemiBold,
-			color = WeskiColor.Gray80
-		)
-
-		Spacer(modifier = Modifier.width(5.dp))
-
-		Text(
-			text = "7.26",
-			style = WeskiTheme.typography.body3Regular,
-			color = WeskiColor.Gray50
-		)
-
-		Spacer(Modifier.weight(1f))
-
-		Icon(
-			painter = painterResource(id = R.drawable.icn_day_night),
-			contentDescription = "weather_icon"
-		)
-
-		Spacer(modifier = Modifier.width(12.dp))
-
-		Column {
+		Row(
+			verticalAlignment = Alignment.CenterVertically
+		) {
 			Text(
-				text = "강수",
-				style = WeskiTheme.typography.body3Regular,
-				color = WeskiColor.Gray60
+				text = day,
+				style = WeskiTheme.typography.body1SemiBold,
+				color = WeskiColor.Gray80
 			)
+
+			Spacer(modifier = Modifier.width(5.dp))
+
 			Text(
-				text = "50%",
-				style = WeskiTheme.typography.body2SemiBold,
-				color = WeskiColor.Gray70
+				text = date,
+				style = WeskiTheme.typography.body3Regular,
+				color = WeskiColor.Gray50
 			)
 		}
 
-		Spacer(modifier = Modifier.width(21.dp))
+		Row(
+			verticalAlignment = Alignment.CenterVertically
+		) {
+			Image(
+				modifier = Modifier.size(24.dp),
+				painter = painterResource(id = weatherType.getIcon()),
+				contentDescription = "weather image"
+			)
 
-		Text(
-			text = "3°",
-			style = WeskiTheme.typography.title2Regular,
-			color = WeskiColor.Gray70
-		)
+			Spacer(modifier = Modifier.width(12.dp))
 
-		Spacer(modifier = Modifier.width(5.dp))
+			Column(
+				modifier = Modifier.width(30.dp)
+			) {
+				Text(
+					text = "강수",
+					style = WeskiTheme.typography.body3Regular,
+					color = WeskiColor.Gray60
+				)
+				Text(
+					text = "${chanceOfRain}%",
+					style = WeskiTheme.typography.body2SemiBold,
+					color = WeskiColor.Gray70
+				)
+			}
 
-		Text(
-			text = "/",
-			style = WeskiTheme.typography.title2Regular,
-			color = WeskiColor.Gray50
-		)
+			Spacer(modifier = Modifier.width(21.dp))
 
-		Spacer(modifier = Modifier.width(3.dp))
+			Row(
+				modifier = Modifier.width(80.dp)
+			) {
+				Text(
+					text = "${highestTemperature}°",
+					style = WeskiTheme.typography.title2Regular,
+					color = WeskiColor.Gray70
+				)
 
-		Text(
-			text = "-2°",
-			style = WeskiTheme.typography.title2SemiBold,
-			color = WeskiColor.Main01
-		)
+				Spacer(modifier = Modifier.width(5.dp))
+
+				Text(
+					text = "/",
+					style = WeskiTheme.typography.title2Regular,
+					color = WeskiColor.Gray50
+				)
+
+				Spacer(modifier = Modifier.width(3.dp))
+
+				Text(
+					text = "${lowestTemperature}°",
+					style = WeskiTheme.typography.title2SemiBold,
+					color = WeskiColor.Main01
+				)
+			}
+
+		}
 	}
 }
 
@@ -97,5 +122,12 @@ fun WeatherWeek(
 @ThemePreviews
 @Composable
 private fun WeatherWeekPreview() {
-	WeatherWeek()
+	WeatherWeek(
+		day = "월요일",
+		date = "8.25",
+		weatherType = WeatherType.SNOW,
+		chanceOfRain = 0,
+		highestTemperature = 10,
+		lowestTemperature = -2
+	)
 }

@@ -38,6 +38,7 @@ class IntroActivity : ComponentActivity()  {
 				this.launch(Dispatchers.Main) {
 					startActivity(
 						Intent(context, MainActivity::class.java).apply {
+							addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 							finish()
 						}
 					)

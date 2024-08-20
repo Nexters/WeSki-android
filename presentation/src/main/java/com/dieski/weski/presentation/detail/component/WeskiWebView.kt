@@ -19,6 +19,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 @Composable
 fun WeskiWebView(
+    modifier: Modifier = Modifier,
     webViewUrl: String,
     startRenderingNow: Boolean = false
 ) {
@@ -38,9 +39,8 @@ fun WeskiWebView(
 
     // Adds view to Compose
     AndroidView(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(500.dp), // Occupy the max size in the Compose UI tree
+        modifier = modifier
+            .fillMaxWidth(), // Occupy the max size in the Compose UI tree
         factory = { context ->
             WebView(context).apply {
                 layoutParams = ViewGroup.LayoutParams(

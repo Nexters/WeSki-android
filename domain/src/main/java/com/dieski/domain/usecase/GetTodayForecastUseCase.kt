@@ -12,5 +12,5 @@ import javax.inject.Named
 class GetTodayForecastUseCase @Inject constructor(
 	@Named("fake") private val weSkiRepository: WeSkiRepository
 ) {
-	operator fun invoke() = weSkiRepository.fetchTodayForecast()
+	suspend operator fun invoke() = weSkiRepository.fetchTodayForecast()
 }

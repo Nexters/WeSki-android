@@ -11,13 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import com.dieski.domain.model.WebMobileData
 import com.dieski.weski.presentation.R
+import com.dieski.weski.presentation.detail.DetailContract
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
 import com.dieski.weski.presentation.detail.component.WeskiWebView
 
 @Composable
 internal fun WebcamScreen(
     modifier: Modifier = Modifier,
+    state: DetailContract.State = DetailContract.State(),
+    onAction: (DetailContract.Event) -> Unit = {},
     isCurrentPage: Boolean = false,
     isWebViewActive: Boolean = true,
     onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
@@ -26,7 +30,7 @@ internal fun WebcamScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Column(
-            modifier = modifier.verticalScroll(rememberScrollState())
+            modifier = modifier
         ) {
             if (!isWebViewActive) {
                 Image(
@@ -37,12 +41,17 @@ internal fun WebcamScreen(
                 )
             } else {
                 WeskiWebView(
-                    webViewUrl = "https://we-ski-web.vercel.app/mobile/webcam",
+                    webViewUrl = "${WebMobileData.WEB_MOBILE_URL}${WebMobileData.WEBCAM_PARAM}/${state.resortWebKey}",
                     startRenderingNow = isCurrentPage
                 )
             }
 
             DetailSnowQualitySurvey(
+                totalNum = state.snowMakingSurveyResult.totalNum,
+                likeNum = state.snowMakingSurveyResult.likeNum,
+                onSubmit = { isGood ->
+                    onAction(DetailContract.Event.SubmitSnowQualitySurvey(state.resortId, isGood))
+                },
                 onShowSnackBar = onShowSnackBar
             )
         }

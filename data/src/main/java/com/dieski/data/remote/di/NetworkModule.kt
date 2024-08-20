@@ -28,7 +28,7 @@ internal abstract class NetworkModule {
     abstract fun bindsNetworkConnectivityManager(networkMonitorImpl: NetworkMonitorImpl): NetworkMonitor
 
     companion object {
-        private const val BASE_URL: String = "test" //BuildConfig.BASE_URL
+        private const val BASE_URL: String = "http://223.130.155.248:8080"
         private const val TAG = "NETWORK_LOG"
 
         @Provides
@@ -63,20 +63,15 @@ internal abstract class NetworkModule {
 
         @Provides
         @Singleton
-        fun provideNetworkResultCallAdapter(): NetworkResultCallAdapterFactory = NetworkResultCallAdapterFactory()
-
-        @Provides
-        @Singleton
         @DefaultApi
         fun provideRetrofit(
             @DefaultClient okHttpClient: OkHttpClient,
-            networkResultCallAdapterFactory: NetworkResultCallAdapterFactory,
             json: Json
         ): Retrofit = Retrofit.Builder()
             .client(okHttpClient)
             .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .addCallAdapterFactory(networkResultCallAdapterFactory)
+            .addCallAdapterFactory(NetworkResultCallAdapterFactory.create())
             .build()
 
         @Provides

@@ -177,6 +177,8 @@ private fun HomeScreenPreview() {
 	val resortWeatherInfoList = listOf(
 		HomeResortWeatherInfo(
 			name = "용평스키장 모나",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.SNOW,
@@ -185,6 +187,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "휘닉스 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature =7,
 			weatherType = WeatherType.NORMAL,
@@ -193,6 +197,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "곤지암 리조트",
+			id = 0,
+			webKey = "",
 			 operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.CLOUDY,
@@ -201,6 +207,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "비발디 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.RAIN,
@@ -209,6 +217,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "용평스키장 모나",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.SNOW,
@@ -217,6 +227,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "휘닉스 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature =7,
 			weatherType = WeatherType.NORMAL,
@@ -225,6 +237,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "곤지암 리조트",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.CLOUDY,
@@ -233,6 +247,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "비발디 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.RAIN,

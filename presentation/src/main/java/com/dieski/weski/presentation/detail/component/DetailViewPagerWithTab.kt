@@ -3,6 +3,7 @@ package com.dieski.weski.presentation.detail.component
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
@@ -14,10 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
+import com.dieski.weski.presentation.detail.DetailContract
 import com.dieski.weski.presentation.detail.congestion.CongestionScreen
 import com.dieski.weski.presentation.detail.weather.WeatherScreen
 import com.dieski.weski.presentation.detail.webcam.WebcamScreen
@@ -29,7 +32,9 @@ data class TabItem(
 
 @Composable
 internal fun DetailViewPagerWithTab(
+    state: DetailContract.State,
     modifier: Modifier = Modifier,
+    onAction: (DetailContract.Event) -> Unit = {},
     onShowSnackBar: (message: String, code: String?) -> Unit = { _, _ ->}
 ) {
     val density = LocalDensity.current
@@ -77,17 +82,24 @@ internal fun DetailViewPagerWithTab(
         HorizontalPager(
             modifier = Modifier,
             state = pagerState,
-            beyondViewportPageCount = tabItemList.size
+//            beyondViewportPageCount = tabItemList.size,
+//            verticalAlignment = Alignment.Top
         ) { page ->
             when (page) {
                 0 -> WebcamScreen(
+                    state = state,
+                    onAction = onAction,
                     isCurrentPage = pagerState.currentPage == 0,
                     onShowSnackBar = onShowSnackBar
                 )
                 1 -> WeatherScreen(
+                    state = state,
+                    onAction = onAction,
                     onShowSnackBar = onShowSnackBar
                 )
                 2 -> CongestionScreen(
+                    state = state,
+                    onAction = onAction,
                     isCurrentPage = pagerState.currentPage == 2,
                     onShowSnackBar = onShowSnackBar
                 )
