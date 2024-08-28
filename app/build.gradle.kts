@@ -17,7 +17,8 @@ android {
 
 	defaultConfig {
 		applicationId = "com.dieski.weski"
-		versionName = "1.0"
+		versionName = "0.0.1"
+		versionCode = 2024_08_22_02
 	}
 
 	signingConfigs {
@@ -34,11 +35,20 @@ android {
 				"proguard-project.txt"
 			)
 		}
-		release {
-			isMinifyEnabled = false
+        create("benchmark") {
+            initWith(buildTypes.getByName("debug"))
+            matchingFallbacks += listOf("release")
+            isDebuggable = false
+        }
+        release {
+			isMinifyEnabled = true
 			signingConfig = signingConfigs.getByName("debug")
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 		}
+	}
+
+	buildFeatures {
+		buildConfig = true
 	}
 }
 

@@ -1,10 +1,21 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
 	id("weski.android.library")
 	id("weski.android.hilt")
 }
 
+val properties = Properties().apply {
+	load(FileInputStream(rootProject.file("local.properties")))
+}
+
 android {
 	namespace = "com.dieski.data"
+
+	defaultConfig {
+		 buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+	}
 }
 
 dependencies {
