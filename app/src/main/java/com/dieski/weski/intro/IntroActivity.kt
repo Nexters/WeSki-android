@@ -7,7 +7,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
-import com.dieski.weski.IntroScreen
 import com.dieski.weski.MainActivity
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +37,7 @@ class IntroActivity : ComponentActivity()  {
 				this.launch(Dispatchers.Main) {
 					startActivity(
 						Intent(context, MainActivity::class.java).apply {
+							addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
 							finish()
 						}
 					)
