@@ -3,6 +3,7 @@ package com.dieski.weski.presentation.core.designsystem.discover
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -51,7 +52,8 @@ fun DiscoverWeather(
 			.background(color = bgColor, shape = RoundedCornerShape(cornerDp))
 			.border(width = 1.dp, shape = RoundedCornerShape(cornerDp), color = borderColor)
 			.padding(vertical = 17.dp, horizontal = 16.dp),
-		horizontalAlignment = Alignment.CenterHorizontally
+		horizontalAlignment = Alignment.CenterHorizontally,
+		verticalArrangement = Arrangement.Center
 	) {
 		Text(
 			text = day,

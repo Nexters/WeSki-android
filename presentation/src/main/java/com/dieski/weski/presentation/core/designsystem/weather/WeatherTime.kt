@@ -11,8 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
+import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -23,15 +23,19 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
  * @created  2024/08/10
  */
 @Composable
-fun WeatherDay(
-	modifier: Modifier = Modifier
+fun WeatherTime(
+	modifier: Modifier = Modifier,
+	time: String,
+	weatherType: WeatherType,
+	temperature: Int,
+	chanceOfRain: Int
 ) {
 	Column(
 		modifier = modifier,
 		horizontalAlignment = Alignment.CenterHorizontally
 	) {
 		Text(
-			text = "오후 -시",
+			text = time,
 			style = WeskiTheme.typography.body3SemiBold,
 			color = WeskiColor.Gray50
 		)
@@ -40,19 +44,19 @@ fun WeatherDay(
 
 		Image(
 			modifier = Modifier.size(32.dp),
-			painter = painterResource(id = R.drawable.icn_day_noon),
+			painter = painterResource(id = weatherType.getIcon()),
 			contentDescription = "weather image"
 		)
 
 		Spacer(modifier = Modifier.height(13.dp))
 
 		Text(
-			text = "00°",
+			text = "${temperature}°",
 			style = WeskiTheme.typography.title3SemiBold,
 			color = WeskiColor.Gray90
 		)
 		Text(
-			text = "00%",
+			text = "${chanceOfRain}%",
 			style = WeskiTheme.typography.body3Regular,
 			color = WeskiColor.Gray60
 		)
@@ -63,5 +67,10 @@ fun WeatherDay(
 @ThemePreviews
 @Composable
 private fun WeatherDayPreview() {
-	WeatherDay()
+	WeatherTime(
+		time = "오전 6시",
+		weatherType = WeatherType.SNOW,
+		temperature = -2,
+		chanceOfRain = 0
+	)
 }

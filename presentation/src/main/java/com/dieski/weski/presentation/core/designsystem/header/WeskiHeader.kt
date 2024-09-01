@@ -28,6 +28,7 @@ fun WeskiHeader(
     showShareButton: Boolean,
     bgColor: Color = Color.Transparent,
     onClickBackButton: () -> Unit = {},
+    onShare: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -59,7 +60,8 @@ fun WeskiHeader(
             Icon(
                 modifier = Modifier
                     .size(26.dp)
-                    .align(Alignment.CenterEnd),
+                    .align(Alignment.CenterEnd)
+                    .noRippleClickable { onShare() },
                 painter = painterResource(id = R.drawable.icn_share),
                 tint = WeskiColor.Gray90,
                 contentDescription = "공유하기"

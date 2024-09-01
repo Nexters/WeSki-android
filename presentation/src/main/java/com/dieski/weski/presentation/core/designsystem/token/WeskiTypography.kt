@@ -66,6 +66,33 @@ data class WeskiTypography(
         letterSpacing = 0.02.em
     ),
 
+    val heading15Bold: TextStyle = TextStyle(
+        fontFamily = pretendardStyle,
+        fontWeight = FontWeight.Bold,
+        fontSize = 30.sp,
+        lineHeight = 1.6.em,
+        lineHeightStyle = setDefaultLineHeight(),
+        letterSpacing = 0.02.em
+    ),
+
+    val heading15SemiBold: TextStyle = TextStyle(
+        fontFamily = pretendardStyle,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 30.sp,
+        lineHeight = 1.6.em,
+        lineHeightStyle = setDefaultLineHeight(),
+        letterSpacing = 0.02.em
+    ),
+
+    val heading15Regular: TextStyle = TextStyle(
+        fontFamily = pretendardStyle,
+        fontWeight = FontWeight.Normal,
+        fontSize = 30.sp,
+        lineHeight = 1.6.em,
+        lineHeightStyle = setDefaultLineHeight(),
+        letterSpacing = 0.02.em
+    ),
+
     val heading2Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
