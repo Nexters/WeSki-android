@@ -1,15 +1,23 @@
 package com.dieski.data.repository
 
+import android.util.Log
 import com.dieski.data.dispatchers.Dispatcher
 import com.dieski.data.dispatchers.WeSkiDispatchers
 import com.dieski.data.remote.network.model.response.ResortWeatherInfoResponse
+import com.dieski.domain.model.BriefResortInfo
+import com.dieski.domain.model.NetworkResult
+import com.dieski.domain.model.ResortApiData
 import com.dieski.domain.model.ResortWeatherInfo
+import com.dieski.domain.model.SnowMakingSurveyResult
 import com.dieski.domain.model.TodayForecast
+import com.dieski.domain.model.WeekWeatherInfo
 import com.dieski.domain.repository.WeSkiRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
 
 /**
@@ -32,78 +40,25 @@ internal class FakeWeskiRepository  @Inject constructor(
 				ResortWeatherInfo.ResortDailyWeatherInfo(day = "일요일", weatherType = "normal", maxTemperature = 6, minTemperature = 3)
 			)
 
-			val resortWeatherInfoList = listOf(
+
+			val resortWeatherInfoList = ResortApiData.entries.map {
 				ResortWeatherInfo(
-					resortName = "용평스키장 모나",
+					resortId = it.key,
+					resortName = it.resortName,
+					resortWebKey = it.webKey,
 					operatingSlopeCount = 5,
-					currentTemperature = 7,
-					weatherType = "snow",
-					weatherDescription = "흐리고 눈",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList,
-				),
-				ResortWeatherInfo(
-					resortName = "휘닉스 파크",
-					operatingSlopeCount = 5,
-					currentTemperature = -12,
-					weatherType = "normal",
-					weatherDescription = "맑음",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList
-				),
-				ResortWeatherInfo(
-					resortName = "곤지암 리조트",
-					operatingSlopeCount = 5,
-					currentTemperature = 4,
-					weatherType = "cloudy",
-					weatherDescription = "흐림",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList
-				),
-				ResortWeatherInfo(
-					resortName = "비발디 파크",
-					operatingSlopeCount = 5,
-					currentTemperature = 1,
-					weatherType = "rain",
-					weatherDescription = "폭우",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList
-				),
-				ResortWeatherInfo(
-					resortName = "용평스키장 모나",
-					operatingSlopeCount = 5,
-					currentTemperature = -3,
-					weatherType = "snow",
-					weatherDescription = "흐리고 눈",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList,
-				),
-				ResortWeatherInfo(
-					resortName = "휘닉스 파크",
-					operatingSlopeCount = 5,
-					currentTemperature = 10,
-					weatherType = "normal",
-					weatherDescription = "맑음",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList
-				),
-				ResortWeatherInfo(
-					resortName = "곤지암 리조트",
-					operatingSlopeCount = 5,
-					currentTemperature = 3,
-					weatherType = "cloudy",
-					weatherDescription = "흐림",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList
-				),
-				ResortWeatherInfo(
-					resortName = "비발디 파크",
-					operatingSlopeCount = 5,
-					currentTemperature = 2,
-					weatherType = "rain",
-					weatherDescription = "폭우",
-					resortDailyWeatherInfoList = resortDailyWeatherInfoList
+					currentTemperature = it.temperature,
+					weatherType = it.weatherType,
+					weatherDescription = it.weatherDescription,
+					resortDailyWeatherInfoList = it.resortDailyWeatherInfo,
 				)
-			)
+			}
 
 			resortWeatherInfoList
 		}
 	}
 
-	override suspend fun fetchTodayForecast() = flow {
+	override suspend fun fetchTodayForecast(): TodayForecast {
 		val todayForecast = TodayForecast(
 			currentTemperature = 7,
 			perceivedTemperature = 5,
@@ -162,6 +117,79 @@ internal class FakeWeskiRepository  @Inject constructor(
 			)
 		)
 
-		emit(todayForecast)
-	}.flowOn(ioDispatcher)
+		return todayForecast
+	}
+
+	override suspend fun fetchWeekForecast(): List<WeekWeatherInfo> {
+		return listOf(
+			WeekWeatherInfo(
+				day = "토요일",
+				date = "8.24",
+				weatherType = "snow",
+				chanceOfRain = 50,
+				highestTemperature = 10,
+				lowestTemperature = 3
+			),
+			WeekWeatherInfo(
+				day = "화요일",
+				date = "8.25",
+				chanceOfRain = 30,
+				weatherType = "snow",
+				highestTemperature = -10,
+				lowestTemperature = 3
+			),
+			WeekWeatherInfo(
+				day = "수요일",
+				date = "8.26",
+				chanceOfRain = 10,
+				weatherType = "snow",
+				highestTemperature = 10,
+				lowestTemperature = 3
+			),
+			WeekWeatherInfo(
+				day = "목요일",
+				date = "8.27",
+				chanceOfRain = 5,
+				weatherType = "snow",
+				highestTemperature = 10,
+				lowestTemperature = 3
+			),
+			WeekWeatherInfo(
+				day = "금요일",
+				date = "8.28",
+				chanceOfRain = 33,
+				weatherType = "snow",
+				highestTemperature = 10,
+				lowestTemperature = 3
+			),
+			WeekWeatherInfo(
+				day = "토요일",
+				date = "8.29",
+				chanceOfRain = 17,
+				weatherType = "snow",
+				highestTemperature = 10,
+				lowestTemperature = 3
+			),
+			WeekWeatherInfo(
+				day = "일요일",
+				date = "2024-08-18",
+				chanceOfRain = 80,
+				weatherType = "snow",
+				highestTemperature = 10,
+				lowestTemperature = 3
+			)
+		)
+	}
+
+	override suspend fun fetchBriefResortInfo(resortId: Int): BriefResortInfo {
+		TODO("Not yet implemented")
+	}
+
+	override suspend fun submitSnowQualitySurvey(resortId: Int, isLike: Boolean) {
+		TODO("Not yet implemented")
+	}
+
+	override suspend fun fetchingSnowQualitySurveyResult(resortId: Int): SnowMakingSurveyResult? {
+		TODO("Not yet implemented")
+	}
 }

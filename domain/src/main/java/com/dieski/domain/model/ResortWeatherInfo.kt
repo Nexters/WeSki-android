@@ -6,7 +6,9 @@ package com.dieski.domain.model
  * @created  2024/08/13
  */
 data class ResortWeatherInfo(
+	val resortId: Int,
 	val resortName: String,
+	val resortWebKey: String,
 	val operatingSlopeCount: Int,
 	val currentTemperature: Int,
 	val weatherDescription: String,

@@ -9,7 +9,9 @@ import com.dieski.domain.model.ResortWeatherInfo
  * @created  2024/08/18
  */
 fun ResortWeatherInfoResponse.toDomain() = ResortWeatherInfo(
+	resortId = -1,
 	resortName = this.resortName,
+	resortWebKey = "",
 	operatingSlopeCount = this.slopeNum,
 	currentTemperature = 0,
 	weatherDescription = "",

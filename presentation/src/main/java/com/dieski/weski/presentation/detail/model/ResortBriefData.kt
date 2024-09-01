@@ -19,7 +19,7 @@ data class ResortBriefData(
 )
 
 fun ResortWeatherInfo.toUiModel() = ResortBriefData(
-	resortName = name,
+	resortName = resortName,
 	operatingSlopeCount = operatingSlopeCount,
 	temperature = currentTemperature,
 	weatherType = WeatherType.valueOf(weatherType),
