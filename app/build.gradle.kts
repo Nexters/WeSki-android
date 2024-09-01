@@ -17,8 +17,8 @@ android {
 
 	defaultConfig {
 		applicationId = "com.dieski.weski"
-		versionName = "0.0.1"
-		versionCode = 2024_08_22_02
+		versionName = "0.0.2"
+		versionCode = 2024_09_01_01
 	}
 
 	signingConfigs {
