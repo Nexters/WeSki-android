@@ -1,10 +1,9 @@
 package com.dieski.weski.presentation.detail.component
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -27,6 +25,9 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 @Composable
 internal fun DetailSnowQualitySurvey(
     modifier: Modifier = Modifier,
+    totalNum: Int = 0,
+    likeNum: Int = 0,
+    onSubmit: (Boolean) -> Unit = {},
     onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
 ) {
     var selectedVoteBtnIndex by remember { mutableIntStateOf(0) }
@@ -53,11 +54,23 @@ internal fun DetailSnowQualitySurvey(
 
        Spacer(modifier = Modifier.height(4.dp))
 
-       Text(
-           text =  "34명 중 12명이 투표 했어요",
-           style = WeskiTheme.typography.body2SemiBold,
-           color = WeskiColor.Gray60
-       )
+       Row {
+           Text(
+               text =  "${totalNum}명 중 ",
+               style = WeskiTheme.typography.body1Bold,
+               color = WeskiColor.Gray60
+           )
+           Text(
+               text =  "${likeNum}",
+               style = WeskiTheme.typography.body1Bold,
+               color = WeskiColor.Main01
+           )
+           Text(
+               text =  "명이 투표 했어요",
+               style = WeskiTheme.typography.body1Bold,
+               color = WeskiColor.Gray60
+           )
+       }
 
        Spacer(modifier = Modifier.height(24.dp))
 
@@ -92,6 +105,7 @@ internal fun DetailSnowQualitySurvey(
        CtaButton(
             text = "투표하기",
             onClick = {
+                onSubmit(selectedVoteBtnIndex == 0)
                 onShowSnackBar("투표가 완료되었어요", null)
             }
         )   

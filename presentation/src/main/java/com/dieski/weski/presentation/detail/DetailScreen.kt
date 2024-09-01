@@ -1,39 +1,36 @@
 package com.dieski.weski.presentation.detail
 
-import android.util.Log
-import androidx.compose.foundation.ScrollState
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
+import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.model.WebMobileData
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
-import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
+import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.detail.component.DetailViewPagerWithTab
 
 /**
@@ -43,23 +40,52 @@ import com.dieski.weski.presentation.detail.component.DetailViewPagerWithTab
  */
 @Composable
 internal fun DetailRouter(
-	skiResortName: String,
+	resortId: Int,
+	resortName: String,
+	resortWebKey: String,
+	temperature: Int,
+	weatherType: WeatherType,
+	weatherDescription: String,
 	padding: PaddingValues,
 	onNavigateUp: () -> Unit,
 	onShowSnackBar: (message: String, action: String?) -> Unit,
 	viewModel: DetailViewModel = hiltViewModel()
 ) {
-
 	val state by viewModel.uiState.collectAsStateWithLifecycle()
+	val context = LocalContext.current
+
+	viewModel.effects.collectWithLifecycle {
+		when (it) {
+			is DetailEffect.GoToBackScreen -> onNavigateUp()
+			is DetailEffect.ShowSnackBar -> onShowSnackBar(it.message, it.action)
+			is DetailEffect.ShareResortWebUrl -> {
+				val intent = Intent(Intent.ACTION_SEND).apply {
+					type = "text/plain"
+					putExtra(Intent.EXTRA_TEXT, "${WebMobileData.WEB_MOBILE_URL}${WebMobileData.WEBCAM_PARAM}/${state.resortWebKey}")
+				}
+				context.startActivity(Intent.createChooser(intent, "${state.resortName}을 공유해보세요!"))
+
+			}
+		}
+
+	}
 
 	LaunchedEffect(Unit) {
-		viewModel.handleEvent(DetailContract.Event.FetchingSkiResortData(skiResortName))
+		viewModel.handleEvent(
+			DetailEvent.Init(
+				resortId = resortId,
+				resortName = resortName,
+				resortWebKey = resortWebKey,
+				temperature = temperature,
+				weatherType = weatherType,
+				weatherDescription = weatherDescription,
+			)
+		)
 	}
 
 	DetailScreen(
 		state = state,
-		onNavigateUp = onNavigateUp ,
-		onShowSnackBar = onShowSnackBar,
+		onAction = viewModel::handleEvent,
 		modifier = Modifier
 			.fillMaxSize()
 			.padding(padding)
@@ -68,38 +94,41 @@ internal fun DetailRouter(
 
 @Composable
 internal fun DetailScreen(
+	state: DetailState,
 	modifier: Modifier = Modifier,
-	state: DetailContract.State = DetailContract.State.Loading,
-	onNavigateUp: () ->Unit = {},
-	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
+	onAction: (DetailEvent) -> Unit = {},
 ) {
-	val scrollState = rememberScrollState()
+	val lazyListState = rememberLazyListState()
 	var cardOffset by remember { mutableStateOf(0f) }
-	val changeHeader by remember { derivedStateOf { scrollState.value > cardOffset }}
 
-	Column(
+	LazyColumn(
 		modifier = modifier
-			.background(WeskiColor.Main05)
+			.background(WeskiColor.Main05),
+		state = lazyListState
 	) {
-		WeskiHeader(
-			bgColor = if (changeHeader) WeskiColor.White else Color.Transparent,
-			showBackButton = true,
-			showShareButton = true,
-			onClickBackButton = { onNavigateUp() }
-		)
+		item {
+			WeskiHeader(
+				bgColor = WeskiColor.White,
+				showBackButton = true,
+				showShareButton = true,
+				onClickBackButton = { onAction(DetailEvent.ClickBackButton) },
+				onShare = {
+					onAction(DetailEvent.ClickShareButton)
+				}
+			)
+		}
 
-		Box(
-			modifier = Modifier.fillMaxSize()
-		) {
-			if (state is DetailContract.State.Success) {
+		item {
+			Box(
+				modifier = Modifier.fillMaxSize()
+			) {
 				DetailContent(
+					state = state,
+					onAction = onAction,
 					measureWeatherCardPosition = {
 						cardOffset = it
-					},
-					onShowSnackBar = onShowSnackBar
+					}
 				)
-			} else {
-				LoadingIndicator()
 			}
 		}
 	}
@@ -107,11 +136,11 @@ internal fun DetailScreen(
 
 @Composable
 internal fun DetailContent(
-	measureWeatherCardPosition: (Float) -> Unit,
+	state: DetailState,
 	modifier: Modifier = Modifier,
-	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
+	onAction: (DetailEvent) -> Unit = {},
+	measureWeatherCardPosition: (Float) -> Unit,
 ) {
-	val density = LocalDensity.current
 	Column(
 		modifier = modifier
 			.fillMaxSize()
@@ -121,18 +150,24 @@ internal fun DetailContent(
 		) {
 			DiscoverCard(
 				modifier = Modifier.onGloballyPositioned {
-					measureWeatherCardPosition(  it.positionInRoot().y )
+					measureWeatherCardPosition(it.positionInRoot().y)
 				},
-				resortName = "용평스키장 모나",
+				resortName = state.resortName,
 				operatingSlopeCount = 5,
-				currentTemperature = 7,
-				weatherType = WeatherType.SNOW,
-				weatherDescription = "흐리고 눈"
+				currentTemperature = state.temperature,
+				weatherType = state.weatherType,
+				weatherDescription = state.weatherDescription
 			)
 		}
-		
+
 		DetailViewPagerWithTab(
-			onShowSnackBar = onShowSnackBar
+			state = state,
+			submitSnowQualitySurvey = {
+				onAction(DetailEvent.SubmitSnowQualitySurvey(it))
+			},
+			onShowSnackBar = { message, action ->
+				onAction(DetailEvent.ShowSnackBar(message, action))
+			}
 		)
 	}
 }
@@ -141,5 +176,15 @@ internal fun DetailContent(
 @ThemePreviews
 @Composable
 private fun DetailScreenPreview() {
-	DetailScreen()
+	DetailScreen(
+		state = DetailState(
+			resortId = 0,
+			resortName = "용평스키장 모나",
+			resortWebKey = "",
+			temperature = 7,
+			weatherType = WeatherType.SNOW,
+			weatherDescription = "눈이 내립니다.",
+			snowMakingSurveyResult = SnowMakingSurveyResult(10, 5)
+		)
+	)
 }

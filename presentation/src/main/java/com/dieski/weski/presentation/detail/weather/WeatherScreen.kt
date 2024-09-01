@@ -1,39 +1,43 @@
 package com.dieski.weski.presentation.detail.weather
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
-import com.dieski.weski.presentation.core.designsystem.weather.WeatherDay
+import com.dieski.weski.presentation.core.designsystem.weather.WeatherTime
 import com.dieski.weski.presentation.core.designsystem.weather.WeatherWeek
+import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
+import com.dieski.weski.presentation.detail.DetailState
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 @Composable
 internal fun WeatherScreen(
 	modifier: Modifier = Modifier,
+	state: DetailState = DetailState(),
+	submitSnowQualitySurvey: (isLike: Boolean) -> Unit = {},
 	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
 ) {
 	Column(
 		modifier = modifier
 			.fillMaxSize()
 			.background(WeskiColor.White)
-			.verticalScroll(rememberScrollState())
 	) {
 		WeatherScreenWeatherInfoTextBox()
 
@@ -41,58 +45,143 @@ internal fun WeatherScreen(
 
 		Spacer(
 			modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .padding(horizontal = 24.dp)
-                .background(WeskiColor.Gray30)
+				.fillMaxWidth()
+				.height(1.dp)
+				.padding(horizontal = 24.dp)
+				.background(WeskiColor.Gray30)
 		)
 
 		Spacer(modifier = Modifier.height(26.dp))
 
-		WeatherDay()
+
+		LazyRow(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(start = 24.dp)
+		) {
+			itemsIndexed(
+				state.todayForecast.hourlyForecastWeatherInfoList
+			) { index, info ->
+				WeatherTime(
+					time = getTime(index),
+					weatherType = WeatherType.findByName(info.weatherType),
+					temperature = info.temperature,
+					chanceOfRain = info.chanceOfRain
+				)
+				
+				if (index != state.todayForecast.hourlyForecastWeatherInfoList.lastIndex) {
+					Spacer(modifier = Modifier.width(24.dp))
+				}
+			}
+		}
 
 		Spacer(modifier = Modifier.height(40.dp))
 
-        WeatherDividerLine()
+		WeatherDividerLine()
 
-        Column(
-            modifier = Modifier.fillMaxWidth()
-				.padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 40.dp),
-			verticalArrangement = Arrangement.spacedBy(24.dp)
-        ) {
+		Column(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(top = 32.dp, start = 24.dp, end = 24.dp, bottom = 40.dp)
+		) {
 			Text(
 				text = "주간 예보",
 				style = WeskiTheme.typography.title3SemiBold,
 				color = WeskiColor.Gray90
 			)
+			
+			Spacer(modifier = Modifier.height(24.dp))
 
-            WeatherWeek()
-        }
+			state.weekForecast.forEachIndexed { index, info ->
+				WeatherWeek(
+					day = if(index == 0) "오늘" else doDayOfWeek(index)+"요일",
+					date = getWeek(index),
+					weatherType = WeatherType.findByName(info.weatherType),
+					chanceOfRain = info.chanceOfRain,
+					highestTemperature = info.highestTemperature,
+					lowestTemperature = info.lowestTemperature
+				)
 
-        WeatherDividerLine()
+				if (index != state.weekForecast.lastIndex) {
+					Spacer(modifier = Modifier.height(2.dp))
+					Spacer(
+						modifier = Modifier
+							.fillMaxWidth()
+							.height(1.dp)
+							.background(
+								WeskiColor.Gray30.copy(
+									alpha = 0.8f
+								)
+							)
+					)
+					Spacer(modifier = Modifier.height(2.dp))
+				}
+			}
+		}
 
-        DetailSnowQualitySurvey(
+		WeatherDividerLine()
+
+		DetailSnowQualitySurvey(
+			totalNum = state.snowMakingSurveyResult.totalNum,
+			likeNum = state.snowMakingSurveyResult.likeNum,
+			onSubmit = { submitSnowQualitySurvey(it) },
 			onShowSnackBar = onShowSnackBar
 		)
 	}
 }
 
+private fun getTime(index: Int): String {
+	val current = LocalDateTime.now().plusHours(index * 2L)
+	val formatter = DateTimeFormatter.ofPattern("HH")
+	return current.format(formatter)
+}
+
+private fun getWeek(index: Int): String {
+	val current = LocalDateTime.now().plusDays(index.toLong())
+	val formatter = DateTimeFormatter.ofPattern("MM.dd")
+	return current.format(formatter)
+}
+
+private fun doDayOfWeek(index: Int): String? {
+	val cal: Calendar = Calendar.getInstance()
+	var strWeek: String? = null
+	var nWeek: Int = ((cal.get(Calendar.DAY_OF_WEEK) + index) % 8)
+	if (nWeek == 0) nWeek += 1
+
+	if (nWeek == 1) {
+		strWeek = "일"
+	} else if (nWeek == 2) {
+		strWeek = "월"
+	} else if (nWeek == 3) {
+		strWeek = "화"
+	} else if (nWeek == 4) {
+		strWeek = "수"
+	} else if (nWeek == 5) {
+		strWeek = "목"
+	} else if (nWeek == 6) {
+		strWeek = "금"
+	} else if (nWeek == 7) {
+		strWeek = "토"
+	}
+	return strWeek
+}
+
 @Composable
 private fun WeatherDividerLine() {
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(6.dp)
-            .background(WeskiColor.Gray20)
-    )
+	Spacer(
+		modifier = Modifier
+			.fillMaxWidth()
+			.height(6.dp)
+			.background(WeskiColor.Gray20)
+	)
 }
 
 @Composable
 private fun WeatherScreenWeatherInfoTextBox() {
 	Column(
 		modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 32.dp, horizontal = 23.dp)
+			.fillMaxWidth()
+			.padding(vertical = 32.dp, horizontal = 23.dp)
 	) {
 		Text(
 			modifier = Modifier.fillMaxWidth(),

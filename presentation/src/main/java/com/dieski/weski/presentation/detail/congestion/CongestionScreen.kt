@@ -11,170 +11,108 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.dieski.weski.presentation.R
+import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
+import com.dieski.weski.presentation.core.util.noRippleClickable
+import com.dieski.weski.presentation.detail.DetailEvent
+import com.dieski.weski.presentation.detail.DetailState
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
 import com.dieski.weski.presentation.detail.component.WeskiWebView
+import com.dieski.weski.presentation.detail.congestion.component.CongestionGraph
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 
 @Composable
 internal fun CongestionScreen(
-    modifier: Modifier = Modifier,
-    isCurrentPage: Boolean = false,
-    isWebViewActive: Boolean = true,
-    onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
+	modifier: Modifier = Modifier,
+	state: DetailState = DetailState(),
+	isCurrentPage: Boolean = false,
+	isWebViewActive: Boolean = true,
+	submitSnowQualitySurvey: (isLike: Boolean) -> Unit = {},
+	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
 ) {
+	var isWebViewFinished by remember { mutableStateOf(false) }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(WeskiColor.White)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 32.dp, horizontal = 20.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "인기 시간대",
-                            style = WeskiTheme.typography.title3SemiBold,
-                            color = WeskiColor.Gray90
-                        )
+	Box(
+		modifier = modifier
+			.fillMaxSize()
+			.background(WeskiColor.White)
+	) {
+		Column(
+			modifier = Modifier
+				.fillMaxSize()
+				.background(WeskiColor.White)
+		) {
+			CongestionGraph()
 
-                        Icon(
-                            painter = painterResource(id = R.drawable.icn_information_circle),
-                            contentDescription = "정보",
-                            tint = WeskiColor.Gray40
-                        )
-                    }
+			Spacer(
+				modifier = Modifier
+					.fillMaxWidth()
+					.height(6.dp)
+					.background(WeskiColor.Gray20)
+			)
 
-                    Text(
-                        text = "TMAP · 08월 14일 업데이트 ",
-                        style = WeskiTheme.typography.body1Medium,
-                        color = WeskiColor.Gray50
-                    )
-                }
+			if (!isWebViewFinished) {
+				Spacer(
+					modifier = Modifier
+						.fillMaxSize()
+						.height(300.dp)
+						.background(WeskiColor.White)
+				)
+			}
 
-                Spacer(modifier = Modifier.height(26.dp))
+			WeskiWebView(
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(vertical = 32.dp, horizontal = 5.dp),
+				webViewUrl = state.slopeWebUrl,
+				startRenderingNow = isCurrentPage,
+				onPageFinished = {
+					isWebViewFinished = true
+				}
+			)
 
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Image(
-                        modifier = Modifier.fillMaxWidth(),
-                        painter = painterResource(id = R.drawable.img_temp_congestion),
-                        contentDescription = "혼잡도 임시 이미지",
-                        contentScale = ContentScale.FillWidth
-                    )
+			if (isWebViewFinished)  {
+				Spacer(
+					modifier = Modifier
+						.fillMaxWidth()
+						.height(6.dp)
+						.background(WeskiColor.Gray20)
+				)
 
-                    Text(
-                        modifier = Modifier.align(Alignment.Center),
-                        text = "인기 시간대는 개장일 이후부터 확인할 수 있어요",
-                        style = WeskiTheme.typography.title3SemiBold,
-                        color = WeskiColor.Main01
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(6.dp)
-                .background(WeskiColor.Gray20)
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 32.dp, horizontal = 20.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "슬로프 운행 현황",
-                            style = WeskiTheme.typography.title3SemiBold,
-                            color = WeskiColor.Gray90
-                        )
-
-                        Icon(
-                            painter = painterResource(id = R.drawable.icn_information_circle),
-                            contentDescription = "정보",
-                            tint = WeskiColor.Gray40
-                        )
-                    }
-
-                    Text(
-                        text = "08월 14일 23:00 업데이트",
-                        style = WeskiTheme.typography.body1Medium,
-                        color = WeskiColor.Gray50
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(26.dp))
-
-                if (!isWebViewActive) {
-                    Image(
-                        modifier = Modifier.fillMaxWidth(),
-                        painter = painterResource(id = R.drawable.img_temp_slope),
-                        contentDescription = "슬로프 임시 이미지",
-                        contentScale = ContentScale.FillWidth
-                    )
-                } else {
-                    WeskiWebView(
-                        webViewUrl = "https://we-ski-web.vercel.app/mobile/slop-status",
-                        startRenderingNow = isCurrentPage
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(6.dp)
-                .background(WeskiColor.Gray20)
-            )
-
-            DetailSnowQualitySurvey(
-                onShowSnackBar = onShowSnackBar
-            )
-        }
-    }
+				DetailSnowQualitySurvey(
+					totalNum = state.snowMakingSurveyResult.totalNum,
+					likeNum = state.snowMakingSurveyResult.likeNum,
+					onSubmit = { isGood ->
+						submitSnowQualitySurvey(isGood)
+					},
+					onShowSnackBar = onShowSnackBar
+				)
+			}
+		}
+	}
 }
 
 @DevicePreviews
 @ThemePreviews
 @Composable
 private fun CongestionScreenPreview() {
-    WeskiTheme {
-        CongestionScreen(isCurrentPage = true)
-    }
+	WeskiTheme {
+		CongestionScreen(isCurrentPage = true)
+	}
 }
