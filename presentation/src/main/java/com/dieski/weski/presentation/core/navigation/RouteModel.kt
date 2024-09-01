@@ -9,7 +9,12 @@ sealed interface Route {
 
     @Serializable
     data class Detail(
-        val skiResortName: String
+        val resortId: Int,
+        val resortName: String,
+        val resortWebKey: String,
+        val temperature: Int,
+        val weatherType: String,
+        val weatherDescription: String
     ) :Route
 }
 

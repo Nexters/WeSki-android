@@ -5,21 +5,29 @@ import com.dieski.weski.presentation.core.base.UiEvent
 import com.dieski.weski.presentation.core.base.UiState
 import com.dieski.weski.presentation.home.model.HomeResortWeatherInfo
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.persistentListOf
 
-class HomeContract {
+sealed interface HomeEvent : UiEvent {
+	data object FetchingHomeData : HomeEvent
 
-    sealed interface Event : UiEvent {
-        data object FetchingHomeData : Event
-    }
+	data class ClickCard(
+		val resortWeatherInfo: HomeResortWeatherInfo
+	) : HomeEvent
 
-    sealed interface State : UiState {
+	data object ClickScrollFloatButton : HomeEvent
+}
 
-        data object Loading : State
+data class HomeState(
+	val isLoading: Boolean = false,
+	val resortWeatherInfoList: PersistentList<HomeResortWeatherInfo> = persistentListOf()
+) : UiState
 
-        data class Success(val resortWeatherInfoList: PersistentList<HomeResortWeatherInfo>) : State
-    }
+sealed interface HomeEffect : UiEffect {
+	data class NavigateToDetail(
+		val resortWeatherInfo: HomeResortWeatherInfo
+	) : HomeEffect
 
-    sealed interface Effect : UiEffect {
-        data class ShowSnackBar(val message: String) : Effect
-    }
+	data object ScrollToTop : HomeEffect
+
+	data class ShowSnackBar(val message: String, val action: String) : HomeEffect
 }

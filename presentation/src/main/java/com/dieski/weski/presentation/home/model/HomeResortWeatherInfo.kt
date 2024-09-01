@@ -14,7 +14,9 @@ import javax.annotation.concurrent.Immutable
  */
 @Immutable
 data class HomeResortWeatherInfo(
+	val id: Int,
 	val name: String,
+	val webKey: String,
 	val operatingSlopeCount: Int,
 	val currentTemperature: Int,
 	val weatherDescription: String,
@@ -23,7 +25,9 @@ data class HomeResortWeatherInfo(
 )
 
 fun ResortWeatherInfo.toUiModel() = HomeResortWeatherInfo(
+	id = this.resortId,
 	name = this.resortName,
+	webKey = this.resortWebKey,
 	operatingSlopeCount = this.operatingSlopeCount,
 	currentTemperature = this.currentTemperature,
 	weatherDescription = this.weatherDescription,

@@ -1,6 +1,6 @@
 package com.dieski.weski.presentation.home
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +40,7 @@ import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCardWith
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.home.model.HomeResortWeatherInfo
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -51,16 +53,30 @@ internal fun HomeRouter(
 	onShowSnackBar: (message: String, action: String?) -> Unit,
 	viewModel: HomeViewModel = hiltViewModel()
 ) {
-	val state: HomeContract.State by viewModel.uiState.collectAsStateWithLifecycle()
+	val state by viewModel.uiState.collectAsStateWithLifecycle()
+	val coroutineScope = rememberCoroutineScope()
+	val lazyListState = rememberLazyListState()
+
+	viewModel.effects.collectWithLifecycle {
+		when (it) {
+			is HomeEffect.NavigateToDetail -> navigateToDetail(it.resortWeatherInfo)
+			is HomeEffect.ShowSnackBar -> onShowSnackBar(it.message, it.action)
+			is HomeEffect.ScrollToTop -> {
+				coroutineScope.launch {
+					lazyListState.animateScrollToItem(0)
+				}
+			}
+		}
+	}
 
 	LaunchedEffect(Unit) {
-		viewModel.handleEvent(HomeContract.Event.FetchingHomeData)
+		viewModel.handleEvent(HomeEvent.FetchingHomeData)
 	}
 
 	HomeScreen(
-		onShowSnackBar = onShowSnackBar,
 		state = state,
-		navigateToDetail = navigateToDetail,
+		onAction = viewModel::handleEvent,
+		lazyListState = lazyListState,
 		modifier = Modifier
 			.fillMaxSize()
 			.padding(padding),
@@ -69,61 +85,67 @@ internal fun HomeRouter(
 
 @Composable
 private fun HomeScreen(
-	state: HomeContract.State,
+	state: HomeState,
+	onAction: (HomeEvent) -> Unit,
 	modifier: Modifier = Modifier,
-	navigateToDetail: (HomeResortWeatherInfo) -> Unit = {},
-	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> },
+	lazyListState: LazyListState = rememberLazyListState(),
 ) {
-	val lazyListState = rememberLazyListState()
-	val coroutineScope = rememberCoroutineScope()
 	val isTop by remember { derivedStateOf {  lazyListState.canScrollBackward }}
 
-	Column(
-		modifier = modifier
-			.fillMaxSize()
-			.background(WeskiColor.Main05)
+	Box(
+		modifier = modifier.fillMaxSize()
 	) {
-		WeskiHeader(
-			showBackButton = false,
-			showShareButton = false
+		Image(
+			modifier = Modifier.fillMaxSize(),
+			painter = painterResource(id = R.drawable.img_background),
+			contentDescription = "",
+			contentScale = ContentScale.FillBounds
 		)
 
-		Spacer(modifier = Modifier.height(19.dp))
-
-		Box(
-			modifier = Modifier.fillMaxSize()
+		Column(
+			modifier = Modifier
+				.fillMaxSize()
 		) {
-			if (state is HomeContract.State.Success) {
-				HomeContent(
-					resortWeatherInfoList = state.resortWeatherInfoList,
-					onCardClick = navigateToDetail,
-					modifier = Modifier.fillMaxSize(),
-					lazyListState = lazyListState
-				)
-			} else {
-				LoadingIndicator()
-			}
+			WeskiHeader(
+				showBackButton = false,
+				showShareButton = false
+			)
 
-			if (isTop) {
-				ScrollFloatButton(
-					modifier = Modifier
-						.zIndex(1f)
-						.align(Alignment.BottomEnd)
-						.offset(x = (-20).dp, y = (-20).dp),
-					onClick = {
-						coroutineScope.launch {
-							lazyListState.animateScrollToItem(0)
-						}
-					}
-				) {
-					Icon(
-						modifier = Modifier
-							.padding(12.dp)
-							.size(18.dp),
-						painter = painterResource(id = R.drawable.ic_arrow_up),
-						contentDescription = "위로 가기",
-						tint = WeskiColor.Gray60
+			Spacer(modifier = Modifier.height(19.dp))
+
+			Box(
+				modifier = Modifier.fillMaxSize()
+			) {
+				if (!state.isLoading) {
+					HomeContent(
+						resortWeatherInfoList = state.resortWeatherInfoList,
+						onCardClick = { onAction(HomeEvent.ClickCard(it)) },
+						modifier = Modifier.fillMaxSize(),
+						lazyListState = lazyListState
 					)
+				} else {
+					LoadingIndicator()
+				}
+
+				if (isTop) {
+					ScrollFloatButton(
+						modifier = Modifier
+							.zIndex(1f)
+							.align(Alignment.BottomEnd)
+							.offset(x = (-20).dp, y = (-20).dp),
+						onClick = {
+							onAction(HomeEvent.ClickScrollFloatButton)
+						}
+					) {
+						Icon(
+							modifier = Modifier
+								.padding(12.dp)
+								.size(18.dp),
+							painter = painterResource(id = R.drawable.ic_arrow_up),
+							contentDescription = "위로 가기",
+							tint = WeskiColor.Gray60
+						)
+					}
 				}
 			}
 		}
@@ -177,6 +199,8 @@ private fun HomeScreenPreview() {
 	val resortWeatherInfoList = listOf(
 		HomeResortWeatherInfo(
 			name = "용평스키장 모나",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.SNOW,
@@ -185,6 +209,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "휘닉스 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature =7,
 			weatherType = WeatherType.NORMAL,
@@ -193,6 +219,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "곤지암 리조트",
+			id = 0,
+			webKey = "",
 			 operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.CLOUDY,
@@ -201,6 +229,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "비발디 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.RAIN,
@@ -209,6 +239,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "용평스키장 모나",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.SNOW,
@@ -217,6 +249,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "휘닉스 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature =7,
 			weatherType = WeatherType.NORMAL,
@@ -225,6 +259,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "곤지암 리조트",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.CLOUDY,
@@ -233,6 +269,8 @@ private fun HomeScreenPreview() {
 		),
 		HomeResortWeatherInfo(
 			name = "비발디 파크",
+			id = 0,
+			webKey = "",
 			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.RAIN,
@@ -242,6 +280,7 @@ private fun HomeScreenPreview() {
 	)
 
 	HomeScreen(
-        state = HomeContract.State.Success(resortWeatherInfoList.toPersistentList())
+        state = HomeState(resortWeatherInfoList = resortWeatherInfoList.toPersistentList()),
+		onAction = {}
     )
 }
