@@ -43,27 +43,27 @@ data class WeskiTypography(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 32.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading1SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 32.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading1Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 32.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading15Bold: TextStyle = TextStyle(
@@ -72,7 +72,7 @@ data class WeskiTypography(
         fontSize = 30.sp,
         lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading15SemiBold: TextStyle = TextStyle(
@@ -81,7 +81,7 @@ data class WeskiTypography(
         fontSize = 30.sp,
         lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading15Regular: TextStyle = TextStyle(
@@ -90,250 +90,250 @@ data class WeskiTypography(
         fontSize = 30.sp,
         lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading2Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading2SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 24.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading2Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 24.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading3Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 22.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading3SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 22.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val heading3Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title1Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title1SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 20.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title1Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 20.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title2Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title2SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title2Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title3Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title3SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val title3Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body1Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body1SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 14.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body1Medium: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body1Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body2Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 13.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body2SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 13.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body2Medium: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Medium,
         fontSize = 13.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body2Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 13.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body3Bold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body3SemiBold: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 12.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body3Medium: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Medium,
         fontSize = 12.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 
     val body3Regular: TextStyle = TextStyle(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
-        letterSpacing = 0.02.em
+        letterSpacing = (-0.02).em
     ),
 )
 

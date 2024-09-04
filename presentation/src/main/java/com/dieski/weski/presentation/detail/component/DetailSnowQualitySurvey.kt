@@ -48,7 +48,7 @@ internal fun DetailSnowQualitySurvey(
 
        Text(
            text =  "상태가 좋아요",
-           style = WeskiTheme.typography.title3SemiBold,
+           style = WeskiTheme.typography.heading3SemiBold,
            color = WeskiColor.Gray80
        )
 
@@ -57,17 +57,17 @@ internal fun DetailSnowQualitySurvey(
        Row {
            Text(
                text =  "${totalNum}명 중 ",
-               style = WeskiTheme.typography.body1Bold,
+               style = WeskiTheme.typography.body1SemiBold,
                color = WeskiColor.Gray60
            )
            Text(
                text =  "${likeNum}",
-               style = WeskiTheme.typography.body1Bold,
+               style = WeskiTheme.typography.body1SemiBold,
                color = WeskiColor.Main01
            )
            Text(
                text =  "명이 투표 했어요",
-               style = WeskiTheme.typography.body1Bold,
+               style = WeskiTheme.typography.body1SemiBold,
                color = WeskiColor.Gray60
            )
        }
