@@ -70,7 +70,7 @@ data class WeskiTypography(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Bold,
         fontSize = 30.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
         letterSpacing = 0.02.em
     ),
@@ -79,7 +79,7 @@ data class WeskiTypography(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.SemiBold,
         fontSize = 30.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
         letterSpacing = 0.02.em
     ),
@@ -88,7 +88,7 @@ data class WeskiTypography(
         fontFamily = pretendardStyle,
         fontWeight = FontWeight.Normal,
         fontSize = 30.sp,
-        lineHeight = 1.6.em,
+        lineHeight = 1.45.em,
         lineHeightStyle = setDefaultLineHeight(),
         letterSpacing = 0.02.em
     ),

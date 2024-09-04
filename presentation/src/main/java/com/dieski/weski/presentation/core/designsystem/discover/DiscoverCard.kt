@@ -50,7 +50,7 @@ fun DiscoverCard(
 			.fillMaxWidth()
 			.background(color = bgColor, shape = RoundedCornerShape(cornerDp))
 			.padding(paddingValues),
-		verticalArrangement = Arrangement.spacedBy(8.dp)
+		verticalArrangement = Arrangement.spacedBy(6.dp)
 	) {
 		Row(
 			modifier = Modifier.fillMaxWidth(),
@@ -83,7 +83,8 @@ fun DiscoverCard(
 		Row(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(end = 6.25.dp)
+				.padding(end = 6.25.dp),
+			verticalAlignment = Alignment.CenterVertically
 		) {
 			Text(
 				modifier = Modifier.weight(1f),
