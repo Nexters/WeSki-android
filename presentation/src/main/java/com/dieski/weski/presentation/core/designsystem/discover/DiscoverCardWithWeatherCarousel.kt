@@ -67,14 +67,14 @@ fun DiscoverCardWithWeatherCarousel(
 			paddingValues = PaddingValues(top = 23.dp, bottom = 23.dp, start = 30.dp,  end = 24.dp)
 		)
 		
-		Spacer(modifier = Modifier.height(1.dp))
-
 		Spacer(
 			modifier = Modifier
 				.fillMaxWidth()
 				.height(1.dp)
 				.padding(horizontal = 24.dp)
-				.background(WeskiColor.Gray80)
+				.background(
+					WeskiColor.Gray80.copy(alpha = 0.04f)
+				)
 		)
 
 		Spacer(modifier = Modifier.height(14.dp))
