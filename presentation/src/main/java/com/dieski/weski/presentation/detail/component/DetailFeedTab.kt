@@ -2,9 +2,11 @@ package com.dieski.weski.presentation.detail.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.TabRowDefaults.SecondaryIndicator
 import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,11 +43,18 @@ internal fun DetailFeedTab(
             },
         selectedTabIndex = currentPage,
         edgePadding = 0.dp,
-        containerColor = Color.LightGray,
+        containerColor = WeskiColor.White,
         indicator = { tabPositions ->
-            TabRowDefaults.Indicator(
+            SecondaryIndicator(
                 modifier = Modifier.tabIndicatorOffset(tabPositions[tabIdx]),
+                height = 2.dp,
                 color = WeskiColor.Gray90
+            )
+        },
+        divider = {
+            HorizontalDivider(
+                thickness = 2.dp,
+                color = WeskiColor.Gray20
             )
         }
     ) {
