@@ -3,8 +3,10 @@ package com.dieski.weski.presentation.core.designsystem.header
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -46,14 +48,15 @@ fun WeskiHeader(
                 tint = Color.Black,
                 contentDescription = "뒤로가기"
             )
-
         }
-        Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = "WeSki",
-            textAlign = TextAlign.Center,
-            style = WeskiTheme.typography.heading2Bold,
-            color = WeskiColor.Gray90
+
+        Icon(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .width(67.dp)
+                .height(21.dp),
+            painter = painterResource(id = R.drawable.ic_weski_header),
+            contentDescription = "WeSki Logo"
         )
 
         if (showShareButton) {

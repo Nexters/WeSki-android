@@ -108,7 +108,6 @@ internal fun DetailScreen(
 	) {
 		item {
 			WeskiHeader(
-				bgColor = WeskiColor.White,
 				showBackButton = true,
 				showShareButton = true,
 				onClickBackButton = { onAction(DetailEvent.ClickBackButton) },
