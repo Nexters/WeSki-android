@@ -44,7 +44,7 @@ fun WeskiHeader(
                     .size(26.dp)
                     .align(Alignment.CenterStart)
                     .noRippleClickable { onClickBackButton() },
-                painter = painterResource(id = R.drawable.icn_chevron_left),
+                painter = painterResource(id = R.drawable.ic_arrow_back),
                 tint = Color.Black,
                 contentDescription = "뒤로가기"
             )
