@@ -31,6 +31,7 @@ kotlinx-serialization-converter = "1.0.0"
 # firebase
 google-services = "4.4.2"
 firebase-crashlytics-gradle = "3.0.2"
+firebase-analytics = "22.1.0"
 firebase-pref-gradle = "1.4.2"
 firebase-appdistribution-gradle = "5.0.0"
 firebase-bom = "33.1.2"
@@ -102,6 +103,7 @@ compose-compiler-extension = { module = "org.jetbrains.kotlin:compose-compiler-g
 firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics-gradle" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx", version.ref = "firebase-analytics" }
 
 # etc
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }

@@ -20,7 +20,7 @@ class NetworkResultCallAdapterFactory private constructor() : CallAdapter.Factor
 
         // 이후 리턴타입이 제네릭 인자를 가지는지 확인한다. 리턴 타입은 Call<?>가 돼야 한다.
         check(returnType is ParameterizedType) {
-            "return type must be parameterized as Call<Result<Foo>> or Call<Result<out Foo>>"
+            "return type must be parameterized as Call<NetworkResult<Foo>> or Call<NetworkResult<out Foo>>"
         }
 
         // 리턴 타입에서 첫 번째 제네릭 인자를 얻는다.
@@ -31,7 +31,7 @@ class NetworkResultCallAdapterFactory private constructor() : CallAdapter.Factor
 
         // Result 클래스가 제네릭 인자를 가지는지 확인한다. 제네릭 인자로는 응답을 변환할 클래스를 받아야 한다.
         check(responseType is ParameterizedType) {
-            "Response must be parameterized as Result<Foo> or Result<out Foo>"
+            "Response must be parameterized as NetworkResult<Foo> or NetworkResult<out Foo>"
         }
 
         // 마지막으로 Result의 제네릭 인자를 얻어서 CallAdapter를 생성한다.

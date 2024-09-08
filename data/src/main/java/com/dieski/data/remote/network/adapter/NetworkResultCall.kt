@@ -11,14 +11,14 @@ import com.dieski.domain.model.NetworkResult as Result
 
 internal class NetworkResultCall<T : Any>(
     private val call: Call<T>
-) : Call<Result<T>> {
+) : Call<NetworkResult<T>> {
     override fun clone(): Call<Result<T>> = NetworkResultCall(call.clone())
 
     override fun execute(): Response<Result<T>> {
         throw UnsupportedOperationException("ResultCall doesn't support execute")
     }
 
-    override fun enqueue(callback: Callback<Result<T>>) {
+    override fun enqueue(callback: Callback<NetworkResult<T>>) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 val networkResult = handleApi { response }
