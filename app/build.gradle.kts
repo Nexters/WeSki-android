@@ -57,6 +57,7 @@ dependencies {
 	implementation(projects.domain)
 	implementation(projects.data)
 	implementation(projects.remote)
+	implementation(projects.analytics)
 
 	implementation(libs.androidx.compose.activity)
 	implementation(libs.androidx.appcompat)
