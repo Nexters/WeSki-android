@@ -1,5 +1,6 @@
 package com.dieski.domain.usecase
 
+import com.dieski.domain.repository.SnowQualityRepository
 import com.dieski.domain.repository.WeSkiRepository
 import javax.inject.Inject
 
@@ -9,9 +10,9 @@ import javax.inject.Inject
  * @created  2024/08/18
  */
 class GetSnowQualitySurveyResultUseCase @Inject constructor(
-	private val weSkiRepository: WeSkiRepository
+	private val snowQualityRepository: SnowQualityRepository
 ) {
 	suspend operator fun invoke(
 		resortId: Int
-	) = weSkiRepository.fetchingSnowQualitySurveyResult(resortId)
+	) = snowQualityRepository.fetchingSnowQualitySurveyResult(resortId)
 }

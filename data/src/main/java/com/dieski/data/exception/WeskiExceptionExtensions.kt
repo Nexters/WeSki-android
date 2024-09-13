@@ -1,5 +1,6 @@
 package com.dieski.data.exception
 
+import com.dieski.remote.model.base.NetworkResult
 import com.dieski.domain.network.NetworkResult
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind

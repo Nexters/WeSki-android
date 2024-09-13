@@ -19,8 +19,9 @@ android {
 }
 
 dependencies {
-	implementation(project(":domain"))
-	implementation(project(":remote"))
+	implementation(projects.domain)
+	implementation(projects.remote)
+	implementation(projects.analytics)
 
 	implementation(libs.kotlin.serialization.json)
 	implementation(libs.kotlin.serialization.converter)
