@@ -1,4 +1,4 @@
-package com.dieski.remote.dispatchers.di
+package com.dieski.remote.di
 
 import com.dieski.remote.dispatchers.Dispatcher
 import com.dieski.remote.dispatchers.WeSkiDispatchers

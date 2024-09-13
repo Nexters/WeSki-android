@@ -1,23 +1,28 @@
 package com.dieski.remote.adapter
 
-import com.dieski.remote.model.base.NetworkResult
-import retrofit2.HttpException
+import com.dieski.domain.network.NetworkResult
 import retrofit2.Response
+import java.io.IOException
 
-internal fun <T: Any> handleApi(
-	execute: () -> Response<T>
-) : NetworkResult<T> {
-	return try {
-		val response = execute()
-		val body = response.body()
-		if (response.isSuccessful && body != null) {
+internal fun <T> Response<T>.toNetworkResult(): NetworkResult<T> {
+	val code: Int = code()
+	val error: String? = errorBody()?.string()
+	return if (isSuccessful) { // 200..300
+		val body = body()
+		if (body != null) {
 			NetworkResult.Success(body)
 		} else {
-			NetworkResult.Error(code = response.code(), message = response.message())
+			NetworkResult.Failure.UnknownError(IllegalStateException("body == null"))
 		}
-	} catch (e: HttpException) {
-		NetworkResult.Error(code = e.code(), message = e.message())
-	} catch (e: Throwable) {
-		NetworkResult.Exception(e)
+	} else { // 300..400
+		NetworkResult.Failure.HttpException(code, IOException(error))
 	}
 }
+
+internal fun <T> Throwable.toErrorResult(): NetworkResult<T> =
+	when (this) {
+		// Network Error - ex) UnknownHostException, SocketTimeoutException, ConnectException
+		is IOException -> NetworkResult.Failure.NetworkException(this)
+		// 통신 이슈 외 - ex) JsonSyntaxException, IllegalStateException
+		else -> NetworkResult.Failure.UnknownError(this)
+	}

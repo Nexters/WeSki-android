@@ -9,7 +9,7 @@ import com.dieski.domain.model.WeekWeatherInfo
 import com.dieski.domain.repository.WeSkiRepository
 import com.dieski.remote.dispatchers.Dispatcher
 import com.dieski.remote.dispatchers.WeSkiDispatchers
-import com.dieski.remote.model.base.NetworkResult
+import com.dieski.domain.network.NetworkResult
 import com.dieski.remote.model.request.SubmitSnowQualitySurveyRequest
 import com.dieski.remote.service.SnowQualityService
 import com.dieski.remote.service.WeSkiService

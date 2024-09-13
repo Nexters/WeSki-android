@@ -1,6 +1,6 @@
 package com.dieski.remote.service
 
-import com.dieski.remote.model.base.NetworkResult
+import com.dieski.domain.network.NetworkResult
 import com.dieski.remote.model.request.SubmitSnowQualitySurveyRequest
 import com.dieski.remote.model.response.SnowQualitySurveyResultResponse
 import retrofit2.http.Body

@@ -139,8 +139,12 @@
 }
 
 # Keep NetworkResult and its subclasses
--keep class com.dieski.remote.model.base.NetworkResult { *; }
--keep class com.dieski.remote.model.base.NetworkResult$* { *; }
+-keep class com.dieski.domain.network.NetworkResult { *; }
+-keep class com.dieski.domain.network.NetworkResult$* { *; }
+
+# Keep NetworkResult and its subclasses
+-keep class com.dieski.domain.exception.WeskiException { *; }
+-keep class com.dieski.domain.exception.WeskiException* { *; }
 
 # Keep generic type information for NetworkResult
 -keepattributes Signature

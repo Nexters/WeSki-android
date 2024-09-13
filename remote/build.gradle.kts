@@ -23,6 +23,7 @@ android {
 }
 
 dependencies {
+	implementation(projects.domain)
 
 	implementation(libs.kotlin.serialization.json)
 	implementation(libs.kotlin.serialization.converter)
