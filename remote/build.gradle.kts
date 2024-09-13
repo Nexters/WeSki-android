@@ -11,16 +11,18 @@ val properties = Properties().apply {
 }
 
 android {
-	namespace = "com.dieski.data"
+	namespace = "com.dieski.remote"
 
 	defaultConfig {
-		 buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+		buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+	}
+
+	buildFeatures {
+		buildConfig = true
 	}
 }
 
 dependencies {
-	implementation(project(":domain"))
-	implementation(project(":remote"))
 
 	implementation(libs.kotlin.serialization.json)
 	implementation(libs.kotlin.serialization.converter)
@@ -28,10 +30,6 @@ dependencies {
 	implementation(libs.okhttp)
 	implementation(libs.okhttp.logging)
 	implementation(libs.kotlin.coroutine.core)
-	implementation(libs.androidx.datastore)
-	implementation(libs.androidx.room.runtime)
-	implementation(libs.androidx.room.ktx)
-	ksp(libs.androidx.room.compiler)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)

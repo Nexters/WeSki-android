@@ -1,6 +1,6 @@
 package com.dieski.data.repository.mapper
 
-import com.dieski.data.remote.network.model.response.ResortWeatherInfoResponse
+import com.dieski.remote.model.response.ResortWeatherInfoResponse
 import com.dieski.domain.model.ResortWeatherInfo
 
 /**

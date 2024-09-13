@@ -1,11 +1,8 @@
 package com.dieski.data.repository
 
-import android.util.Log
-import com.dieski.data.dispatchers.Dispatcher
-import com.dieski.data.dispatchers.WeSkiDispatchers
-import com.dieski.data.remote.network.model.response.ResortWeatherInfoResponse
+import com.dieski.remote.dispatchers.Dispatcher
+import com.dieski.remote.dispatchers.WeSkiDispatchers
 import com.dieski.domain.model.BriefResortInfo
-import com.dieski.domain.model.NetworkResult
 import com.dieski.domain.model.ResortApiData
 import com.dieski.domain.model.ResortWeatherInfo
 import com.dieski.domain.model.SnowMakingSurveyResult
@@ -13,11 +10,7 @@ import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.model.WeekWeatherInfo
 import com.dieski.domain.repository.WeSkiRepository
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
 import javax.inject.Inject
 
 /**

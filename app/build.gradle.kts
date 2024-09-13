@@ -18,7 +18,7 @@ android {
 	defaultConfig {
 		applicationId = "com.dieski.weski"
 		versionName = "0.0.3"
-		versionCode = 2024_09_06_01
+		versionCode = 2024_09_08_01
 	}
 
 	signingConfigs {
@@ -56,6 +56,7 @@ dependencies {
 	implementation(projects.presentation)
 	implementation(projects.domain)
 	implementation(projects.data)
+	implementation(projects.remote)
 
 	implementation(libs.androidx.compose.activity)
 	implementation(libs.androidx.appcompat)

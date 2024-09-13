@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import com.dieski.data.remote.network.monitor.NetworkMonitor
+import com.dieski.remote.monitor.NetworkMonitor
 import com.dieski.weski.navigation.MainNavigator
 import com.dieski.weski.navigation.rememberMainNavigator
 import kotlinx.coroutines.CoroutineScope
@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.stateIn
 
 @Composable
 internal fun rememberWeSkiAppState(
-    networkMonitor: NetworkMonitor,
-    coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    navigator: MainNavigator = rememberMainNavigator()
+	networkMonitor: com.dieski.remote.monitor.NetworkMonitor,
+	coroutineScope: CoroutineScope = rememberCoroutineScope(),
+	navigator: MainNavigator = rememberMainNavigator()
 ) = remember(
     networkMonitor,
     coroutineScope,
@@ -31,9 +31,9 @@ internal fun rememberWeSkiAppState(
 
 @Stable
 internal class WeSkiAppState(
-    val networkMonitor: NetworkMonitor,
-    val coroutineScope: CoroutineScope,
-    val navigator: MainNavigator
+	val networkMonitor: com.dieski.remote.monitor.NetworkMonitor,
+	val coroutineScope: CoroutineScope,
+	val navigator: MainNavigator
 ) {
     val isOffline = networkMonitor.isOnline
         .map(Boolean::not)

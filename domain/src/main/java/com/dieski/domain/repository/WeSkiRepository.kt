@@ -1,12 +1,10 @@
 package com.dieski.domain.repository
 
 import com.dieski.domain.model.BriefResortInfo
-import com.dieski.domain.model.NetworkResult
 import com.dieski.domain.model.ResortWeatherInfo
 import com.dieski.domain.model.SnowMakingSurveyResult
 import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.model.WeekWeatherInfo
-import kotlinx.coroutines.flow.Flow
 
 /**
  *

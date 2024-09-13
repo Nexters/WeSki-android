@@ -1,7 +1,7 @@
 package com.dieski.data.repository.mapper
 
-import com.dieski.data.remote.network.model.response.SnowQualitySurveyResultResponse
 import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.remote.model.response.SnowQualitySurveyResultResponse
 
 /**
  *

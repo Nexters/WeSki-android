@@ -1,24 +1,19 @@
 package com.dieski.data.repository
 
-import android.net.Network
-import com.dieski.data.dispatchers.Dispatcher
-import com.dieski.data.dispatchers.WeSkiDispatchers
-import com.dieski.data.remote.network.model.request.SubmitSnowQualitySurveyRequest
-import com.dieski.data.remote.network.service.WeSkiService
 import com.dieski.data.repository.mapper.toDomain
 import com.dieski.domain.model.BriefResortInfo
-import com.dieski.domain.model.NetworkResult
 import com.dieski.domain.model.ResortWeatherInfo
 import com.dieski.domain.model.SnowMakingSurveyResult
 import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.model.WeekWeatherInfo
-import com.dieski.domain.model.onFailure
-import com.dieski.domain.model.onSuccess
-import com.dieski.domain.model.transform
 import com.dieski.domain.repository.WeSkiRepository
+import com.dieski.remote.dispatchers.Dispatcher
+import com.dieski.remote.dispatchers.WeSkiDispatchers
+import com.dieski.remote.model.base.NetworkResult
+import com.dieski.remote.model.request.SubmitSnowQualitySurveyRequest
+import com.dieski.remote.service.SnowQualityService
+import com.dieski.remote.service.WeSkiService
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -29,6 +24,7 @@ import javax.inject.Inject
  */
 internal class DefaultWeskiRepository @Inject constructor(
 	private val weSkiService: WeSkiService,
+	private val snowQualityService: SnowQualityService,
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : WeSkiRepository {
 
@@ -59,7 +55,7 @@ internal class DefaultWeskiRepository @Inject constructor(
 		isLike: Boolean
 	) {
 		return withContext(ioDispatcher) {
-			weSkiService.submitSnowQualitySurvey(
+			snowQualityService.submitSnowQualitySurvey(
 				resortId,
 				SubmitSnowQualitySurveyRequest(isLike)
 			)
@@ -70,7 +66,7 @@ internal class DefaultWeskiRepository @Inject constructor(
 		resortId: Int
 	): SnowMakingSurveyResult? {
 		return withContext(ioDispatcher) {
-			val response = weSkiService.fetchingSnowQualitySurveyResult(resortId)
+			val response = snowQualityService.fetchingSnowQualitySurveyResult(resortId)
 			if (response is NetworkResult.Success) {
 				response.data.toDomain()
 			} else {

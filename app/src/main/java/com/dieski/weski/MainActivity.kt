@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
-import com.dieski.data.remote.network.monitor.NetworkMonitor
+import com.dieski.remote.monitor.NetworkMonitor
 import com.dieski.weski.component.WeSkiApp
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import dagger.hilt.android.AndroidEntryPoint
