@@ -1,6 +1,8 @@
 package com.dieski.data.datasource
 
 import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.result.DataError
+import com.dieski.domain.result.WResult
 
 /**
  *
@@ -11,5 +13,5 @@ interface SnowQualityDataSource {
 
 	suspend fun submitSnowQualitySurvey(resortId: Int, isLike: Boolean) : Unit
 
-	suspend fun fetchingSnowQualitySurveyResult(resortId: Int) : SnowMakingSurveyResult
+	suspend fun fetchingSnowQualitySurveyResult(resortId: Int) : WResult<SnowMakingSurveyResult, DataError>
 }

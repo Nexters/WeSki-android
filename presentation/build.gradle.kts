@@ -10,6 +10,8 @@ android {
 
 dependencies {
 	implementation(projects.domain)
+	implementation(projects.data)
+	implementation(projects.analytics)
 
 	implementation(libs.material)
 	implementation(libs.dagger.hilt.android)

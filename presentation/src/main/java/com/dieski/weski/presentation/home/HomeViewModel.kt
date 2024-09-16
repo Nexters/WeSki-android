@@ -1,6 +1,7 @@
 package com.dieski.weski.presentation.home
 
 import androidx.lifecycle.viewModelScope
+import com.dieski.analytics.AnalyticsLogger
 import com.dieski.domain.model.ResortWeatherInfo
 import com.dieski.domain.usecase.GetResortWeatherInfoListUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-	private val getResortWeatherInfoListUseCase: GetResortWeatherInfoListUseCase
+	private val getResortWeatherInfoListUseCase: GetResortWeatherInfoListUseCase,
+	private val logger: AnalyticsLogger
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
 
 	/**

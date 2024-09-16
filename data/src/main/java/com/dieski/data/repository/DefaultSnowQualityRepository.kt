@@ -3,6 +3,9 @@ package com.dieski.data.repository
 import com.dieski.data.datasource.SnowQualityDataSource
 import com.dieski.domain.model.SnowMakingSurveyResult
 import com.dieski.domain.repository.SnowQualityRepository
+import com.dieski.domain.result.DataError
+import com.dieski.domain.result.WError
+import com.dieski.domain.result.WResult
 import com.dieski.remote.dispatchers.Dispatcher
 import com.dieski.remote.dispatchers.WeSkiDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,7 +28,7 @@ class DefaultSnowQualityRepository @Inject constructor(
 		}
 	}
 
-	override suspend fun fetchingSnowQualitySurveyResult(resortId: Int): SnowMakingSurveyResult {
+	override suspend fun fetchingSnowQualitySurveyResult(resortId: Int): WResult<SnowMakingSurveyResult, WError> {
 		return withContext(ioDispatcher) {
 			remoteSnowQualityDataSource.fetchingSnowQualitySurveyResult(resortId)
 		}

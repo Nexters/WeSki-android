@@ -1,6 +1,7 @@
 package com.dieski.weski.presentation.detail
 
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -71,7 +72,6 @@ internal fun DetailRouter(
                     )
                 }
                 context.startActivity(Intent.createChooser(intent, "${state.resortName}을 공유해보세요!"))
-
             }
         }
 
@@ -94,8 +94,8 @@ internal fun DetailRouter(
         state = state,
         onAction = viewModel::handleEvent,
         modifier = Modifier
-			.fillMaxSize()
-			.padding(padding)
+            .fillMaxSize()
+            .padding(padding)
     )
 }
 

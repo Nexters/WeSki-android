@@ -8,4 +8,8 @@ package com.dieski.domain.model
 data class SnowMakingSurveyResult(
 	val totalNum: Int = 0,
 	val likeNum: Int = 0
-)
+) {
+	companion object {
+		val EMPTY = SnowMakingSurveyResult(0, 0)
+	}
+}

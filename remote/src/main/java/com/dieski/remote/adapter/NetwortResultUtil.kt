@@ -14,7 +14,7 @@ internal fun <T> Response<T>.toNetworkResult(): NetworkResult<T> {
 		} else {
 			NetworkResult.Failure.UnknownError(IllegalStateException("body == null"))
 		}
-	} else { // 300..400
+	} else { // 300 ~ 500번대 에러들
 		NetworkResult.Failure.HttpException(code, IOException(error))
 	}
 }
@@ -22,7 +22,7 @@ internal fun <T> Response<T>.toNetworkResult(): NetworkResult<T> {
 internal fun <T> Throwable.toErrorResult(): NetworkResult<T> =
 	when (this) {
 		// Network Error - ex) UnknownHostException, SocketTimeoutException, ConnectException
-		is IOException -> NetworkResult.Failure.NetworkException(this)
+		is IOException -> NetworkResult.Failure.UnexpectedException(this)
 		// 통신 이슈 외 - ex) JsonSyntaxException, IllegalStateException
 		else -> NetworkResult.Failure.UnknownError(this)
 	}
