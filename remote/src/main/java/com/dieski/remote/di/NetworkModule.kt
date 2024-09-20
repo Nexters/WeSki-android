@@ -14,6 +14,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -56,6 +57,8 @@ internal abstract class NetworkModule {
             httpLoggingInterceptor: HttpLoggingInterceptor
         ): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .readTimeout(5000, TimeUnit.MILLISECONDS)
+            .writeTimeout(5000, TimeUnit.MILLISECONDS)
             .build()
 
         @Provides
