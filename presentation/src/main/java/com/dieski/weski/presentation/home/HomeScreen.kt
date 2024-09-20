@@ -21,11 +21,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.domain.model.ResortWeatherInfo.ResortDailyWeatherInfo
 import com.dieski.weski.presentation.R
+import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffect
 import com.dieski.weski.presentation.core.designsystem.button.scroll.ScrollFloatButton
 import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCardWithWeatherCarousel
@@ -73,14 +77,28 @@ internal fun HomeRouter(
 		viewModel.handleEvent(HomeEvent.FetchingHomeData)
 	}
 
-	HomeScreen(
-		state = state,
-		onAction = viewModel::handleEvent,
-		lazyListState = lazyListState,
-		modifier = Modifier
-			.fillMaxSize()
-			.padding(padding),
-	)
+	Box(
+		modifier = Modifier.fillMaxSize()
+	) {
+		Image(
+			modifier = Modifier.fillMaxSize(),
+			painter = painterResource(id = R.drawable.img_background),
+			contentDescription = "",
+			contentScale = ContentScale.FillBounds
+		)
+
+		WindBlownSnowflakeEffect()
+
+		HomeScreen(
+			state = state,
+			onAction = viewModel::handleEvent,
+			lazyListState = lazyListState,
+			modifier = Modifier
+				.fillMaxSize()
+				.padding(padding),
+		)
+	}
+
 }
 
 @Composable
@@ -90,62 +108,51 @@ private fun HomeScreen(
 	modifier: Modifier = Modifier,
 	lazyListState: LazyListState = rememberLazyListState(),
 ) {
-	val isTop by remember { derivedStateOf {  lazyListState.canScrollBackward }}
+	val isTop by remember { derivedStateOf { lazyListState.canScrollBackward } }
 
-	Box(
-		modifier = modifier.fillMaxSize()
+	Column(
+		modifier = modifier
+			.fillMaxSize()
 	) {
-		Image(
-			modifier = Modifier.fillMaxSize(),
-			painter = painterResource(id = R.drawable.img_background),
-			contentDescription = "",
-			contentScale = ContentScale.FillBounds
+		WeskiHeader(
+			showBackButton = false,
+			showShareButton = false
 		)
 
-		Column(
-			modifier = Modifier
-				.fillMaxSize()
+		Spacer(modifier = Modifier.height(19.dp))
+
+		Box(
+			modifier = Modifier.fillMaxSize()
 		) {
-			WeskiHeader(
-				showBackButton = false,
-				showShareButton = false
-			)
+			if (!state.isLoading) {
+				HomeContent(
+					resortWeatherInfoList = state.resortWeatherInfoList,
+					onCardClick = { onAction(HomeEvent.ClickCard(it)) },
+					modifier = Modifier.fillMaxSize(),
+					lazyListState = lazyListState
+				)
+			} else {
+				LoadingIndicator()
+			}
 
-			Spacer(modifier = Modifier.height(19.dp))
-
-			Box(
-				modifier = Modifier.fillMaxSize()
-			) {
-				if (!state.isLoading) {
-					HomeContent(
-						resortWeatherInfoList = state.resortWeatherInfoList,
-						onCardClick = { onAction(HomeEvent.ClickCard(it)) },
-						modifier = Modifier.fillMaxSize(),
-						lazyListState = lazyListState
-					)
-				} else {
-					LoadingIndicator()
-				}
-
-				if (isTop) {
-					ScrollFloatButton(
-						modifier = Modifier
-							.zIndex(1f)
-							.align(Alignment.BottomEnd)
-							.offset(x = (-20).dp, y = (-20).dp),
-						onClick = {
-							onAction(HomeEvent.ClickScrollFloatButton)
-						}
-					) {
-						Icon(
-							modifier = Modifier
-								.padding(12.dp)
-								.size(18.dp),
-							painter = painterResource(id = R.drawable.ic_arrow_up),
-							contentDescription = "위로 가기",
-							tint = WeskiColor.Gray60
-						)
+			if (isTop) {
+				ScrollFloatButton(
+					modifier = Modifier
+						.zIndex(1f)
+						.align(Alignment.BottomEnd)
+						.offset(x = (-20).dp, y = (-20).dp),
+					onClick = {
+						onAction(HomeEvent.ClickScrollFloatButton)
 					}
+				) {
+					Icon(
+						modifier = Modifier
+							.padding(12.dp)
+							.size(18.dp),
+						painter = painterResource(id = R.drawable.ic_arrow_up),
+						contentDescription = "위로 가기",
+						tint = WeskiColor.Gray60
+					)
 				}
 			}
 		}
@@ -188,12 +195,12 @@ internal fun HomeContent(
 @Composable
 private fun HomeScreenPreview() {
 	val resortDailyWeatherInfoList = persistentListOf(
-		ResortDailyWeatherInfo(day = "월요일",  weatherType = "normal", maxTemperature = 2,  minTemperature =  -7),
+		ResortDailyWeatherInfo(day = "월요일", weatherType = "normal", maxTemperature = 2, minTemperature = -7),
 		ResortDailyWeatherInfo(day = "화요일", weatherType = "snow", maxTemperature = 0, minTemperature = -7),
-		ResortDailyWeatherInfo(day ="수요일", weatherType = "cloudy", maxTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="목요일", weatherType = "rain", maxTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="금요일", weatherType = "normal", maxTemperature = 5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="일요일", weatherType = "normal", maxTemperature = 6,  minTemperature = -7)
+		ResortDailyWeatherInfo(day = "수요일", weatherType = "cloudy", maxTemperature = -5, minTemperature = -7),
+		ResortDailyWeatherInfo(day = "목요일", weatherType = "rain", maxTemperature = -5, minTemperature = -7),
+		ResortDailyWeatherInfo(day = "금요일", weatherType = "normal", maxTemperature = 5, minTemperature = -7),
+		ResortDailyWeatherInfo(day = "일요일", weatherType = "normal", maxTemperature = 6, minTemperature = -7)
 	)
 
 	val resortWeatherInfoList = listOf(
@@ -212,7 +219,7 @@ private fun HomeScreenPreview() {
 			id = 0,
 			webKey = "",
 			operatingSlopeCount = 5,
-			currentTemperature =7,
+			currentTemperature = 7,
 			weatherType = WeatherType.NORMAL,
 			weatherDescription = "맑음",
 			weekWeatherInfo = resortDailyWeatherInfoList
@@ -221,7 +228,7 @@ private fun HomeScreenPreview() {
 			name = "곤지암 리조트",
 			id = 0,
 			webKey = "",
-			 operatingSlopeCount = 5,
+			operatingSlopeCount = 5,
 			currentTemperature = 7,
 			weatherType = WeatherType.CLOUDY,
 			weatherDescription = "흐림",
@@ -252,7 +259,7 @@ private fun HomeScreenPreview() {
 			id = 0,
 			webKey = "",
 			operatingSlopeCount = 5,
-			currentTemperature =7,
+			currentTemperature = 7,
 			weatherType = WeatherType.NORMAL,
 			weatherDescription = "맑음",
 			weekWeatherInfo = resortDailyWeatherInfoList
@@ -280,7 +287,7 @@ private fun HomeScreenPreview() {
 	)
 
 	HomeScreen(
-        state = HomeState(resortWeatherInfoList = resortWeatherInfoList.toPersistentList()),
+		state = HomeState(resortWeatherInfoList = resortWeatherInfoList.toPersistentList()),
 		onAction = {}
-    )
+	)
 }
