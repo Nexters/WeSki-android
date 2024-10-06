@@ -22,15 +22,16 @@ class DefaultSnowQualityRepository @Inject constructor(
 	@Named("remote") private val remoteSnowQualityDataSource: SnowQualityDataSource,
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : SnowQualityRepository {
+
 	override suspend fun submitSnowQualitySurvey(resortId: Int, isLike: Boolean) {
 		return withContext(ioDispatcher) {
 			remoteSnowQualityDataSource.submitSnowQualitySurvey(resortId, isLike)
 		}
 	}
 
-	override suspend fun fetchingSnowQualitySurveyResult(resortId: Int): WResult<SnowMakingSurveyResult, WError> {
+	override suspend fun fetchingSnowQualitySurveyResult(resortId: Long): WResult<SnowMakingSurveyResult, WError> {
 		return withContext(ioDispatcher) {
-			remoteSnowQualityDataSource.fetchingSnowQualitySurveyResult(resortId)
+			remoteSnowQualityDataSource.fetchingSnowQualitySurveyResult(resortId.toInt())
 		}
 	}
 }

@@ -9,7 +9,7 @@ sealed interface Route {
 
     @Serializable
     data class Detail(
-        val resortId: Int,
+        val resortId: Long,
         val resortName: String,
         val resortWebKey: String,
         val temperature: Int,

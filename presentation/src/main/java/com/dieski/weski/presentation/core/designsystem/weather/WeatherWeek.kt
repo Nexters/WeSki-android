@@ -14,8 +14,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
-import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.weski.presentation.core.model.asWeatherIcon
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -30,7 +31,7 @@ fun WeatherWeek(
 	modifier: Modifier = Modifier,
 	day: String,
 	date: String,
-	weatherType: WeatherType,
+	weatherCondition: WeatherCondition,
 	chanceOfRain: Int,
 	highestTemperature: Int,
 	lowestTemperature: Int
@@ -63,7 +64,7 @@ fun WeatherWeek(
 		) {
 			Image(
 				modifier = Modifier.size(24.dp),
-				painter = painterResource(id = weatherType.getIcon()),
+				painter = painterResource(id = weatherCondition.asWeatherIcon()),
 				contentDescription = "weather image"
 			)
 
@@ -123,7 +124,7 @@ private fun WeatherWeekPreview() {
 	WeatherWeek(
 		day = "월요일",
 		date = "8.25",
-		weatherType = WeatherType.SNOW,
+		weatherCondition = WeatherCondition.SNOW,
 		chanceOfRain = 0,
 		highestTemperature = 10,
 		lowestTemperature = -2

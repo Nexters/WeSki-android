@@ -13,5 +13,5 @@ interface SnowQualityRepository {
 
 	suspend fun submitSnowQualitySurvey(resortId: Int, isLike: Boolean) : Unit
 
-	suspend fun fetchingSnowQualitySurveyResult(resortId: Int) : WResult<SnowMakingSurveyResult, WError>
+	suspend fun fetchingSnowQualitySurveyResult(resortId: Long) : WResult<SnowMakingSurveyResult, WError>
 }

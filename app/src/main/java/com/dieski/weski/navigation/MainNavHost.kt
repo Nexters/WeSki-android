@@ -31,7 +31,7 @@ internal fun MainNavHost(
                 padding = padding,
                 navigateToDetail = {
 					navigator.navigateToDetail(
-                    	it.id, it.name, it.webKey, it.currentTemperature, it.weatherType.name, it.weatherDescription
+                    	it.id, it.name, it.webKey.name, it.currentWeather.temperature, "", ""
                 	)
 				},
                 onShowSnackBar = onShowSnackBar

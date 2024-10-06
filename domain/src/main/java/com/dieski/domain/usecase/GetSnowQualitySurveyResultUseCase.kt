@@ -13,6 +13,6 @@ class GetSnowQualitySurveyResultUseCase @Inject constructor(
 	private val snowQualityRepository: SnowQualityRepository
 ) {
 	suspend operator fun invoke(
-		resortId: Int
+		resortId: Long
 	) = snowQualityRepository.fetchingSnowQualitySurveyResult(resortId)
 }

@@ -25,12 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WebMobileData
 import com.dieski.weski.presentation.R
-import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffect
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
-import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
@@ -43,11 +42,11 @@ import com.dieski.weski.presentation.detail.component.DetailViewPagerWithTab
  */
 @Composable
 internal fun DetailRouter(
-	resortId: Int,
+	resortId: Long,
 	resortName: String,
 	resortWebKey: String,
 	temperature: Int,
-	weatherType: WeatherType,
+	weatherCondition: WeatherCondition,
 	weatherDescription: String,
 	padding: PaddingValues,
 	onNavigateUp: () -> Unit,
@@ -82,7 +81,7 @@ internal fun DetailRouter(
 				resortName = resortName,
 				resortWebKey = resortWebKey,
 				temperature = temperature,
-				weatherType = weatherType,
+				weatherCondition = weatherCondition,
 				weatherDescription = weatherDescription,
 			)
 		)
@@ -98,7 +97,7 @@ internal fun DetailRouter(
 			contentScale = ContentScale.FillBounds
 		)
 
-        WindBlownSnowflakeEffect()
+//        WindBlownSnowflakeEffect()
 
 		DetailScreen(
 			state = state,
@@ -170,9 +169,9 @@ internal fun DetailContent(
 				},
 				resortName = state.resortName,
 				operatingSlopeCount = 5,
+				status = "",
 				currentTemperature = state.temperature,
-				weatherType = state.weatherType,
-				weatherDescription = state.weatherDescription
+				weatherCondition = state.weatherCondition,
 			)
 		}
 
@@ -198,7 +197,7 @@ private fun DetailScreenPreview() {
 			resortName = "용평스키장 모나",
 			resortWebKey = "",
 			temperature = 7,
-			weatherType = WeatherType.SNOW,
+			weatherCondition = WeatherCondition.SNOW,
 			weatherDescription = "눈이 내립니다.",
 			snowMakingSurveyResult = SnowMakingSurveyResult(10, 5)
 		)

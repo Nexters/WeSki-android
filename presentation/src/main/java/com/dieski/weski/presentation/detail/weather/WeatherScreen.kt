@@ -14,10 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.designsystem.weather.WeatherTime
 import com.dieski.weski.presentation.core.designsystem.weather.WeatherWeek
-import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.detail.DetailState
@@ -64,7 +64,7 @@ internal fun WeatherScreen(
 			) { index, info ->
 				WeatherTime(
 					time = getTime(index),
-					weatherType = WeatherType.findByName(info.weatherType),
+					weatherCondition = WeatherCondition.SNOW,
 					temperature = info.temperature,
 					chanceOfRain = info.chanceOfRain
 				)
@@ -96,7 +96,7 @@ internal fun WeatherScreen(
 				WeatherWeek(
 					day = if(index == 0) "오늘" else doDayOfWeek(index)+"요일",
 					date = getWeek(index),
-					weatherType = WeatherType.findByName(info.weatherType),
+					weatherCondition = WeatherCondition.SNOW,
 					chanceOfRain = info.chanceOfRain,
 					highestTemperature = info.highestTemperature,
 					lowestTemperature = info.lowestTemperature

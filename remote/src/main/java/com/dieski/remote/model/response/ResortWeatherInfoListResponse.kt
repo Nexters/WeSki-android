@@ -9,28 +9,37 @@ import kotlinx.serialization.Serializable
  * @created  2024/08/17
  */
 @Serializable
-data class ResortWeatherInfoResponse(
-	@SerialName("key")
-	val key: Int,
+data class SkiResortInfoResponse(
+	@SerialName("resortId")
+	val resortId: Long,
 	@SerialName("name")
 	val resortName: String,
-	@SerialName("slopeNum")
-	val slopeNum: Int,
-	@SerialName("weather")
-	val weather: List<ResortDailyWeatherInfoResponse>
+	@SerialName("status")
+	val status: String,
+	@SerialName("openSlopes")
+	val openSlopeCount: Int,
+	@SerialName("currentWeather")
+	val currentWeatherResponse: CurrentWeatherResponse,
+	@SerialName("weeklyWeather")
+	val weeklyWeatherResponse: List<DailyWeatherResponse>
 ) {
 	@Serializable
-	data class ResortDailyWeatherInfoResponse(
-		@SerialName("dayName")
-		val dayName: String,
-		// 날씨 타입
-		@SerialName("name")
-		val name: String,
-		@SerialName("maxTm")
+	data class CurrentWeatherResponse(
+		@SerialName("temperature")
+		val temperature: Int,
+		@SerialName("description")
+		val description: String,
+	)
+
+	@Serializable
+	data class DailyWeatherResponse(
+		@SerialName("day")
+		val day: String,
+		@SerialName("maxTemperature")
 		val maxTemperature: Int,
-		@SerialName("minTm")
+		@SerialName("minTemperature")
 		val minTemperature: Int,
-		@SerialName("perRain")
-		val chanceOfRain: Int,
+		@SerialName("description")
+		val description: String,
 	)
 }

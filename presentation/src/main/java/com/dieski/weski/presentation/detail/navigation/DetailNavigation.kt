@@ -5,7 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.navigation.Route
 import com.dieski.weski.presentation.detail.DetailRouter
 
@@ -15,7 +15,7 @@ import com.dieski.weski.presentation.detail.DetailRouter
  * @created  2024/08/06
  */
 fun NavController.navigateDetail(
-	resortId: Int,
+	resortId: Long,
 	resortName: String,
 	resortWebKey: String,
 	temperature: Int,
@@ -39,7 +39,7 @@ fun NavGraphBuilder.detailNavGraph(
 		val resortName = navBackStackEntry.toRoute<Route.Detail>().resortName
 		val resortWebKey = navBackStackEntry.toRoute<Route.Detail>().resortWebKey
 		val temperature = navBackStackEntry.toRoute<Route.Detail>().temperature
-		val weatherType = WeatherType.findByName(navBackStackEntry.toRoute<Route.Detail>().weatherType)
+		val weatherCondition = WeatherCondition.findByName(navBackStackEntry.toRoute<Route.Detail>().weatherType)
 		val weatherDescription = navBackStackEntry.toRoute<Route.Detail>().weatherDescription
 
 		DetailRouter(
@@ -47,7 +47,7 @@ fun NavGraphBuilder.detailNavGraph(
 			resortName = resortName,
 			resortWebKey = resortWebKey,
 			temperature = temperature,
-			weatherType = weatherType,
+			weatherCondition = weatherCondition,
 			weatherDescription = weatherDescription,
 			padding = padding,
 			onNavigateUp = onNavigateUp,

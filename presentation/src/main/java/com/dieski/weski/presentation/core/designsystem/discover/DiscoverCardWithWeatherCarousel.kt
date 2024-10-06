@@ -1,36 +1,26 @@
 package com.dieski.weski.presentation.core.designsystem.discover
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dieski.domain.model.ResortWeatherInfo
-import com.dieski.domain.model.ResortWeatherInfo.ResortDailyWeatherInfo
-import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.domain.model.SkiResortInfo.DailyWeather
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.debounceClickable
-import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.persistentListOf
 
 /**
  *
@@ -41,10 +31,10 @@ import kotlinx.collections.immutable.toPersistentList
 fun DiscoverCardWithWeatherCarousel(
 	resortName: String,
 	operatingSlopeCount: Int,
-	weatherType: WeatherType,
+	weatherCondition: WeatherCondition,
+	status: String,
 	currentTemperature: Int,
-	weatherDescription: String,
-	weekWeatherInfoList: ImmutableList<ResortDailyWeatherInfo>,
+	weekWeatherInfoList: ImmutableList<DailyWeather>,
 	onClick: () -> Unit,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
@@ -59,11 +49,11 @@ fun DiscoverCardWithWeatherCarousel(
 		DiscoverCard(
 			resortName = resortName,
 			operatingSlopeCount = operatingSlopeCount,
-			weatherType = weatherType,
+			weatherCondition = weatherCondition,
 			currentTemperature = currentTemperature,
-			weatherDescription = weatherDescription,
 			bgColor = bgColor,
 			cornerDp = cornerDp,
+			status = status,
 			paddingValues = PaddingValues(top = 23.dp, bottom = 23.dp, start = 30.dp,  end = 24.dp)
 		)
 		
@@ -91,22 +81,22 @@ fun DiscoverCardWithWeatherCarousel(
 @DevicePreviews
 @Composable
 private fun DiscoverCardWithWeatherCarouselPreview() {
-	val resortDailyWeatherInfoList = listOf(
-		ResortDailyWeatherInfo(day = "월요일", weatherType = "normal", maxTemperature = 2, minTemperature = -7),
-		ResortDailyWeatherInfo(day ="화요일", weatherType = "snow", maxTemperature = 0,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="수요일", weatherType = "cloudy", maxTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="목요일", weatherType = "rain", maxTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="금요일", weatherType = "normal", maxTemperature = 5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="일요일", weatherType = "normal", maxTemperature = 6,  minTemperature = -7)
+	val dailyWeatherLists = persistentListOf(
+		DailyWeather(day = "월요일", condition = WeatherCondition.SNOW, maxTemperature = 2, minTemperature = -7),
+		DailyWeather(day ="화요일", condition = WeatherCondition.SNOW, maxTemperature = 0,  minTemperature = -7),
+		DailyWeather(day ="수요일", condition = WeatherCondition.SNOW, maxTemperature = -5,  minTemperature = -7),
+		DailyWeather(day ="목요일", condition = WeatherCondition.SNOW, maxTemperature = -5,  minTemperature = -7),
+		DailyWeather(day ="금요일", condition = WeatherCondition.SNOW, maxTemperature = 5,  minTemperature = -7),
+		DailyWeather(day ="일요일", condition = WeatherCondition.SNOW, maxTemperature = 6,  minTemperature = -7)
 	)
 
 	DiscoverCardWithWeatherCarousel(
 		resortName = "용평스키장 모나",
 		operatingSlopeCount = 5,
 		currentTemperature = 7,
-		weatherType = WeatherType.SNOW,
-		weatherDescription = "흐리고 눈",
-		weekWeatherInfoList = resortDailyWeatherInfoList.toPersistentList(),
+		weatherCondition = WeatherCondition.SNOW,
+		weekWeatherInfoList = dailyWeatherLists,
+		status = "운영 중",
 		onClick = {}
 	)
 }

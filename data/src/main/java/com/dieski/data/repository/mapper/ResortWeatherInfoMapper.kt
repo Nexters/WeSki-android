@@ -1,27 +1,33 @@
 package com.dieski.data.repository.mapper
 
-import com.dieski.remote.model.response.ResortWeatherInfoResponse
-import com.dieski.domain.model.ResortWeatherInfo
+import com.dieski.remote.model.response.SkiResortInfoResponse
+import com.dieski.domain.model.SkiResortInfo
+import com.dieski.domain.model.SkiResortWebKey
+import com.dieski.domain.model.WeatherCondition
 
 /**
  *
  * @author   JGeun
  * @created  2024/08/18
  */
-fun ResortWeatherInfoResponse.toDomain() = ResortWeatherInfo(
-	resortId = -1,
+fun SkiResortInfoResponse.toDomain() = SkiResortInfo(
+	resortId = this.resortId,
 	resortName = this.resortName,
-	resortWebKey = "",
-	operatingSlopeCount = this.slopeNum,
-	currentTemperature = 0,
-	weatherDescription = "",
-	weatherType = "snow",
-	resortDailyWeatherInfoList = this.weather.map(ResortWeatherInfoResponse.ResortDailyWeatherInfoResponse::toDomain)
+	status = this.status,
+	resortWebKey = SkiResortWebKey.findByServerResortId(this.resortId),
+	openSlopeCount = this.openSlopeCount,
+	currentWeather = this.currentWeatherResponse.toDomain(),
+	weeklyWeather = this.weeklyWeatherResponse.map { it.toDomain() }
 )
 
-fun ResortWeatherInfoResponse.ResortDailyWeatherInfoResponse.toDomain() = ResortWeatherInfo.ResortDailyWeatherInfo(
-	day = this.dayName,
-	weatherType = this.name,
+fun SkiResortInfoResponse.CurrentWeatherResponse.toDomain() = SkiResortInfo.CurrentWeather(
+	temperature = this.temperature,
+	condition = WeatherCondition.findByKorean(this.description)
+)
+
+fun SkiResortInfoResponse.DailyWeatherResponse.toDomain() = SkiResortInfo.DailyWeather(
+	day = this.day,
 	maxTemperature = this.maxTemperature,
 	minTemperature = this.minTemperature,
+	condition = WeatherCondition.findByKorean(this.description)
 )

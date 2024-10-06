@@ -19,8 +19,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
-import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.weski.presentation.core.model.asWeatherIcon
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -33,7 +34,7 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 @Composable
 fun DiscoverWeather(
 	day: String,
-	weatherType: WeatherType,
+	weatherCondition: WeatherCondition,
 	avgTemperature: Int,
 	minTemperature: Int,
 	isToday: Boolean,
@@ -65,7 +66,7 @@ fun DiscoverWeather(
 
 		Image(
 			modifier = Modifier.size(32.dp),
-			painter = painterResource(id = weatherType.getIcon()),
+			painter = painterResource(id = weatherCondition.asWeatherIcon()),
 			contentDescription = "weather icon"
 		)
 
@@ -92,14 +93,14 @@ private fun DiscoverWeatherPreview() {
 	Row {
 		DiscoverWeather(
 			day = "월요일",
-			weatherType = WeatherType.NORMAL,
+			weatherCondition = WeatherCondition.RAIN,
 			avgTemperature = 2,
 			minTemperature = -7,
 			isToday = false
 		)
 		DiscoverWeather(
 			day = "화요일",
-			weatherType = WeatherType.SNOW,
+			weatherCondition = WeatherCondition.CLOUDY,
 			avgTemperature = 2,
 			minTemperature = -7,
 			isToday = true

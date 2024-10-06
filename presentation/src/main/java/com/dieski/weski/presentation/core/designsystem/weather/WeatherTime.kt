@@ -11,8 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
-import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.weski.presentation.core.model.asWeatherIcon
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -26,7 +27,7 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 fun WeatherTime(
 	modifier: Modifier = Modifier,
 	time: String,
-	weatherType: WeatherType,
+	weatherCondition: WeatherCondition,
 	temperature: Int,
 	chanceOfRain: Int
 ) {
@@ -44,7 +45,7 @@ fun WeatherTime(
 
 		Image(
 			modifier = Modifier.size(32.dp),
-			painter = painterResource(id = weatherType.getIcon()),
+			painter = painterResource(id = weatherCondition.asWeatherIcon()),
 			contentDescription = "weather image"
 		)
 
@@ -69,7 +70,7 @@ fun WeatherTime(
 private fun WeatherDayPreview() {
 	WeatherTime(
 		time = "오전 6시",
-		weatherType = WeatherType.SNOW,
+		weatherCondition = WeatherCondition.SNOW,
 		temperature = -2,
 		chanceOfRain = 0
 	)

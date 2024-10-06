@@ -2,14 +2,12 @@ package com.dieski.weski.presentation.core.designsystem.discover
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
-import com.dieski.domain.model.ResortWeatherInfo
-import com.dieski.domain.model.ResortWeatherInfo.ResortDailyWeatherInfo
-import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.domain.model.SkiResortInfo.DailyWeather
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import kotlinx.collections.immutable.ImmutableList
@@ -23,7 +21,7 @@ import java.util.Calendar
  */
 @Composable
 fun DiscoverWeatherCarousel(
-	weekWeatherInfoList: ImmutableList<ResortDailyWeatherInfo>,
+	weekWeatherInfoList: ImmutableList<DailyWeather>,
 	modifier: Modifier = Modifier
 ) {
 
@@ -36,7 +34,7 @@ fun DiscoverWeatherCarousel(
 			key(weatherInfo.day) {
 				DiscoverWeather(
 					day = doDayOfWeek(index)+"요일",
-					weatherType = WeatherType.findByName(weatherInfo.weatherType),
+					weatherCondition = weatherInfo.condition,
 					avgTemperature = weatherInfo.maxTemperature,
 					minTemperature = weatherInfo.minTemperature,
 					isToday = index == 0
@@ -74,16 +72,16 @@ private fun doDayOfWeek(index: Int): String? {
 @DevicePreviews
 @Composable
 private fun DiscoverWeatherCarouselPreview() {
-	val resortDailyWeatherInfoList = listOf(
-		ResortDailyWeatherInfo(day = "월요일", weatherType = "normal", maxTemperature = 2, minTemperature = -7),
-		ResortDailyWeatherInfo(day ="화요일", weatherType = "snow", maxTemperature = 0,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="수요일", weatherType = "cloudy", maxTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="목요일", weatherType = "rain", maxTemperature = -5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="금요일", weatherType = "normal", maxTemperature = 5,  minTemperature = -7),
-		ResortDailyWeatherInfo(day ="일요일", weatherType = "normal", maxTemperature = 6,  minTemperature = -7)
+	val dailyWeatherLists = listOf(
+		DailyWeather(day = "월요일", condition = WeatherCondition.SNOW, maxTemperature = 2, minTemperature = -7),
+		DailyWeather(day ="화요일", condition = WeatherCondition.SNOW, maxTemperature = 0,  minTemperature = -7),
+		DailyWeather(day ="수요일", condition = WeatherCondition.SNOW, maxTemperature = -5,  minTemperature = -7),
+		DailyWeather(day ="목요일", condition = WeatherCondition.SNOW, maxTemperature = -5,  minTemperature = -7),
+		DailyWeather(day ="금요일", condition = WeatherCondition.SNOW, maxTemperature = 5,  minTemperature = -7),
+		DailyWeather(day ="일요일", condition = WeatherCondition.SNOW, maxTemperature = 6,  minTemperature = -7)
 	)
 
 	DiscoverWeatherCarousel(
-		resortDailyWeatherInfoList.toPersistentList()
+		dailyWeatherLists.toPersistentList()
 	)
 }

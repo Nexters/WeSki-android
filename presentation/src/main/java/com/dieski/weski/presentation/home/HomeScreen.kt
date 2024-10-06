@@ -21,21 +21,21 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dieski.domain.model.ResortWeatherInfo.ResortDailyWeatherInfo
+import com.dieski.domain.model.SkiResortInfo
+import com.dieski.domain.model.SkiResortInfo.DailyWeather
+import com.dieski.domain.model.SkiResortWebKey
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffect
 import com.dieski.weski.presentation.core.designsystem.button.scroll.ScrollFloatButton
@@ -43,9 +43,8 @@ import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicato
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCardWithWeatherCarousel
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
-import com.dieski.weski.presentation.core.model.WeatherType
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
-import com.dieski.weski.presentation.home.model.HomeResortWeatherInfo
+import com.dieski.weski.presentation.home.model.HomeSkiResortInfo
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -53,7 +52,7 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun HomeRouter(
 	padding: PaddingValues,
-	navigateToDetail: (HomeResortWeatherInfo) -> Unit,
+	navigateToDetail: (HomeSkiResortInfo) -> Unit,
 	onShowSnackBar: (message: String, action: String?) -> Unit,
 	viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -98,7 +97,6 @@ internal fun HomeRouter(
 				.padding(padding),
 		)
 	}
-
 }
 
 @Composable
@@ -161,9 +159,9 @@ private fun HomeScreen(
 
 @Composable
 internal fun HomeContent(
-	resortWeatherInfoList: List<HomeResortWeatherInfo>,
+	resortWeatherInfoList: List<HomeSkiResortInfo>,
 	modifier: Modifier = Modifier,
-	onCardClick: (HomeResortWeatherInfo) -> Unit = {},
+	onCardClick: (HomeSkiResortInfo) -> Unit = {},
 	lazyListState: LazyListState = rememberLazyListState()
 ) {
 	LazyColumn(
@@ -180,13 +178,17 @@ internal fun HomeContent(
 				DiscoverCardWithWeatherCarousel(
 					resortName = resortWeatherInfo.name,
 					operatingSlopeCount = resortWeatherInfo.operatingSlopeCount,
-					weatherType = resortWeatherInfo.weatherType,
-					currentTemperature = resortWeatherInfo.currentTemperature,
-					weatherDescription = resortWeatherInfo.weatherDescription,
-					weekWeatherInfoList = resortWeatherInfo.weekWeatherInfo,
+					weatherCondition = resortWeatherInfo.currentWeather.condition,
+					currentTemperature = resortWeatherInfo.currentWeather.temperature,
+					weekWeatherInfoList = resortWeatherInfo.weeklyWeather,
+					status = resortWeatherInfo.status,
 					onClick = { onCardClick(resortWeatherInfo) }
 				)
 			}
+		}
+
+		item {
+			Spacer(modifier = Modifier.height(45.dp))
 		}
 	}
 }
@@ -194,95 +196,27 @@ internal fun HomeContent(
 @Preview
 @Composable
 private fun HomeScreenPreview() {
-	val resortDailyWeatherInfoList = persistentListOf(
-		ResortDailyWeatherInfo(day = "월요일", weatherType = "normal", maxTemperature = 2, minTemperature = -7),
-		ResortDailyWeatherInfo(day = "화요일", weatherType = "snow", maxTemperature = 0, minTemperature = -7),
-		ResortDailyWeatherInfo(day = "수요일", weatherType = "cloudy", maxTemperature = -5, minTemperature = -7),
-		ResortDailyWeatherInfo(day = "목요일", weatherType = "rain", maxTemperature = -5, minTemperature = -7),
-		ResortDailyWeatherInfo(day = "금요일", weatherType = "normal", maxTemperature = 5, minTemperature = -7),
-		ResortDailyWeatherInfo(day = "일요일", weatherType = "normal", maxTemperature = 6, minTemperature = -7)
+	val dailyWeatherLists = persistentListOf(
+		DailyWeather(day = "월요일", condition = WeatherCondition.CLOUDY, maxTemperature = 2, minTemperature = -7),
+		DailyWeather(day = "화요일", condition = WeatherCondition.CLOUDY, maxTemperature = 0, minTemperature = -7),
+		DailyWeather(day = "수요일", condition = WeatherCondition.CLOUDY, maxTemperature = -5, minTemperature = -7),
+		DailyWeather(day = "목요일", condition = WeatherCondition.CLOUDY, maxTemperature = -5, minTemperature = -7),
+		DailyWeather(day = "금요일", condition = WeatherCondition.CLOUDY, maxTemperature = 5, minTemperature = -7),
+		DailyWeather(day = "일요일", condition = WeatherCondition.CLOUDY, maxTemperature = 6, minTemperature = -7)
 	)
 
 	val resortWeatherInfoList = listOf(
-		HomeResortWeatherInfo(
+		HomeSkiResortInfo(
 			name = "용평스키장 모나",
 			id = 0,
-			webKey = "",
+			webKey = SkiResortWebKey.O2,
 			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.SNOW,
-			weatherDescription = "흐리고 눈",
-			weekWeatherInfo = resortDailyWeatherInfoList,
-		),
-		HomeResortWeatherInfo(
-			name = "휘닉스 파크",
-			id = 0,
-			webKey = "",
-			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.NORMAL,
-			weatherDescription = "맑음",
-			weekWeatherInfo = resortDailyWeatherInfoList
-		),
-		HomeResortWeatherInfo(
-			name = "곤지암 리조트",
-			id = 0,
-			webKey = "",
-			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.CLOUDY,
-			weatherDescription = "흐림",
-			weekWeatherInfo = resortDailyWeatherInfoList
-		),
-		HomeResortWeatherInfo(
-			name = "비발디 파크",
-			id = 0,
-			webKey = "",
-			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.RAIN,
-			weatherDescription = "폭우",
-			weekWeatherInfo = resortDailyWeatherInfoList
-		),
-		HomeResortWeatherInfo(
-			name = "용평스키장 모나",
-			id = 0,
-			webKey = "",
-			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.SNOW,
-			weatherDescription = "흐리고 눈",
-			weekWeatherInfo = resortDailyWeatherInfoList,
-		),
-		HomeResortWeatherInfo(
-			name = "휘닉스 파크",
-			id = 0,
-			webKey = "",
-			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.NORMAL,
-			weatherDescription = "맑음",
-			weekWeatherInfo = resortDailyWeatherInfoList
-		),
-		HomeResortWeatherInfo(
-			name = "곤지암 리조트",
-			id = 0,
-			webKey = "",
-			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.CLOUDY,
-			weatherDescription = "흐림",
-			weekWeatherInfo = resortDailyWeatherInfoList
-		),
-		HomeResortWeatherInfo(
-			name = "비발디 파크",
-			id = 0,
-			webKey = "",
-			operatingSlopeCount = 5,
-			currentTemperature = 7,
-			weatherType = WeatherType.RAIN,
-			weatherDescription = "폭우",
-			weekWeatherInfo = resortDailyWeatherInfoList
+			currentWeather = SkiResortInfo.CurrentWeather(
+				condition = WeatherCondition.CLOUDY,
+				temperature = 7
+			),
+			status = "",
+			weeklyWeather = dailyWeatherLists
 		)
 	)
 

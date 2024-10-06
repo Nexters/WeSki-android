@@ -18,11 +18,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
-import com.dieski.weski.presentation.core.model.WeatherType
+import com.dieski.weski.presentation.core.model.asWeatherIcon
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -37,9 +37,9 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 fun DiscoverCard(
 	resortName: String,
 	operatingSlopeCount: Int,
-	weatherType: WeatherType,
+	status: String,
+	weatherCondition: WeatherCondition,
 	currentTemperature: Int,
-	weatherDescription: String,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
 	cornerDp: Dp = 15.dp,
@@ -67,7 +67,7 @@ fun DiscoverCard(
 
 			Image(
 				modifier = Modifier.size(32.dp),
-				painter = painterResource(id = weatherType.getIcon()),
+				painter = painterResource(id = weatherCondition.asWeatherIcon()),
 				contentDescription = "Weather Icon"
 			)
 			
@@ -88,7 +88,7 @@ fun DiscoverCard(
 		) {
 			Text(
 				modifier = Modifier.weight(1f),
-				text = "개장일이 곧 공개될 예정이에요",
+				text = status,
 				style = WeskiTheme.typography.body1Medium,
 				color = WeskiColor.Gray60
 			)
@@ -96,7 +96,7 @@ fun DiscoverCard(
 			Spacer(modifier = Modifier.width(8.dp))
 
 			Text(
-				text = weatherDescription,
+				text = weatherCondition.korean,
 				style = WeskiTheme.typography.body1SemiBold,
 				color = WeskiColor.Gray60,
 			)
@@ -112,8 +112,8 @@ private fun DiscoverCardPreview() {
 		resortName = "용평스키장 모나",
 		operatingSlopeCount = 5,
 		currentTemperature = 7,
-		weatherType = WeatherType.SNOW,
-		weatherDescription = "흐리고 눈"
+		weatherCondition = WeatherCondition.SNOW,
+		status = "운영 중"
 	)
 }
 

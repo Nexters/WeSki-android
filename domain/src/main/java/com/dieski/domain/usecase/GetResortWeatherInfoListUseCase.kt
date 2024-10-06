@@ -10,7 +10,7 @@ import javax.inject.Named
  * @created  2024/08/13
  */
 class GetResortWeatherInfoListUseCase @Inject constructor(
-	@Named("fake") private val weSkiRepository: WeSkiRepository
+	private val weSkiRepository: WeSkiRepository
 ) {
-	suspend operator fun invoke() = weSkiRepository.fetchResortWeatherInfoList()
+	suspend operator fun invoke() = weSkiRepository.fetchAllSkiResortsInfo()
 }

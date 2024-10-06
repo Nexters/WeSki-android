@@ -1,22 +1,17 @@
 package com.dieski.weski.presentation.detail
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.dieski.analytics.AnalyticsLogger
-import com.dieski.domain.model.ResortApiData
-import com.dieski.domain.model.ResortApiWeatherData
 import com.dieski.domain.model.SnowMakingSurveyResult
-import com.dieski.domain.model.WebMobileData
+import com.dieski.domain.model.TodayForecast
+import com.dieski.domain.model.WeatherCondition
+import com.dieski.domain.model.WeekWeatherInfo
 import com.dieski.domain.repository.SnowQualityRepository
 import com.dieski.domain.repository.WeSkiRepository
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
-import com.dieski.domain.result.onError
-import com.dieski.domain.result.onSuccess
 import com.dieski.weski.presentation.core.base.BaseViewModel
-import com.dieski.weski.presentation.core.model.WeatherType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Named
@@ -24,7 +19,7 @@ import javax.inject.Named
 @HiltViewModel
 class DetailViewModel @Inject constructor(
 	private val snowQualityRepository: SnowQualityRepository,
-	@Named("fake") private val fakeWeSkiRepository: WeSkiRepository,
+	private val fakeWeSkiRepository: WeSkiRepository,
 	private val logger : AnalyticsLogger
 ) : BaseViewModel<DetailEvent, DetailState, DetailEffect>() {
 
@@ -40,7 +35,7 @@ class DetailViewModel @Inject constructor(
 					resortName = event.resortName,
 					resortWebKey = event.resortWebKey,
 					temperature = event.temperature,
-					weatherType = event.weatherType,
+					weatherCondition = event.weatherCondition,
 					weatherDescription = event.weatherDescription
 				)
 			}
@@ -69,16 +64,24 @@ class DetailViewModel @Inject constructor(
 	}
 
 	private fun fetchSkiResortData(
-		resortId: Int,
+		resortId: Long,
 		resortName: String,
 		resortWebKey: String,
 		temperature: Int,
-		weatherType: WeatherType,
+		weatherCondition: WeatherCondition,
 		weatherDescription: String
 	) {
 		viewModelScope.launch {
-			val todayForecast = ResortApiWeatherData.entries.firstOrNull { it.key == resortId }?.todayForecast ?: ResortApiWeatherData.JISAN.todayForecast
-			val weekForecast =  ResortApiWeatherData.entries.firstOrNull { it.key == resortId }?.weekForecast ?: ResortApiWeatherData.JISAN.weekForecast
+			val todayForecast = TodayForecast() //ResortApiWeatherData.entries.firstOrNull { it.key == resortId }?.todayForecast ?: ResortApiWeatherData.JISAN.todayForecast
+			val weekForecast =  emptyList<WeekWeatherInfo>()
+//				date = "",
+//				day = "",
+//				chanceOfRain = 0,
+//				weatherType = "",
+//				highestTemperature = 0,
+//				lowestTemperature = 0
+//			)
+			//ResortApiWeatherData.entries.firstOrNull { it.key == resortId }?.weekForecast ?: ResortApiWeatherData.JISAN.weekForecast
 			val snowMakingSurveyResult = when(val result = snowQualityRepository.fetchingSnowQualitySurveyResult(resortId)) {
 				is WResult.Success -> result.data
 				is WResult.Error -> {
@@ -100,7 +103,7 @@ class DetailViewModel @Inject constructor(
 					resortName = resortName,
 					resortWebKey = resortWebKey,
 					temperature = temperature,
-					weatherType = weatherType,
+					weatherCondition = weatherCondition,
 					weatherDescription  = weatherDescription,
 					todayForecast = todayForecast,
 					weekForecast = weekForecast,
@@ -111,11 +114,11 @@ class DetailViewModel @Inject constructor(
 	}
 
 	private fun submitSnowQualitySurvey(
-		resortId: Int,
+		resortId: Long,
 		isLike: Boolean
 	) {
 		viewModelScope.launch {
-			snowQualityRepository.submitSnowQualitySurvey(resortId, isLike)
+			snowQualityRepository.submitSnowQualitySurvey(resortId.toInt(), isLike)
 			val snowMakingSurveyResult = when(val result = snowQualityRepository.fetchingSnowQualitySurveyResult(resortId)) {
 				is WResult.Success -> result.data
 				is WResult.Error -> {

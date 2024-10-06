@@ -2,7 +2,6 @@ package com.dieski.data.repository.di
 
 import com.dieski.data.repository.DefaultSnowQualityRepository
 import com.dieski.data.repository.DefaultWeskiRepository
-import com.dieski.data.repository.FakeWeskiRepository
 import com.dieski.domain.repository.SnowQualityRepository
 import com.dieski.domain.repository.WeSkiRepository
 import dagger.Binds
@@ -32,11 +31,4 @@ internal abstract class RepositoryModule {
 	abstract fun bindsSnowQualityRepository(
 		defaultSnowQualityRepository: DefaultSnowQualityRepository
 	): SnowQualityRepository
-
-	@Binds
-	@Singleton
-	@Named("fake")
-	abstract fun bindsFakeWeSkiRepository(
-		fakeWeskiRepository: FakeWeskiRepository
-	): WeSkiRepository
 }
