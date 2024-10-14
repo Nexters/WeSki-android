@@ -1,13 +1,12 @@
 package com.dieski.data.repository
 
 import com.dieski.data.datasource.SnowQualityDataSource
-import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.repository.SnowQualityRepository
-import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
-import com.dieski.remote.dispatchers.Dispatcher
-import com.dieski.remote.dispatchers.WeSkiDispatchers
+import com.dieski.domain.dispatchers.Dispatcher
+import com.dieski.domain.dispatchers.WeSkiDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -23,15 +22,15 @@ class DefaultSnowQualityRepository @Inject constructor(
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : SnowQualityRepository {
 
-	override suspend fun submitSnowQualitySurvey(resortId: Int, isLike: Boolean) {
+	override suspend fun submitSnowQualitySurvey(resortId: Long, isPositive: Boolean) {
 		return withContext(ioDispatcher) {
-			remoteSnowQualityDataSource.submitSnowQualitySurvey(resortId, isLike)
+			remoteSnowQualityDataSource.submitSnowQualitySurvey(resortId, isPositive)
 		}
 	}
 
-	override suspend fun fetchingSnowQualitySurveyResult(resortId: Long): WResult<SnowMakingSurveyResult, WError> {
+	override suspend fun fetchSnowQualitySurveyResult(resortId: Long): WResult<SnowQualitySurveyResult, WError> {
 		return withContext(ioDispatcher) {
-			remoteSnowQualityDataSource.fetchingSnowQualitySurveyResult(resortId.toInt())
+			remoteSnowQualityDataSource.fetchingSnowQualitySurveyResult(resortId)
 		}
 	}
 }

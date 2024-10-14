@@ -1,7 +1,9 @@
 package com.dieski.domain.usecase
 
+import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.repository.SnowQualityRepository
-import com.dieski.domain.repository.WeSkiRepository
+import com.dieski.domain.result.WError
+import com.dieski.domain.result.WResult
 import javax.inject.Inject
 
 /**
@@ -12,9 +14,13 @@ import javax.inject.Inject
 class SubmitSnowQualitySurveyResultUseCase @Inject constructor(
 	private val snowQualityRepository: SnowQualityRepository
 ) {
-
 	suspend operator fun invoke(
-		resortId: Int,
-		isLike:Boolean
-	) = snowQualityRepository.submitSnowQualitySurvey(resortId, isLike)
+		resortId: Long,
+		isPositive:Boolean
+	): WResult<SnowQualitySurveyResult, WError> {
+		// 에러 여부와 상관없이 데이터 전송
+		snowQualityRepository.submitSnowQualitySurvey(resortId, isPositive)
+
+		return snowQualityRepository.fetchSnowQualitySurveyResult(resortId)
+	}
 }

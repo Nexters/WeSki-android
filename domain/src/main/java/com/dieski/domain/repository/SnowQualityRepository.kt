@@ -1,6 +1,6 @@
 package com.dieski.domain.repository
 
-import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
 
@@ -11,7 +11,12 @@ import com.dieski.domain.result.WResult
  */
 interface SnowQualityRepository {
 
-	suspend fun submitSnowQualitySurvey(resortId: Int, isLike: Boolean) : Unit
+	suspend fun submitSnowQualitySurvey(
+		resortId: Long,
+		isPositive: Boolean
+	)
 
-	suspend fun fetchingSnowQualitySurveyResult(resortId: Long) : WResult<SnowMakingSurveyResult, WError>
+	suspend fun fetchSnowQualitySurveyResult(
+		resortId: Long
+	) : WResult<SnowQualitySurveyResult, WError>
 }

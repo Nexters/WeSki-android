@@ -1,7 +1,9 @@
 package com.dieski.weski.presentation.detail
 
 import androidx.compose.runtime.Immutable
-import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.model.SkiResortWeatherInfo
+import com.dieski.domain.model.SkiResortWebKey
+import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WebMobileData.Companion.SLOPE_PARAM
@@ -14,12 +16,7 @@ import com.dieski.weski.presentation.core.base.UiState
 
 sealed interface DetailEvent : UiEvent {
 	data class Init(
-		val resortId: Long,
-		val resortName: String,
-		val resortWebKey: String,
-		val temperature: Int,
-		val weatherCondition: WeatherCondition,
-		val weatherDescription: String
+		val resortId: Long
 	) : DetailEvent
 
 	data object ClickBackButton : DetailEvent
@@ -32,24 +29,24 @@ sealed interface DetailEvent : UiEvent {
 	) : DetailEvent
 
 	data class SubmitSnowQualitySurvey(
-		val isLike: Boolean
+		val isPositive: Boolean
 	) : DetailEvent
 }
 
 @Immutable
 data class DetailState(
-	val resortId: Long = 0L,
+	val resortId: Long = -1L,
 	val resortName: String = "",
-	val resortWebKey: String = "",
+	val resortWebKey: SkiResortWebKey = SkiResortWebKey.NONE,
 	val temperature: Int = 0,
 	val weatherCondition: WeatherCondition = WeatherCondition.SUNNY,
 	val weatherDescription: String = "",
-	val todayForecast: TodayForecast = TodayForecast(),
-	val weekForecast: List<WeekWeatherInfo> = emptyList(),
-	val snowMakingSurveyResult: SnowMakingSurveyResult = SnowMakingSurveyResult()
+	val todayWeatherByTime: List<SkiResortWeatherInfo.HourlyWeather> = emptyList(),
+	val weeklyWeather: List<SkiResortWeatherInfo.DailyWeather> = emptyList(),
+	val snowQualitySurveyResult: SnowQualitySurveyResult = SnowQualitySurveyResult.EMPTY
 ) : UiState {
-	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}$resortWebKey"
-	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}$resortWebKey"
+	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortWebKey.value}"
+	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}${resortWebKey.value}"
 }
 
 sealed interface DetailEffect : UiEffect {

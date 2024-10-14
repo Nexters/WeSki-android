@@ -24,7 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.model.SkiResortWebKey
+import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WebMobileData
 import com.dieski.weski.presentation.R
@@ -43,11 +44,6 @@ import com.dieski.weski.presentation.detail.component.DetailViewPagerWithTab
 @Composable
 internal fun DetailRouter(
 	resortId: Long,
-	resortName: String,
-	resortWebKey: String,
-	temperature: Int,
-	weatherCondition: WeatherCondition,
-	weatherDescription: String,
 	padding: PaddingValues,
 	onNavigateUp: () -> Unit,
 	onShowSnackBar: (message: String, action: String?) -> Unit,
@@ -76,14 +72,7 @@ internal fun DetailRouter(
 
 	LaunchedEffect(Unit) {
 		viewModel.handleEvent(
-			DetailEvent.Init(
-				resortId = resortId,
-				resortName = resortName,
-				resortWebKey = resortWebKey,
-				temperature = temperature,
-				weatherCondition = weatherCondition,
-				weatherDescription = weatherDescription,
-			)
+			DetailEvent.Init(resortId)
 		)
 	}
 
@@ -195,11 +184,11 @@ private fun DetailScreenPreview() {
 		state = DetailState(
 			resortId = 0,
 			resortName = "용평스키장 모나",
-			resortWebKey = "",
+			resortWebKey = SkiResortWebKey.EDEN,
 			temperature = 7,
 			weatherCondition = WeatherCondition.SNOW,
 			weatherDescription = "눈이 내립니다.",
-			snowMakingSurveyResult = SnowMakingSurveyResult(10, 5)
+			snowQualitySurveyResult = SnowQualitySurveyResult(10, 5, 3, "")
 		)
 	)
 }

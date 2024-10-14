@@ -42,13 +42,8 @@ internal class MainNavigator(
 
     fun navigateToDetail(
         resortId: Long,
-        resortName: String,
-        resortWebKey: String,
-        temperature: Int,
-        weatherType: String,
-        weatherDescription: String
     ) {
-        navController.navigateDetail(resortId, resortName, resortWebKey, temperature, weatherType, weatherDescription)
+        navController.navigateDetail(resortId)
     }
 
     private fun popBackStack() {

@@ -1,26 +1,30 @@
 package com.dieski.weski.presentation.detail
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dieski.analytics.AnalyticsLogger
-import com.dieski.domain.model.SnowMakingSurveyResult
+import com.dieski.domain.model.SkiResortDetailInfo
+import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WeekWeatherInfo
-import com.dieski.domain.repository.SnowQualityRepository
-import com.dieski.domain.repository.WeSkiRepository
+import com.dieski.domain.model.result.DetailError
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
+import com.dieski.domain.usecase.GetAllSkiResortsUseCase
+import com.dieski.domain.usecase.GetSkiResortDetailInfoUseCase
+import com.dieski.domain.usecase.GetSkiResortWeatherInfoUseCase
+import com.dieski.domain.usecase.SubmitSnowQualitySurveyResultUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Named
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-	private val snowQualityRepository: SnowQualityRepository,
-	private val fakeWeSkiRepository: WeSkiRepository,
-	private val logger : AnalyticsLogger
+	private val getSkiResortDetailInfoUseCase: GetSkiResortDetailInfoUseCase,
+	private val submitSnowQualitySurveyResultUseCase: SubmitSnowQualitySurveyResultUseCase,
+	private val logger : AnalyticsLogger,
 ) : BaseViewModel<DetailEvent, DetailState, DetailEffect>() {
 
 	override fun createInitialState(): DetailState {
@@ -31,19 +35,14 @@ class DetailViewModel @Inject constructor(
 		when (event) {
 			is DetailEvent.Init -> {
 				fetchSkiResortData(
-					resortId = event.resortId,
-					resortName = event.resortName,
-					resortWebKey = event.resortWebKey,
-					temperature = event.temperature,
-					weatherCondition = event.weatherCondition,
-					weatherDescription = event.weatherDescription
+					resortId = event.resortId
 				)
 			}
 
 			is DetailEvent.SubmitSnowQualitySurvey -> {
 				submitSnowQualitySurvey(
 					resortId = uiState.value.resortId,
-					isLike = event.isLike
+					isPositive = event.isPositive
 				)
 			}
 
@@ -65,27 +64,15 @@ class DetailViewModel @Inject constructor(
 
 	private fun fetchSkiResortData(
 		resortId: Long,
-		resortName: String,
-		resortWebKey: String,
-		temperature: Int,
-		weatherCondition: WeatherCondition,
-		weatherDescription: String
 	) {
 		viewModelScope.launch {
-			val todayForecast = TodayForecast() //ResortApiWeatherData.entries.firstOrNull { it.key == resortId }?.todayForecast ?: ResortApiWeatherData.JISAN.todayForecast
-			val weekForecast =  emptyList<WeekWeatherInfo>()
-//				date = "",
-//				day = "",
-//				chanceOfRain = 0,
-//				weatherType = "",
-//				highestTemperature = 0,
-//				lowestTemperature = 0
-//			)
-			//ResortApiWeatherData.entries.firstOrNull { it.key == resortId }?.weekForecast ?: ResortApiWeatherData.JISAN.weekForecast
-			val snowMakingSurveyResult = when(val result = snowQualityRepository.fetchingSnowQualitySurveyResult(resortId)) {
+			val skiResortDetailInfo: SkiResortDetailInfo = when(val result = getSkiResortDetailInfoUseCase(resortId)) {
 				is WResult.Success -> result.data
 				is WResult.Error -> {
 					when(result.error) {
+						is DetailError -> {
+							setEffect(DetailEffect.ShowSnackBar((result.error as DetailError).message, null))
+						}
 						is DataError.Network.ServerError -> {
 							setEffect(DetailEffect.ShowSnackBar("서버 에러가 발생하여 설문 결과를 불러오지 못했습니다.", null))
 						}
@@ -93,21 +80,21 @@ class DetailViewModel @Inject constructor(
 							setEffect(DetailEffect.ShowSnackBar("응답 시간을 초과하여 설문 결과를 불러오지 못했습니다.", null))
 						}
 					}
-					SnowMakingSurveyResult.EMPTY
+					return@launch
 				}
 			}
 
 			setState {
 				copy(
-					resortId = resortId,
-					resortName = resortName,
-					resortWebKey = resortWebKey,
-					temperature = temperature,
-					weatherCondition = weatherCondition,
-					weatherDescription  = weatherDescription,
-					todayForecast = todayForecast,
-					weekForecast = weekForecast,
-					snowMakingSurveyResult = snowMakingSurveyResult
+					resortId = skiResortDetailInfo.skiResortInfo.resortId,
+					resortName = skiResortDetailInfo.skiResortInfo.resortName,
+					resortWebKey = skiResortDetailInfo.skiResortInfo.resortWebKey,
+					temperature = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.temperature,
+					weatherCondition = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.condition,
+					weatherDescription = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.description,
+					todayWeatherByTime = skiResortDetailInfo.skiResortWeatherInfo.todayWeatherByTime,
+					weeklyWeather = skiResortDetailInfo.skiResortWeatherInfo.weeklyWeather,
+					snowQualitySurveyResult = snowQualitySurveyResult
 				)
 			}
 		}
@@ -115,12 +102,14 @@ class DetailViewModel @Inject constructor(
 
 	private fun submitSnowQualitySurvey(
 		resortId: Long,
-		isLike: Boolean
+		isPositive: Boolean
 	) {
 		viewModelScope.launch {
-			snowQualityRepository.submitSnowQualitySurvey(resortId.toInt(), isLike)
-			val snowMakingSurveyResult = when(val result = snowQualityRepository.fetchingSnowQualitySurveyResult(resortId)) {
-				is WResult.Success -> result.data
+			val snowMakingSurveyResult = when(val result = submitSnowQualitySurveyResultUseCase(resortId, isPositive)) {
+				is WResult.Success -> {
+					setEffect(DetailEffect.ShowSnackBar("고마워요! 투표의 결과가 반영되었어요", null))
+					result.data
+				}
 				is WResult.Error -> {
 					when (result.error) {
 						is DataError.Network.ServerError -> {
@@ -130,17 +119,15 @@ class DetailViewModel @Inject constructor(
 							setEffect(DetailEffect.ShowSnackBar("응답 시간을 초과하여 설문 결과를 불러오지 못했습니다.", null))
 						}
 					}
-					null
+					return@launch
 				}
 			}
 
-			if (snowMakingSurveyResult != null) {
 				setState {
 					copy(
-						snowMakingSurveyResult = snowMakingSurveyResult
+						snowQualitySurveyResult = snowMakingSurveyResult
 					)
 				}
 			}
 		}
-	}
 }

@@ -3,6 +3,7 @@ package com.dieski.data.datasource
 import com.dieski.analytics.AnalyticsLogger
 import com.dieski.data.repository.mapper.toDomain
 import com.dieski.domain.model.SkiResortInfo
+import com.dieski.domain.model.SkiResortWeatherInfo
 import com.dieski.domain.network.onFailure
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
@@ -30,4 +31,13 @@ class RemoteWeSkiDataSource @Inject constructor(
 			}
 	}
 
+	override suspend fun fetchSkiResortWeatherInfo(resortId: Long): WResult<SkiResortWeatherInfo, DataError> {
+		return weSkiService.fetchSkiResortWeatherInfo(resortId)
+			.onFailure {
+				logger.logError(throwable, "WeSkiDataSource - fetchSkiResortWeatherInfo()에서 발생")
+			}
+			.toResult { skiResortWeatherInfoResponse ->
+				skiResortWeatherInfoResponse.toDomain()
+			}
+	}
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.detail.DetailEvent
 import com.dieski.weski.presentation.detail.DetailState
@@ -90,7 +91,7 @@ internal fun DetailViewPagerWithTab(
             },
         )
 
-		if (state.resortWebKey.isNotEmpty()) {
+		if (state.resortWebKey != SkiResortWebKey.NONE) {
 			HorizontalPager(
 				modifier = Modifier
 					.fillMaxSize()

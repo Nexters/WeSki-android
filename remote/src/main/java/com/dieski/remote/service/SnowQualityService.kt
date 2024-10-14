@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  *
@@ -15,14 +16,14 @@ import retrofit2.http.Path
  */
 interface SnowQualityService {
 
-	@POST("/ski/{key}/snowmaking")
+	@POST("/api/snow-maker/{resortId}/vote")
 	suspend fun submitSnowQualitySurvey(
-		@Path("key") resortId: Int,
-		@Body request: SubmitSnowQualitySurveyRequest
+		@Path("resortId") resortId: Long,
+		@Query("isPositive") isPositive: Boolean
 	) : NetworkResult<Unit>
 
-	@GET("/ski/{key}/snowmaking")
-	suspend fun fetchingSnowQualitySurveyResult(
-		@Path("key") resortId: Int
+	@GET("/api/snow-maker/{resortId}")
+	suspend fun fetchSnowQualitySurveyResult(
+		@Path("resortId") resortId: Long
 	) : NetworkResult<SnowQualitySurveyResultResponse>
 }

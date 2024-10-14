@@ -46,8 +46,8 @@ internal fun WebcamScreen(
 
 			if (isWebViewFinished) {
 				DetailSnowQualitySurvey(
-					totalNum = state.snowMakingSurveyResult.totalNum,
-					likeNum = state.snowMakingSurveyResult.likeNum,
+					totalNum = state.snowQualitySurveyResult.totalVotes,
+					likeNum = state.snowQualitySurveyResult.positiveVotes,
 					onSubmit = { isGood ->
 						submitSnowQualitySurvey(isGood)
 					},

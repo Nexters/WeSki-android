@@ -1,36 +1,23 @@
 package com.dieski.weski.presentation.detail.congestion
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.dieski.weski.presentation.R
-import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
-import com.dieski.weski.presentation.core.util.noRippleClickable
-import com.dieski.weski.presentation.detail.DetailEvent
 import com.dieski.weski.presentation.detail.DetailState
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
 import com.dieski.weski.presentation.detail.component.WeskiWebView
@@ -96,8 +83,8 @@ internal fun CongestionScreen(
 				)
 
 				DetailSnowQualitySurvey(
-					totalNum = state.snowMakingSurveyResult.totalNum,
-					likeNum = state.snowMakingSurveyResult.likeNum,
+					totalNum = state.snowQualitySurveyResult.totalVotes,
+					likeNum = state.snowQualitySurveyResult.positiveVotes,
 					onSubmit = { isGood ->
 						submitSnowQualitySurvey(isGood)
 					},

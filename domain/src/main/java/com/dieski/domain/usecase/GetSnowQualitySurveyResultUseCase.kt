@@ -1,7 +1,6 @@
 package com.dieski.domain.usecase
 
 import com.dieski.domain.repository.SnowQualityRepository
-import com.dieski.domain.repository.WeSkiRepository
 import javax.inject.Inject
 
 /**
@@ -14,5 +13,5 @@ class GetSnowQualitySurveyResultUseCase @Inject constructor(
 ) {
 	suspend operator fun invoke(
 		resortId: Long
-	) = snowQualityRepository.fetchingSnowQualitySurveyResult(resortId)
+	) = snowQualityRepository.fetchSnowQualitySurveyResult(resortId)
 }

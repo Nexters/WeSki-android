@@ -1,4 +1,4 @@
-package com.dieski.remote.dispatchers
+package com.dieski.domain.dispatchers
 
 import javax.inject.Qualifier
 

@@ -1,7 +1,7 @@
-package com.dieski.remote.di
+package com.dieski.domain.dispatchers.di
 
-import com.dieski.remote.dispatchers.Dispatcher
-import com.dieski.remote.dispatchers.WeSkiDispatchers
+import com.dieski.domain.dispatchers.Dispatcher
+import com.dieski.domain.dispatchers.WeSkiDispatchers
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

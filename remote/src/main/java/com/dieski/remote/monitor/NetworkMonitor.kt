@@ -7,8 +7,8 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import androidx.core.content.getSystemService
-import com.dieski.remote.dispatchers.Dispatcher
-import com.dieski.remote.dispatchers.WeSkiDispatchers
+import com.dieski.domain.dispatchers.Dispatcher
+import com.dieski.domain.dispatchers.WeSkiDispatchers
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.awaitClose

@@ -60,16 +60,16 @@ internal fun WeatherScreen(
 				.padding(start = 24.dp)
 		) {
 			itemsIndexed(
-				state.todayForecast.hourlyForecastWeatherInfoList
+				state.todayWeatherByTime
 			) { index, info ->
 				WeatherTime(
 					time = getTime(index),
 					weatherCondition = WeatherCondition.SNOW,
 					temperature = info.temperature,
-					chanceOfRain = info.chanceOfRain
+					chanceOfRain = info.precipitationChance
 				)
 				
-				if (index != state.todayForecast.hourlyForecastWeatherInfoList.lastIndex) {
+				if (index != state.todayWeatherByTime.lastIndex) {
 					Spacer(modifier = Modifier.width(24.dp))
 				}
 			}
@@ -92,17 +92,17 @@ internal fun WeatherScreen(
 			
 			Spacer(modifier = Modifier.height(24.dp))
 
-			state.weekForecast.forEachIndexed { index, info ->
+			state.weeklyWeather.forEachIndexed { index, info ->
 				WeatherWeek(
 					day = if(index == 0) "오늘" else doDayOfWeek(index)+"요일",
 					date = getWeek(index),
 					weatherCondition = WeatherCondition.SNOW,
-					chanceOfRain = info.chanceOfRain,
-					highestTemperature = info.highestTemperature,
-					lowestTemperature = info.lowestTemperature
+					chanceOfRain = info.precipitationChance,
+					highestTemperature = info.maxTemperature,
+					lowestTemperature = info.minTemperature
 				)
 
-				if (index != state.weekForecast.lastIndex) {
+				if (index != state.weeklyWeather.lastIndex) {
 					Spacer(modifier = Modifier.height(2.dp))
 					Spacer(
 						modifier = Modifier
@@ -122,8 +122,8 @@ internal fun WeatherScreen(
 		WeatherDividerLine()
 
 		DetailSnowQualitySurvey(
-			totalNum = state.snowMakingSurveyResult.totalNum,
-			likeNum = state.snowMakingSurveyResult.likeNum,
+			totalNum = state.snowQualitySurveyResult.totalVotes,
+			likeNum = state.snowQualitySurveyResult.positiveVotes,
 			onSubmit = { submitSnowQualitySurvey(it) },
 			onShowSnackBar = onShowSnackBar
 		)

@@ -8,14 +8,7 @@ sealed interface Route {
     data object Home : Route
 
     @Serializable
-    data class Detail(
-        val resortId: Long,
-        val resortName: String,
-        val resortWebKey: String,
-        val temperature: Int,
-        val weatherType: String,
-        val weatherDescription: String
-    ) :Route
+    data class Detail(val resortId: Long, ) :Route
 }
 
 

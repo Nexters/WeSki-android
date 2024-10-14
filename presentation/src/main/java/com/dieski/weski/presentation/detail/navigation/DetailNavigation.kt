@@ -16,16 +16,9 @@ import com.dieski.weski.presentation.detail.DetailRouter
  */
 fun NavController.navigateDetail(
 	resortId: Long,
-	resortName: String,
-	resortWebKey: String,
-	temperature: Int,
-	weatherType: String,
-	weatherDescription: String
 ) {
 	navigate(
-		Route.Detail(
-			resortId, resortName, resortWebKey, temperature, weatherType, weatherDescription
-		)
+		Route.Detail(resortId)
 	)
 }
 
@@ -36,19 +29,9 @@ fun NavGraphBuilder.detailNavGraph(
 	) {
 	composable<Route.Detail> { navBackStackEntry ->
 		val resortId = navBackStackEntry.toRoute<Route.Detail>().resortId
-		val resortName = navBackStackEntry.toRoute<Route.Detail>().resortName
-		val resortWebKey = navBackStackEntry.toRoute<Route.Detail>().resortWebKey
-		val temperature = navBackStackEntry.toRoute<Route.Detail>().temperature
-		val weatherCondition = WeatherCondition.findByName(navBackStackEntry.toRoute<Route.Detail>().weatherType)
-		val weatherDescription = navBackStackEntry.toRoute<Route.Detail>().weatherDescription
 
 		DetailRouter(
 			resortId = resortId,
-			resortName = resortName,
-			resortWebKey = resortWebKey,
-			temperature = temperature,
-			weatherCondition = weatherCondition,
-			weatherDescription = weatherDescription,
 			padding = padding,
 			onNavigateUp = onNavigateUp,
 			onShowSnackBar = onShowSnackBar

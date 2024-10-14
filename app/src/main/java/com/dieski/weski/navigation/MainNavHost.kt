@@ -30,9 +30,7 @@ internal fun MainNavHost(
             homeNavGraph(
                 padding = padding,
                 navigateToDetail = {
-					navigator.navigateToDetail(
-                    	it.id, it.name, it.webKey.name, it.currentWeather.temperature, "", ""
-                	)
+					navigator.navigateToDetail(it.id)
 				},
                 onShowSnackBar = onShowSnackBar
             )

@@ -32,7 +32,7 @@ fun WeatherWeek(
 	day: String,
 	date: String,
 	weatherCondition: WeatherCondition,
-	chanceOfRain: Int,
+	chanceOfRain: String,
 	highestTemperature: Int,
 	lowestTemperature: Int
 ) {
@@ -79,7 +79,7 @@ fun WeatherWeek(
 					color = WeskiColor.Gray60
 				)
 				Text(
-					text = "${chanceOfRain}%",
+					text = chanceOfRain,
 					style = WeskiTheme.typography.body2SemiBold,
 					color = WeskiColor.Gray70
 				)
@@ -125,7 +125,7 @@ private fun WeatherWeekPreview() {
 		day = "월요일",
 		date = "8.25",
 		weatherCondition = WeatherCondition.SNOW,
-		chanceOfRain = 0,
+		chanceOfRain = "0%",
 		highestTemperature = 10,
 		lowestTemperature = -2
 	)

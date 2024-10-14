@@ -2,20 +2,17 @@ package com.dieski.data.repository
 
 import com.dieski.data.datasource.WeSkiDataSource
 import com.dieski.data.repository.mapper.toDomain
-import com.dieski.domain.model.BriefResortInfo
 import com.dieski.domain.model.SkiResortInfo
-import com.dieski.domain.model.SnowMakingSurveyResult
-import com.dieski.domain.model.TodayForecast
-import com.dieski.domain.model.WeekWeatherInfo
+import com.dieski.domain.model.SkiResortWeatherInfo
+import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.repository.WeSkiRepository
-import com.dieski.remote.dispatchers.Dispatcher
-import com.dieski.remote.dispatchers.WeSkiDispatchers
+import com.dieski.domain.dispatchers.Dispatcher
+import com.dieski.domain.dispatchers.WeSkiDispatchers
 import com.dieski.domain.network.NetworkResult
 import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
 import com.dieski.remote.model.request.SubmitSnowQualitySurveyRequest
 import com.dieski.remote.service.SnowQualityService
-import com.dieski.remote.service.WeSkiService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -38,36 +35,9 @@ internal class DefaultWeskiRepository @Inject constructor(
 		}
 	}
 
-	override suspend fun fetchTodayForecast(): TodayForecast {
-		return TodayForecast()
-	}
-
-	override suspend fun fetchWeekForecast(): List<WeekWeatherInfo> {
-		return emptyList()
-	}
-
-	override suspend fun submitSnowQualitySurvey(
-		resortId: Int,
-		isLike: Boolean
-	) {
+	override suspend fun fetchSkiResortWeatherInfo(resortId: Long): WResult<SkiResortWeatherInfo, WError> {
 		return withContext(ioDispatcher) {
-			snowQualityService.submitSnowQualitySurvey(
-				resortId,
-				SubmitSnowQualitySurveyRequest(isLike)
-			)
-		}
-	}
-
-	override suspend fun fetchingSnowQualitySurveyResult(
-		resortId: Int
-	): SnowMakingSurveyResult? {
-		return withContext(ioDispatcher) {
-			val response = snowQualityService.fetchingSnowQualitySurveyResult(resortId)
-			if (response is NetworkResult.Success) {
-				response.data.toDomain()
-			} else {
-				null
-			}
+			remoteWeSkiDataSource.fetchSkiResortWeatherInfo(resortId)
 		}
 	}
 }

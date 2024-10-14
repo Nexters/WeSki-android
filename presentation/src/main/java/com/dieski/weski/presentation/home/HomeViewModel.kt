@@ -5,9 +5,8 @@ import com.dieski.analytics.AnalyticsLogger
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
-import com.dieski.domain.usecase.GetResortWeatherInfoListUseCase
+import com.dieski.domain.usecase.GetAllSkiResortsUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
-import com.dieski.weski.presentation.detail.DetailEffect
 import com.dieski.weski.presentation.home.model.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
@@ -16,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-	private val getResortWeatherInfoListUseCase: GetResortWeatherInfoListUseCase,
+	private val getAllSkiResortsUseCase: GetAllSkiResortsUseCase,
 	private val logger: AnalyticsLogger
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
 
@@ -46,7 +45,7 @@ class HomeViewModel @Inject constructor(
 		viewModelScope.launch {
 			setState { copy(isLoading = true) }
 
-			val skiResortInfoListResult = when(val result = getResortWeatherInfoListUseCase()) {
+			val skiResortInfoListResult = when(val result = getAllSkiResortsUseCase()) {
 				is WResult.Success -> result.data
 				is WResult.Error -> {
 					when(result.error) {

@@ -10,8 +10,12 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class SnowQualitySurveyResultResponse(
-	@SerialName("totalNum")
-	val totalNum: Int,
-	@SerialName("likeNum")
-	val likeNum: Int,
+	@SerialName("resortId")
+	val resortId: Long,
+	@SerialName("totalVotes")
+	val totalVotes: Int,
+	@SerialName("positiveVotes")
+	val positiveVotes: Int,
+	@SerialName("status")
+	val status: String
 )
