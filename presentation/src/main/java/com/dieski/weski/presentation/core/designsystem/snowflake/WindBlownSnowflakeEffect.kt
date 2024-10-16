@@ -89,8 +89,6 @@ fun WindBlownSnowflakeEffect() {
 		}
 	}
 
-	val yellow = Color(0xFFFdFF99)
-
 	Box(
 		modifier = Modifier
 			.fillMaxSize()

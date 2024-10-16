@@ -54,22 +54,18 @@ fun WeskiWebView(
                     override fun onPageCommitVisible(view: WebView?, url: String?) {
                         super.onPageCommitVisible(view, url)
                         onPageFinished()
-						Log.i("Test@@@", "onPageCommitVisible ${view?.height}")
                     }
 
 					override fun onScaleChanged(view: WebView?, oldScale: Float, newScale: Float) {
 						super.onScaleChanged(view, oldScale, newScale)
-						Log.i("Test@@@", "onScaleChanged: height: ${view?.height} oldScale: ${oldScale} newScale: ${newScale}")
 					}
 
 					override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
 						super.onPageStarted(view, url, favicon)
-						Log.i("Test@@@", "onPageStarted")
 					}
 
 					override fun onPageFinished(view: WebView?, url: String?) {
 						if (url != webViewUrl) {
-							Log.i("Test@@@", "onPageFinished ${view?.height}")
 							super.onPageFinished(view, url)
 						}
 					}
@@ -77,7 +73,6 @@ fun WeskiWebView(
 					override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
 						if (url != webViewUrl) {
 							super.doUpdateVisitedHistory(view, url, isReload)
-							Log.i("Test@@@", "doUpdateVisitedHistory isReload: $isReload")
 						}
 					}
 				}
@@ -85,7 +80,6 @@ fun WeskiWebView(
         },
         update = { view ->
             if (viewRenderingComplete) {
-				Log.i("Test@@@", "view loadUrl:$webViewUrl")
 				view.loadUrl(webViewUrl)
             }
         },

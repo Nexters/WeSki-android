@@ -1,14 +1,24 @@
 package com.dieski.weski.presentation.detail
 
 import android.content.Intent
-import androidx.compose.foundation.Image
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.view.ViewGroup
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import android.widget.TextView
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,12 +26,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.domain.model.SkiResortWebKey
@@ -31,6 +40,7 @@ import com.dieski.domain.model.WebMobileData
 import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
+import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffectBackground
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
@@ -78,22 +88,19 @@ internal fun DetailRouter(
 
 	Box(
 		modifier = Modifier.fillMaxSize()
+			.background(androidx.compose.ui.graphics.Color.Cyan)
 	) {
-		Image(
-			modifier = Modifier.fillMaxSize(),
-			painter = painterResource(id = R.drawable.img_background),
-			contentDescription = "",
-			contentScale = ContentScale.FillBounds
+		WindBlownSnowflakeEffectBackground(
+			modifier = Modifier.fillMaxSize()
+				.background(androidx.compose.ui.graphics.Color.Transparent)
 		)
-
-//        WindBlownSnowflakeEffect()
 
 		DetailScreen(
 			state = state,
 			onAction = viewModel::handleEvent,
 			modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
+				.fillMaxSize()
+				.padding(padding)
 		)
 	}
 }

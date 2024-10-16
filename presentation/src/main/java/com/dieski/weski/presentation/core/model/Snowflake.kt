@@ -8,7 +8,7 @@ import androidx.compose.ui.geometry.Offset
  * @created  2024/09/17
  */
 data class Snowflake(
-	val offset: Offset,
+	var offset: Offset,
 	val angle: Float,
 	val createTime: Long
 )

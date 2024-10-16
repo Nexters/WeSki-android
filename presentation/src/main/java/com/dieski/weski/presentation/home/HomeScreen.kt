@@ -42,6 +42,7 @@ import com.dieski.weski.presentation.core.designsystem.button.scroll.ScrollFloat
 import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCardWithWeatherCarousel
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
+import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffectBackground
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.home.model.HomeSkiResortInfo
@@ -79,14 +80,7 @@ internal fun HomeRouter(
 	Box(
 		modifier = Modifier.fillMaxSize()
 	) {
-		Image(
-			modifier = Modifier.fillMaxSize(),
-			painter = painterResource(id = R.drawable.img_background),
-			contentDescription = "",
-			contentScale = ContentScale.FillBounds
-		)
-
-		WindBlownSnowflakeEffect()
+		WindBlownSnowflakeEffectBackground()
 
 		HomeScreen(
 			state = state,
