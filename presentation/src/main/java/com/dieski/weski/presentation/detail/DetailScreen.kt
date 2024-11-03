@@ -181,7 +181,6 @@ internal fun DetailScreen(
 							cardVisibility = it
 						},
 					resortName = state.resortName,
-					operatingSlopeCount = 5,
 					status = "",
 					currentTemperature = state.temperature,
 					weatherCondition = state.weatherCondition,

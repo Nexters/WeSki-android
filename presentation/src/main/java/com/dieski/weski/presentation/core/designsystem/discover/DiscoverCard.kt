@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -32,11 +33,9 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
  * @author   JGeun
  * @created  2024/08/10
  */
-// TODO 배경색 추후 수정필요 - 디자인 확정 시
 @Composable
 fun DiscoverCard(
 	resortName: String,
-	operatingSlopeCount: Int,
 	status: String,
 	weatherCondition: WeatherCondition,
 	currentTemperature: Int,
@@ -45,10 +44,11 @@ fun DiscoverCard(
 	cornerDp: Dp = 15.dp,
 	paddingValues: PaddingValues = PaddingValues(top = 34.dp, bottom = 34.dp, start = 30.dp, end = 24.dp)
 ) {
+	val glassMorphismBgColor = Brush.linearGradient(listOf(Color(0xE6FFFFFF), Color(0x99FFFFFF)))
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
-			.background(color = bgColor, shape = RoundedCornerShape(cornerDp))
+			.background(brush = glassMorphismBgColor, shape = RoundedCornerShape(cornerDp))
 			.padding(paddingValues),
 		verticalArrangement = Arrangement.spacedBy(6.dp)
 	) {
@@ -110,7 +110,6 @@ fun DiscoverCard(
 private fun DiscoverCardPreview() {
 	DiscoverCard(
 		resortName = "용평스키장 모나",
-		operatingSlopeCount = 5,
 		currentTemperature = 7,
 		weatherCondition = WeatherCondition.SNOW,
 		status = "운영 중"
