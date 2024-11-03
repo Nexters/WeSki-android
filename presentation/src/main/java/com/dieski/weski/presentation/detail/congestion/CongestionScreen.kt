@@ -1,5 +1,6 @@
 package com.dieski.weski.presentation.detail.congestion
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -69,6 +70,7 @@ internal fun CongestionScreen(
 					.padding(vertical = 32.dp, horizontal = 5.dp),
 				webViewUrl = state.slopeWebUrl,
 				startRenderingNow = isCurrentPage,
+				onShowSnackBar = onShowSnackBar,
 				onPageFinished = {
 					isWebViewFinished = true
 				}

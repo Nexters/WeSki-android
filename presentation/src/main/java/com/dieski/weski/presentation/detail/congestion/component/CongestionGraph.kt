@@ -64,11 +64,11 @@ fun CongestionGraph(
 				)
 			}
 
-			Text(
-				text = updateMessage,
-				style = WeskiTheme.typography.body1Medium,
-				color = WeskiColor.Gray50
-			)
+//			Text(
+//				text = updateMessage,
+//				style = WeskiTheme.typography.body1Medium,
+//				color = WeskiColor.Gray50
+//			)
 		}
 
 		Spacer(modifier = Modifier.height(26.dp))

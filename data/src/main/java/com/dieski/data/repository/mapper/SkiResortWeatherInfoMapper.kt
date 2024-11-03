@@ -21,12 +21,10 @@ fun SkiResortWeatherInfoResponse.CurrentWeather.toDomain() = SkiResortWeatherInf
 )
 
 fun SkiResortWeatherInfoResponse.HourlyWeather.toDomain() = SkiResortWeatherInfo.HourlyWeather(
-    resortId = this.resortId,
     forecastTime = this.forecastTime,
     temperature = this.temperature,
     precipitationChance = this.precipitationChance,
     condition = this.condition,
-    updatedAt = this.updatedAt
 )
 
 fun SkiResortWeatherInfoResponse.DailyWeather.toDomain() = SkiResortWeatherInfo.DailyWeather(

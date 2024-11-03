@@ -38,6 +38,8 @@ data class DetailState(
 	val resortId: Long = -1L,
 	val resortName: String = "",
 	val resortWebKey: SkiResortWebKey = SkiResortWebKey.NONE,
+	val openSlopes: Int = 0,
+	val status: String = "",
 	val temperature: Int = 0,
 	val weatherCondition: WeatherCondition = WeatherCondition.SUNNY,
 	val weatherDescription: String = "",
@@ -45,7 +47,7 @@ data class DetailState(
 	val weeklyWeather: List<SkiResortWeatherInfo.DailyWeather> = emptyList(),
 	val snowQualitySurveyResult: SnowQualitySurveyResult = SnowQualitySurveyResult.EMPTY
 ) : UiState {
-	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortWebKey.value}"
+	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortWebKey.serverResortId}"
 	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}${resortWebKey.serverResortId}"
 }
 

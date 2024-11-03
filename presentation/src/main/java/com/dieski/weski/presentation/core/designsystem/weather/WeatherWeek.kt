@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
@@ -34,7 +35,8 @@ fun WeatherWeek(
 	weatherCondition: WeatherCondition,
 	chanceOfRain: String,
 	highestTemperature: Int,
-	lowestTemperature: Int
+	lowestTemperature: Int,
+	showRainChanceText: Boolean = false
 ) {
 	Row(
 		modifier = modifier.fillMaxWidth(),
@@ -71,13 +73,17 @@ fun WeatherWeek(
 			Spacer(modifier = Modifier.width(12.dp))
 
 			Column(
-				modifier = Modifier.width(30.dp)
+				modifier = Modifier
+					.padding(end = 6.dp)
 			) {
-				Text(
-					text = "강수",
-					style = WeskiTheme.typography.body3Regular,
-					color = WeskiColor.Gray60
-				)
+				if (showRainChanceText) {
+					Text(
+						text = "강수",
+						style = WeskiTheme.typography.body3Regular,
+						color = WeskiColor.Gray60
+					)
+				}
+
 				Text(
 					text = chanceOfRain,
 					style = WeskiTheme.typography.body2SemiBold,
@@ -85,7 +91,7 @@ fun WeatherWeek(
 				)
 			}
 
-			Spacer(modifier = Modifier.width(21.dp))
+			Spacer(modifier = Modifier.width(8.dp))
 
 			Row(
 				modifier = Modifier.width(80.dp)

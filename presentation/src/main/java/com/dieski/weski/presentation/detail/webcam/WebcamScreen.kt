@@ -1,5 +1,6 @@
 package com.dieski.weski.presentation.detail.webcam
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,12 +34,14 @@ internal fun WebcamScreen(
 		Column(
 			modifier = Modifier.fillMaxSize()
 		) {
+			Log.e("Test@@@", "WebcamScreen: ${state.webcamWebUrl}")
 			WeskiWebView(
 				modifier = Modifier
 					.fillMaxWidth()
 					.background(Color.Transparent),
 				webViewUrl = state.webcamWebUrl,
 				startRenderingNow = isCurrentPage,
+				onShowSnackBar = onShowSnackBar,
 				onPageFinished = {
 					isWebViewFinished = true
 				}

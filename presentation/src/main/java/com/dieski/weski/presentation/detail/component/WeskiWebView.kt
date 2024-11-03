@@ -2,7 +2,6 @@ package com.dieski.weski.presentation.detail.component
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -15,16 +14,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import com.dieski.weski.presentation.detail.common.WebViewAppInterface
 
 @Composable
 fun WeskiWebView(
     modifier: Modifier = Modifier,
     webViewUrl: String,
     startRenderingNow: Boolean = false,
+	onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
     onPageFinished: () -> Unit = {},
 ) {
     var viewRenderingComplete by remember { mutableStateOf(false) }
     var loadingFinished by remember { mutableStateOf(false) }
+
+	val webViewAppInterface by lazy { WebViewAppInterface(
+		onShowToast = { onShowSnackBar(it, null)} )
+	}
 
     // webViewUrl 변경에 따른 rendering 초기화
     LaunchedEffect(webViewUrl) {
@@ -50,6 +55,7 @@ fun WeskiWebView(
                 settings.javaScriptEnabled = true
                 settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
                 setBackgroundColor(Color.TRANSPARENT)
+				addJavascriptInterface(webViewAppInterface, "Android")
                 webViewClient = object : WebViewClient() {
                     override fun onPageCommitVisible(view: WebView?, url: String?) {
                         super.onPageCommitVisible(view, url)

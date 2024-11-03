@@ -33,18 +33,14 @@ data class SkiResortWeatherInfoResponse(
     @Serializable
     data class HourlyWeather(
         // Define fields for hourly weather if needed
-        @SerialName("resort_id")
-        val resortId: Int,
-        @SerialName("forecast_time")
+        @SerialName("time")
         val forecastTime: String, // Use String for DATETIME
         @SerialName("temperature")
         val temperature: Int,
         @SerialName("precipitationChance")
-        val precipitationChance: Int,
+        val precipitationChance: String,
         @SerialName("condition")
         val condition: String,
-        @SerialName("updated_at")
-        val updatedAt: String
     )
 
     @Serializable

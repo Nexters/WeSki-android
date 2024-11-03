@@ -31,7 +31,7 @@ fun VoteButton(
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    defaultBorderColor: Color =  WeskiColor.Gray60,
+    defaultBorderColor: Color =  WeskiColor.Gray30,
     selectedBorderColor: Color =  WeskiColor.Main01,
     selectedIconColor: Color =  WeskiColor.Main01,
     cornerDp: Dp = 8.dp

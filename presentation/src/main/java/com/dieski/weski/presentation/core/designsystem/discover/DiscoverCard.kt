@@ -45,12 +45,12 @@ fun DiscoverCard(
 	paddingValues: PaddingValues = PaddingValues(top = 34.dp, bottom = 34.dp, start = 30.dp, end = 24.dp)
 ) {
 	val glassMorphismBgColor = Brush.linearGradient(listOf(Color(0xE6FFFFFF), Color(0x99FFFFFF)))
+
 	Column(
 		modifier = modifier
 			.fillMaxWidth()
 			.background(brush = glassMorphismBgColor, shape = RoundedCornerShape(cornerDp))
-			.padding(paddingValues),
-		verticalArrangement = Arrangement.spacedBy(6.dp)
+			.padding(paddingValues)
 	) {
 		Row(
 			modifier = Modifier.fillMaxWidth(),

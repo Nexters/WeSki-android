@@ -29,7 +29,7 @@ fun WeatherTime(
 	time: String,
 	weatherCondition: WeatherCondition,
 	temperature: Int,
-	chanceOfRain: Int
+	chanceOfRain: String
 ) {
 	Column(
 		modifier = modifier,
@@ -57,7 +57,7 @@ fun WeatherTime(
 			color = WeskiColor.Gray90
 		)
 		Text(
-			text = "${chanceOfRain}%",
+			text = chanceOfRain,
 			style = WeskiTheme.typography.body3Regular,
 			color = WeskiColor.Gray60
 		)
@@ -72,6 +72,6 @@ private fun WeatherDayPreview() {
 		time = "오전 6시",
 		weatherCondition = WeatherCondition.SNOW,
 		temperature = -2,
-		chanceOfRain = 0
+		chanceOfRain = "20%"
 	)
 }

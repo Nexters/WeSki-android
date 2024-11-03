@@ -89,6 +89,8 @@ class DetailViewModel @Inject constructor(
 					resortId = skiResortDetailInfo.skiResortInfo.resortId,
 					resortName = skiResortDetailInfo.skiResortInfo.resortName,
 					resortWebKey = skiResortDetailInfo.skiResortInfo.resortWebKey,
+					openSlopes = skiResortDetailInfo.skiResortInfo.openSlopeCount,
+					status = skiResortDetailInfo.skiResortInfo.status,
 					temperature = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.temperature,
 					weatherCondition = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.condition,
 					weatherDescription = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.description,

@@ -70,7 +70,6 @@ internal fun DetailRouter(
 ) {
 	val state by viewModel.uiState.collectAsStateWithLifecycle()
 	val context = LocalContext.current
-	var windowPaddingOff by rememberSaveable { mutableStateOf(false) }
 
 	viewModel.effects.collectWithLifecycle {
 		when (it) {
@@ -81,7 +80,7 @@ internal fun DetailRouter(
 					type = "text/plain"
 					putExtra(
 						Intent.EXTRA_TEXT,
-						"${WebMobileData.WEB_MOBILE_URL}${WebMobileData.WEBCAM_PARAM}/${state.resortWebKey}"
+						it.webUrl
 					)
 				}
 				context.startActivity(Intent.createChooser(intent, "${state.resortName}을 공유해보세요!"))
@@ -107,9 +106,6 @@ internal fun DetailRouter(
 		DetailScreen(
 			state = state,
 			onAction = viewModel::handleEvent,
-			onWindowPaddingOff = {
-				windowPaddingOff = it
-			},
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(padding)
@@ -122,8 +118,7 @@ internal fun DetailRouter(
 internal fun DetailScreen(
 	state: DetailState,
 	modifier: Modifier = Modifier,
-	onAction: (DetailEvent) -> Unit = {},
-	onWindowPaddingOff: (Boolean) -> Unit = {}
+	onAction: (DetailEvent) -> Unit = {}
 ) {
 	val lazyListState = rememberLazyListState()
 	var cardVisibility by remember { mutableStateOf(true) }
@@ -181,7 +176,7 @@ internal fun DetailScreen(
 							cardVisibility = it
 						},
 					resortName = state.resortName,
-					status = "",
+					status = state.status,
 					currentTemperature = state.temperature,
 					weatherCondition = state.weatherCondition,
 				)

@@ -16,12 +16,10 @@ data class SkiResortWeatherInfo(
     )
 
     data class HourlyWeather(
-        val resortId: Int,
         val forecastTime: String,
         val temperature: Int,
-        val precipitationChance: Int,
+        val precipitationChance: String,
         val condition: String,
-        val updatedAt: String
     )
 
     data class DailyWeather(

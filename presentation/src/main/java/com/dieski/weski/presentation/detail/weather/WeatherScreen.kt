@@ -99,11 +99,12 @@ internal fun WeatherScreen(
 					weatherCondition = WeatherCondition.SNOW,
 					chanceOfRain = info.precipitationChance,
 					highestTemperature = info.maxTemperature,
-					lowestTemperature = info.minTemperature
+					lowestTemperature = info.minTemperature,
+					showRainChanceText = index == 0
 				)
 
 				if (index != state.weeklyWeather.lastIndex) {
-					Spacer(modifier = Modifier.height(2.dp))
+					Spacer(modifier = Modifier.height(6.dp))
 					Spacer(
 						modifier = Modifier
 							.fillMaxWidth()
@@ -114,7 +115,7 @@ internal fun WeatherScreen(
 								)
 							)
 					)
-					Spacer(modifier = Modifier.height(2.dp))
+					Spacer(modifier = Modifier.height(6.dp))
 				}
 			}
 		}
@@ -216,7 +217,7 @@ private fun WeatherScreenWeatherInfoTextBox() {
 
 		Text(
 			text = "최고 28° 최저 24°",
-			style = WeskiTheme.typography.heading3SemiBold,
+			style = WeskiTheme.typography.body1Regular,
 			color = WeskiColor.Gray60
 		)
 	}
