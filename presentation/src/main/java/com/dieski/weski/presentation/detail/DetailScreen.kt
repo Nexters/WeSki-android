@@ -1,12 +1,7 @@
 package com.dieski.weski.presentation.detail
 
+import android.app.Activity
 import android.content.Intent
-import android.util.Log
-import android.view.ViewGroup
-import android.webkit.WebSettings
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.TextView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,9 +14,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -29,21 +21,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,7 +39,6 @@ import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WebMobileData
-import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffectBackground
@@ -60,13 +47,13 @@ import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.detail.component.DetailFeedTab
-import com.dieski.weski.presentation.detail.component.DetailViewPagerWithTab
 import com.dieski.weski.presentation.detail.component.TabItem
 import com.dieski.weski.presentation.detail.congestion.CongestionScreen
 import com.dieski.weski.presentation.detail.weather.WeatherScreen
 import com.dieski.weski.presentation.detail.webcam.WebcamScreen
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
+import android.graphics.Color as AndroidColor
 
 /**
  *
@@ -83,6 +70,7 @@ internal fun DetailRouter(
 ) {
 	val state by viewModel.uiState.collectAsStateWithLifecycle()
 	val context = LocalContext.current
+	var windowPaddingOff by rememberSaveable { mutableStateOf(false) }
 
 	viewModel.effects.collectWithLifecycle {
 		when (it) {
@@ -99,7 +87,6 @@ internal fun DetailRouter(
 				context.startActivity(Intent.createChooser(intent, "${state.resortName}을 공유해보세요!"))
 			}
 		}
-
 	}
 
 	LaunchedEffect(Unit) {
@@ -114,12 +101,15 @@ internal fun DetailRouter(
 		WindBlownSnowflakeEffectBackground(
 			modifier = Modifier
 				.fillMaxSize()
-				.background(androidx.compose.ui.graphics.Color.Transparent)
+				.background(Color.Transparent)
 		)
 
 		DetailScreen(
 			state = state,
 			onAction = viewModel::handleEvent,
+			onWindowPaddingOff = {
+				windowPaddingOff = it
+			},
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(padding)
@@ -133,9 +123,17 @@ internal fun DetailScreen(
 	state: DetailState,
 	modifier: Modifier = Modifier,
 	onAction: (DetailEvent) -> Unit = {},
+	onWindowPaddingOff: (Boolean) -> Unit = {}
 ) {
 	val lazyListState = rememberLazyListState()
 	var cardVisibility by remember { mutableStateOf(true) }
+	val context  = LocalContext.current
+
+	LaunchedEffect(cardVisibility) {
+		if (context is Activity) {
+			context.window.statusBarColor = if(cardVisibility) AndroidColor.TRANSPARENT else AndroidColor.WHITE
+		}
+	}
 
 	val tabItemList = persistentListOf(
 		TabItem("웹캠 정보"),

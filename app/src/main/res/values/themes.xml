@@ -2,7 +2,7 @@
 <resources>
 
     <style name="Theme.Weski" parent="android:Theme.Material.Light.NoActionBar" >
-        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightStatusBar">true</item>
         <!--statusbar 컬러가 밝은색(true)/어두운색(false)에 따라 글자 및 이모티콘 색상을 맞춰서 어둡게/밝게 변경 -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <!--statusbar 컬러를 투명으로 변경 -->

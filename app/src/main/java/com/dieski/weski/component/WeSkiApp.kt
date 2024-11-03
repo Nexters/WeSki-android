@@ -24,7 +24,6 @@ internal fun WeSkiApp(
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
-    val localContextResource = LocalContext.current.resources
     val onShowSnackBar: (String, String?) -> Unit = { message, action ->
         appState.coroutineScope.launch {
             snackBarHostState.showSnackbar(
