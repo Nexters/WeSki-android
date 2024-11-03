@@ -1,13 +1,13 @@
 package com.dieski.weski.presentation.detail
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Color
+import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,20 +17,34 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion
+import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.domain.model.SkiResortWebKey
@@ -41,10 +55,18 @@ import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffectBackground
+import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
+import com.dieski.weski.presentation.detail.component.DetailFeedTab
 import com.dieski.weski.presentation.detail.component.DetailViewPagerWithTab
+import com.dieski.weski.presentation.detail.component.TabItem
+import com.dieski.weski.presentation.detail.congestion.CongestionScreen
+import com.dieski.weski.presentation.detail.weather.WeatherScreen
+import com.dieski.weski.presentation.detail.webcam.WebcamScreen
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.launch
 
 /**
  *
@@ -88,10 +110,10 @@ internal fun DetailRouter(
 
 	Box(
 		modifier = Modifier.fillMaxSize()
-			.background(androidx.compose.ui.graphics.Color.Cyan)
 	) {
 		WindBlownSnowflakeEffectBackground(
-			modifier = Modifier.fillMaxSize()
+			modifier = Modifier
+				.fillMaxSize()
 				.background(androidx.compose.ui.graphics.Color.Transparent)
 		)
 
@@ -105,6 +127,7 @@ internal fun DetailRouter(
 	}
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun DetailScreen(
 	state: DetailState,
@@ -112,74 +135,140 @@ internal fun DetailScreen(
 	onAction: (DetailEvent) -> Unit = {},
 ) {
 	val lazyListState = rememberLazyListState()
-	var cardOffset by remember { mutableStateOf(0f) }
+	var cardVisibility by remember { mutableStateOf(true) }
 
-	LazyColumn(
+	val tabItemList = persistentListOf(
+		TabItem("웹캠 정보"),
+		TabItem("날씨"),
+		TabItem("슬로프"),
+	)
+
+	val coroutineScope = rememberCoroutineScope()
+
+	val pagerState = rememberPagerState(
+		initialPage = 0,
+		initialPageOffsetFraction = 0f,
+		pageCount = { tabItemList.size }
+	)
+
+	LaunchedEffect(pagerState.currentPage) {
+		snapshotFlow { pagerState.currentPage }
+			.collect { currentPage ->
+				pagerState.animateScrollToPage(currentPage)
+			}
+	}
+
+	Column(
 		modifier = modifier.fillMaxSize(),
-		state = lazyListState
 	) {
-		item {
-			WeskiHeader(
-				showBackButton = true,
-				showShareButton = true,
-				onClickBackButton = { onAction(DetailEvent.ClickBackButton) },
-				onShare = {
-					onAction(DetailEvent.ClickShareButton)
-				}
-			)
-		}
-
-		item {
-			Box(
-				modifier = Modifier.fillMaxSize()
-			) {
-				DetailContent(
-					state = state,
-					onAction = onAction,
-					measureWeatherCardPosition = {
-						cardOffset = it
-					}
+		WeskiHeader(
+			bgColor = if (cardVisibility) Color.Transparent else Color.White,
+			showBackButton = true,
+			showShareButton = true,
+			title = if (cardVisibility) null else state.resortName,
+			onClickBackButton = { onAction(DetailEvent.ClickBackButton) },
+			onShare = {
+				onAction(DetailEvent.ClickShareButton)
+			}
+		)
+		LazyColumn(
+			modifier = Modifier.fillMaxSize(),
+			state = lazyListState
+		) {
+			item {
+				DiscoverCard(
+					modifier = Modifier
+						.padding(vertical = 28.dp, horizontal = 21.dp)
+						.isElementVisible {
+							cardVisibility = it
+						},
+					resortName = state.resortName,
+					operatingSlopeCount = 5,
+					status = "",
+					currentTemperature = state.temperature,
+					weatherCondition = state.weatherCondition,
 				)
+			}
+
+			stickyHeader {
+				DetailFeedTab(
+					modifier = Modifier
+						.fillMaxWidth()
+						.zIndex(1f),
+					tabs = tabItemList,
+					currentPage = pagerState.currentPage,
+					tabIdx = pagerState.currentPage,
+					onTabClick = { index ->
+						coroutineScope.launch {
+							pagerState.scrollToPage(index)
+						}
+					},
+				)
+			}
+
+			item {
+				if (state.resortWebKey != SkiResortWebKey.NONE) {
+					HorizontalPager(
+						modifier = Modifier
+							.fillMaxSize()
+							.background(WeskiColor.White),
+						state = pagerState,
+					) { page ->
+						when (page) {
+							0 -> WebcamScreen(
+								state = state,
+								isCurrentPage = pagerState.currentPage == 0,
+								submitSnowQualitySurvey = {
+									onAction(DetailEvent.SubmitSnowQualitySurvey(it))
+								},
+								onShowSnackBar = { message, action ->
+									onAction(DetailEvent.ShowSnackBar(message, action))
+								}
+							)
+
+							1 -> WeatherScreen(
+								state = state,
+								submitSnowQualitySurvey = {
+									onAction(DetailEvent.SubmitSnowQualitySurvey(it))
+								},
+								onShowSnackBar = { message, action ->
+									onAction(DetailEvent.ShowSnackBar(message, action))
+								}
+							)
+
+							2 -> CongestionScreen(
+								state = state,
+								submitSnowQualitySurvey = {
+									onAction(DetailEvent.SubmitSnowQualitySurvey(it))
+								},
+								isCurrentPage = pagerState.currentPage == 2,
+								onShowSnackBar = { message, action ->
+									onAction(DetailEvent.ShowSnackBar(message, action))
+								}
+							)
+						}
+					}
+				}
 			}
 		}
 	}
 }
 
-@Composable
-internal fun DetailContent(
-	state: DetailState,
-	modifier: Modifier = Modifier,
-	onAction: (DetailEvent) -> Unit = {},
-	measureWeatherCardPosition: (Float) -> Unit,
-) {
-	Column(
-		modifier = modifier
-			.fillMaxSize()
-	) {
-		Box(
-			modifier = Modifier.padding(vertical = 28.dp, horizontal = 21.dp)
-		) {
-			DiscoverCard(
-				modifier = Modifier.onGloballyPositioned {
-					measureWeatherCardPosition(it.positionInRoot().y)
-				},
-				resortName = state.resortName,
-				operatingSlopeCount = 5,
-				status = "",
-				currentTemperature = state.temperature,
-				weatherCondition = state.weatherCondition,
+private fun Modifier.isElementVisible(onVisibilityChanged: (Boolean) -> Unit) = composed {
+	val isVisible by remember { derivedStateOf { mutableStateOf(false) } }
+	LaunchedEffect(isVisible.value) { onVisibilityChanged.invoke(isVisible.value) }
+	this.onGloballyPositioned { layoutCoordinates ->
+		isVisible.value = layoutCoordinates.parentLayoutCoordinates?.let {
+			val parentBounds = it.boundsInWindow()
+			val childBounds = layoutCoordinates.boundsInWindow()
+			val childHalfBounds = Rect(
+				left = childBounds.left,
+				bottom = childBounds.bottom,
+				right = childBounds.right,
+				top = childBounds.top
 			)
-		}
-
-		DetailViewPagerWithTab(
-			state = state,
-			submitSnowQualitySurvey = {
-				onAction(DetailEvent.SubmitSnowQualitySurvey(it))
-			},
-			onShowSnackBar = { message, action ->
-				onAction(DetailEvent.ShowSnackBar(message, action))
-			}
-		)
+			parentBounds.overlaps(childHalfBounds)
+		} ?: false
 	}
 }
 

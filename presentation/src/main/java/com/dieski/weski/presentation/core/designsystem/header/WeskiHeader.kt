@@ -2,6 +2,7 @@ package com.dieski.weski.presentation.core.designsystem.header
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,9 +26,10 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 
 @Composable
 fun WeskiHeader(
-    modifier: Modifier = Modifier,
     showBackButton: Boolean,
     showShareButton: Boolean,
+    modifier: Modifier = Modifier,
+    title: String? = null,
     bgColor: Color = Color.Transparent,
     onClickBackButton: () -> Unit = {},
     onShare: () -> Unit = {}
@@ -50,14 +52,24 @@ fun WeskiHeader(
             )
         }
 
-        Icon(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .width(67.dp)
-                .height(21.dp),
-            painter = painterResource(id = R.drawable.ic_weski_header),
-            contentDescription = "WeSki Logo"
-        )
+        if (title == null) {
+            Icon(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .width(67.dp)
+                    .height(21.dp),
+                painter = painterResource(id = R.drawable.ic_weski_header),
+                contentDescription = "WeSki Logo"
+            )
+        } else {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = title,
+                color = WeskiColor.Gray100,
+                textAlign = TextAlign.Center,
+                style = WeskiTheme.typography.title3Bold
+            )
+        }
 
         if (showShareButton) {
             Icon(
@@ -79,6 +91,9 @@ fun WeskiHeader(
 @Composable
 private fun HeaderPreview() {
     WeskiTheme {
-        WeskiHeader(showBackButton = true, showShareButton = true)
+        Column {
+            WeskiHeader(showBackButton = true, showShareButton = true, title = null)
+            WeskiHeader(showBackButton = true, showShareButton = true, title = "지산리조트")
+        }
     }
 }
