@@ -10,6 +10,6 @@ class WebMobileData {
 	companion object {
 		const val WEB_MOBILE_URL = "https://we-ski-web.vercel.app/mobile/"
 		const val WEBCAM_PARAM = "webcam/"
-		const val SLOPE_PARAM = "slop-status/"
+		const val SLOPE_PARAM = "slope/"
 	}
 }

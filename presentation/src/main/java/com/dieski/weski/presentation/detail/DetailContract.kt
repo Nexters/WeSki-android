@@ -46,7 +46,7 @@ data class DetailState(
 	val snowQualitySurveyResult: SnowQualitySurveyResult = SnowQualitySurveyResult.EMPTY
 ) : UiState {
 	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortWebKey.value}"
-	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}${resortWebKey.value}"
+	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}${resortWebKey.serverResortId}"
 }
 
 sealed interface DetailEffect : UiEffect {
