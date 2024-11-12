@@ -14,7 +14,7 @@ interface SnowQualityRepository {
 	suspend fun submitSnowQualitySurvey(
 		resortId: Long,
 		isPositive: Boolean
-	)
+	) :WResult<Boolean, WError>
 
 	suspend fun fetchSnowQualitySurveyResult(
 		resortId: Long

@@ -106,7 +106,6 @@ internal fun DetailSnowQualitySurvey(
             text = "투표하기",
             onClick = {
                 onSubmit(selectedVoteBtnIndex == 0)
-                onShowSnackBar("투표가 완료되었어요", null)
             }
         )   
    }

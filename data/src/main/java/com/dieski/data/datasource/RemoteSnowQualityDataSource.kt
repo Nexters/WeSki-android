@@ -23,12 +23,15 @@ class RemoteSnowQualityDataSource @Inject constructor(
 	override suspend fun submitSnowQualitySurvey(
 		resortId: Long,
 		isPositive: Boolean
-	) {
+	): WResult<Boolean, DataError> =
 		snowQualityService.submitSnowQualitySurvey(resortId, isPositive)
 			.onFailure {
 				logger.logError(throwable, "SnowQualityService - submitSnowQualitySurvey()에서 발생")
 			}
-	}
+			.toResult {
+				true
+			}
+
 
 	override suspend fun fetchingSnowQualitySurveyResult(resortId: Long): WResult<SnowQualitySurveyResult, DataError> =
 		snowQualityService.fetchSnowQualitySurveyResult(resortId)

@@ -14,7 +14,7 @@ interface SnowQualityDataSource {
 	suspend fun submitSnowQualitySurvey(
 		resortId: Long,
 		isPositive: Boolean
-	)
+	): WResult<Boolean, DataError>
 
 	suspend fun fetchingSnowQualitySurveyResult(
 		resortId: Long

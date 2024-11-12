@@ -9,6 +9,7 @@ import com.dieski.domain.model.TodayForecast
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WeekWeatherInfo
 import com.dieski.domain.model.result.DetailError
+import com.dieski.domain.model.result.SubmitError
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
 import com.dieski.domain.usecase.GetAllSkiResortsUseCase
@@ -96,7 +97,7 @@ class DetailViewModel @Inject constructor(
 					weatherDescription = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.description,
 					todayWeatherByTime = skiResortDetailInfo.skiResortWeatherInfo.todayWeatherByTime,
 					weeklyWeather = skiResortDetailInfo.skiResortWeatherInfo.weeklyWeather,
-					snowQualitySurveyResult = snowQualitySurveyResult
+					snowQualitySurveyResult = skiResortDetailInfo.snowQualitySurveyResult
 				)
 			}
 		}
@@ -119,6 +120,9 @@ class DetailViewModel @Inject constructor(
 						}
 						is DataError.Network.TimeoutError -> {
 							setEffect(DetailEffect.ShowSnackBar("응답 시간을 초과하여 설문 결과를 불러오지 못했습니다.", null))
+						}
+						is SubmitError -> {
+							setEffect(DetailEffect.ShowSnackBar("오늘은 이미 설문조사를 완료하셨습니다.", null))
 						}
 					}
 					return@launch

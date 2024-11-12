@@ -1,6 +1,7 @@
 package com.dieski.domain.usecase
 
 import com.dieski.domain.model.SnowQualitySurveyResult
+import com.dieski.domain.model.result.SubmitError
 import com.dieski.domain.repository.SnowQualityRepository
 import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
@@ -19,8 +20,18 @@ class SubmitSnowQualitySurveyResultUseCase @Inject constructor(
 		isPositive:Boolean
 	): WResult<SnowQualitySurveyResult, WError> {
 		// 에러 여부와 상관없이 데이터 전송
-		snowQualityRepository.submitSnowQualitySurvey(resortId, isPositive)
-
-		return snowQualityRepository.fetchSnowQualitySurveyResult(resortId)
+		val submitResult = snowQualityRepository.submitSnowQualitySurvey(resortId, isPositive)
+		return when (submitResult) {
+			is WResult.Success -> {
+				if (!submitResult.data) {
+					WResult.Error(SubmitError)
+				} else {
+					snowQualityRepository.fetchSnowQualitySurveyResult(resortId)
+				}
+			}
+			is WResult.Error -> {
+				WResult.Error(submitResult.error)
+			}
+		}
 	}
 }

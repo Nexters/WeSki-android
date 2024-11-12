@@ -1,7 +1,9 @@
 package com.dieski.data.datasource.di
 
+import com.dieski.data.datasource.LocalSnowMakerDataSource
 import com.dieski.data.datasource.RemoteSnowQualityDataSource
 import com.dieski.data.datasource.RemoteWeSkiDataSource
+import com.dieski.data.datasource.SnowMakerSurveyRecordDataSource
 import com.dieski.data.datasource.SnowQualityDataSource
 import com.dieski.data.datasource.WeSkiDataSource
 import dagger.Binds
@@ -22,15 +24,22 @@ internal abstract class DataSourceModule {
 
 	@Binds
 	@Singleton
-	@Named("remote")
+	@Remote
 	abstract fun bindsRemoteSnowQualityDataSource(
 		remoteSnowQualityDataSource: RemoteSnowQualityDataSource
 	): SnowQualityDataSource
 
 	@Binds
 	@Singleton
-	@Named("remote")
+	@Remote
 	abstract fun bindsRemoteWeSkiDataSource(
 		remoteWeSkiDataSource: RemoteWeSkiDataSource
 	): WeSkiDataSource
+
+	@Binds
+	@Singleton
+	@Local
+	abstract fun bindsLocalSnowQualityDataSource(
+		localSnowMakerDataSource: LocalSnowMakerDataSource
+	): SnowMakerSurveyRecordDataSource
 }

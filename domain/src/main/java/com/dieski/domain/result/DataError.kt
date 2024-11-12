@@ -17,5 +17,6 @@ sealed interface DataError : WError {
 
 	sealed interface Local : DataError {
 		data object DiskFullError : Local
+		data object UnknownError : Local
 	}
 }

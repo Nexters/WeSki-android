@@ -1,6 +1,7 @@
 package com.dieski.data.repository
 
 import com.dieski.data.datasource.WeSkiDataSource
+import com.dieski.data.datasource.di.Remote
 import com.dieski.data.repository.mapper.toDomain
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortWeatherInfo
@@ -24,7 +25,7 @@ import javax.inject.Named
  * @created  2024/08/13
  */
 internal class DefaultWeskiRepository @Inject constructor(
-	@Named("remote") private val remoteWeSkiDataSource: WeSkiDataSource,
+	@Remote private val remoteWeSkiDataSource: WeSkiDataSource,
 	private val snowQualityService: SnowQualityService,
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : WeSkiRepository {
