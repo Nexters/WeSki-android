@@ -5,6 +5,7 @@ package com.dieski.analytics
  * @author   JGeun
  * @created  2024/09/14
  */
+
 interface AnalyticsLogger {
 	fun logEvent(event: AnalyticsEvent)
 
@@ -22,3 +23,4 @@ interface AnalyticsLogger {
 			}
 	}
 }
+

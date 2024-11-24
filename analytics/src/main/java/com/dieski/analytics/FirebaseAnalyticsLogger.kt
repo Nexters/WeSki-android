@@ -1,5 +1,6 @@
 package com.dieski.analytics
 
+import android.util.Log
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.crashlytics.ktx.crashlytics
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
  * @author   JGeun
  * @created  2024/09/14
  */
-internal object FireBaseAnalyticsLogger : AnalyticsLogger {
+object FireBaseAnalyticsLogger : AnalyticsLogger {
 	override fun logEvent(event: AnalyticsEvent) {
 		analyticsScope.launch {
 			Firebase.analytics.logEvent(event.type) {

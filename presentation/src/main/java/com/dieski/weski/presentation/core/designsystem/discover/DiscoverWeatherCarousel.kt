@@ -1,15 +1,23 @@
 package com.dieski.weski.presentation.core.designsystem.discover
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import com.dieski.domain.model.SkiResortInfo.DailyWeather
 import com.dieski.domain.model.WeatherCondition
+import com.dieski.weski.presentation.LocalLoggerOwner
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
+import com.dieski.weski.presentation.util.log
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toPersistentList
 import java.util.Calendar
@@ -22,11 +30,19 @@ import java.util.Calendar
 @Composable
 fun DiscoverWeatherCarousel(
 	weekWeatherInfoList: ImmutableList<DailyWeather>,
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	logRowScrolling: (Boolean) -> Unit = {},
 ) {
+	val lazyRowState = rememberLazyListState()
+	val isScrolling by remember { derivedStateOf { lazyRowState.isScrollInProgress } }
+
+	LaunchedEffect(isScrolling) {
+		logRowScrolling(isScrolling)
+	}
 
 	LazyRow(
-		modifier = modifier.fillMaxWidth()
+		modifier = modifier.fillMaxWidth(),
+		state = lazyRowState
 	) {
 		itemsIndexed(
 			weekWeatherInfoList

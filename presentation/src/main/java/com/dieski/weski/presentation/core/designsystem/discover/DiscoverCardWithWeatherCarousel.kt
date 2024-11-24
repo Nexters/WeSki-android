@@ -49,7 +49,8 @@ fun DiscoverCardWithWeatherCarousel(
 	onClick: () -> Unit,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
-	cornerDp: Dp = 15.dp
+	cornerDp: Dp = 15.dp,
+	logWeatherCarouselScrolling: (Boolean) -> Unit = {}
 ) {
 	val glassMorphismBgColor = Brush.linearGradient(listOf(Color(0xE6FFFFFF), Color(0x99FFFFFF)))
 
@@ -130,7 +131,8 @@ fun DiscoverCardWithWeatherCarousel(
 
 		DiscoverWeatherCarousel(
 			weekWeatherInfoList =weekWeatherInfoList,
-			modifier = Modifier.padding(start = 14.dp)
+			modifier = Modifier.padding(start = 14.dp),
+			logRowScrolling = logWeatherCarouselScrolling
 		)
 	}
 

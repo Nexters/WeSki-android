@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dieski.domain.model.WeatherCondition
@@ -32,8 +37,16 @@ internal fun WeatherScreen(
 	modifier: Modifier = Modifier,
 	state: DetailState = DetailState(),
 	submitSnowQualitySurvey: (isLike: Boolean) -> Unit = {},
-	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
+	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> },
+	logWeatherTimeRowScrolling: (Boolean) -> Unit = {}
 ) {
+	val weatherTimeLazyRowListState = rememberLazyListState()
+	val isScrolling by remember { derivedStateOf { weatherTimeLazyRowListState.isScrollInProgress } }
+
+	LaunchedEffect(isScrolling) {
+		logWeatherTimeRowScrolling(isScrolling)
+	}
+
 	Column(
 		modifier = modifier
 			.fillMaxSize()
@@ -53,11 +66,11 @@ internal fun WeatherScreen(
 
 		Spacer(modifier = Modifier.height(26.dp))
 
-
 		LazyRow(
 			modifier = Modifier
 				.fillMaxWidth()
-				.padding(start = 24.dp)
+				.padding(start = 24.dp),
+			state = weatherTimeLazyRowListState
 		) {
 			itemsIndexed(
 				state.todayWeatherByTime

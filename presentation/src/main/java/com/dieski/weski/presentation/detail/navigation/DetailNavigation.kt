@@ -26,7 +26,7 @@ fun NavGraphBuilder.detailNavGraph(
 	padding: PaddingValues,
 	onNavigateUp: () -> Unit,
 	onShowSnackBar: (String, String?) -> Unit,
-	) {
+) {
 	composable<Route.Detail> { navBackStackEntry ->
 		val resortId = navBackStackEntry.toRoute<Route.Detail>().resortId
 
@@ -34,7 +34,7 @@ fun NavGraphBuilder.detailNavGraph(
 			resortId = resortId,
 			padding = padding,
 			onNavigateUp = onNavigateUp,
-			onShowSnackBar = onShowSnackBar
+			onShowSnackBar = onShowSnackBar,
 		)
 	}
 }

@@ -17,12 +17,12 @@ fun NavGraphBuilder.homeNavGraph(
 	padding: PaddingValues,
 	navigateToDetail: (HomeSkiResortInfo) -> Unit,
 	onShowSnackBar: (String, String?) -> Unit,
-    ) {
+) {
     composable<Route.Home> {
         HomeRouter(
             padding = padding,
             navigateToDetail = navigateToDetail,
-            onShowSnackBar = onShowSnackBar
+            onShowSnackBar = onShowSnackBar,
         )
     }
 }

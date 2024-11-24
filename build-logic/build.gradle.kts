@@ -17,6 +17,24 @@ dependencies {
 	compileOnly(libs.firebase.crashlytics.gradle)
 }
 
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
+	}
+}
+
+kotlin {
+	jvmToolchain {
+		(this as JavaToolchainSpec).languageVersion.set(JavaLanguageVersion.of(17))
+	}
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+	kotlinOptions {
+		jvmTarget = "17"
+	}
+}
+
 gradlePlugin {
 	plugins {
 		register("androidApplication") {

@@ -6,8 +6,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.dieski.weski.presentation.detail.navigation.detailNavGraph
 import com.dieski.weski.presentation.home.navigation.homeNavGraph
 
@@ -17,7 +22,7 @@ internal fun MainNavHost(
     navigator: MainNavigator,
     padding: PaddingValues,
     onShowSnackBar: (String, String?) -> Unit,
-    ) {
+) {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -32,13 +37,13 @@ internal fun MainNavHost(
                 navigateToDetail = {
 					navigator.navigateToDetail(it.id)
 				},
-                onShowSnackBar = onShowSnackBar
+                onShowSnackBar = onShowSnackBar,
             )
 
             detailNavGraph(
                 padding = padding,
                 onNavigateUp = navigator::popBackStackIfNotHome,
-                onShowSnackBar = onShowSnackBar
+                onShowSnackBar = onShowSnackBar,
             )
         }
     }

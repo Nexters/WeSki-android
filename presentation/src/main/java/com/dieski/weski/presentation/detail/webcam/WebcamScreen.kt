@@ -34,7 +34,6 @@ internal fun WebcamScreen(
 		Column(
 			modifier = Modifier.fillMaxSize()
 		) {
-			Log.e("Test@@@", "WebcamScreen: ${state.webcamWebUrl}")
 			WeskiWebView(
 				modifier = Modifier
 					.fillMaxWidth()

@@ -18,7 +18,7 @@ android {
 	defaultConfig {
 		applicationId = "com.dieski.weski"
 		versionName = "1.0.0"
-		versionCode = 2024_11_12_01
+		versionCode = 2024_11_13_01
 	}
 
 	signingConfigs {
@@ -65,6 +65,7 @@ dependencies {
 	implementation(libs.material)
 	implementation(libs.bundles.androidx.compose.navigation)
 	implementation(libs.kotlin.collections.immutable)
+	implementation(libs.firebase.analytics)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)

@@ -27,4 +27,5 @@ object AnalyticsModule {
 			else -> error("Unknown build type")
 		}
 	}
+
 }

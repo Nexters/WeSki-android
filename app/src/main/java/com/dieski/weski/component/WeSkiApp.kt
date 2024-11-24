@@ -8,19 +8,30 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.dieski.weski.WeSkiAppState
 import com.dieski.weski.navigation.MainNavHost
 import com.dieski.weski.presentation.core.LocalWebOwner
+import com.dieski.weski.presentation.model.WeSkiEnterScreenLoggerRoute
+import com.dieski.weski.presentation.util.log
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @Composable
 internal fun WeSkiApp(
-    appState: WeSkiAppState
+    appState: WeSkiAppState,
 ) {
     val snackBarHostState = remember { SnackbarHostState() }
 
@@ -31,6 +42,28 @@ internal fun WeSkiApp(
                 actionLabel = action,
                 duration = Short
             )
+        }
+    }
+
+    val navBackStackEntry: NavBackStackEntry? by appState.navigator.navController.currentBackStackEntryAsState()
+    val currentDestination: NavDestination? by remember(navBackStackEntry) { derivedStateOf { navBackStackEntry?.destination } }
+    var previousLoggingScreenEventName: String? by remember { mutableStateOf(null) }
+
+    LaunchedEffect(currentDestination) {
+        val weSkiEnterScreenLoggerRoute = WeSkiEnterScreenLoggerRoute
+            .createWeSkiEnterScreenLoggerRoute(currentDestination)
+
+        val screenLoggerEventName = weSkiEnterScreenLoggerRoute.getEventName()
+
+        if(screenLoggerEventName.isNullOrEmpty().not() &&
+            checkNotNull(screenLoggerEventName) != previousLoggingScreenEventName
+         ) {
+            val localDateTime: LocalDateTime = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.KOREA)
+            val formattedDateTime = localDateTime.format(formatter)
+
+            appState.logger.log(screenLoggerEventName, formattedDateTime)
+            previousLoggingScreenEventName = screenLoggerEventName
         }
     }
 
