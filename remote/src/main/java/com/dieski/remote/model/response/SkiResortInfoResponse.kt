@@ -18,6 +18,8 @@ data class SkiResortInfoResponse(
 	val status: String,
 	@SerialName("openSlopes")
 	val openSlopeCount: Int,
+	@SerialName("openingDate")
+	val openingDate: String,
 	@SerialName("currentWeather")
 	val currentWeatherResponse: CurrentWeatherResponse,
 	@SerialName("weeklyWeather")

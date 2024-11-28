@@ -2,7 +2,6 @@ package com.dieski.weski.presentation.detail
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -22,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
@@ -39,7 +37,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.WeatherCondition
-import com.dieski.domain.model.WebMobileData
 import com.dieski.weski.presentation.LocalLoggerOwner
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
@@ -191,7 +188,7 @@ internal fun DetailScreen(
 							cardVisibility = it
 						},
 					resortName = state.resortName,
-					status = state.status,
+					status = state.getResortOperatingStatus(),
 					currentTemperature = state.temperature,
 					weatherCondition = state.weatherCondition,
 				)
@@ -227,7 +224,7 @@ internal fun DetailScreen(
 								isCurrentPage = pagerState.currentPage == 0,
 								submitSnowQualitySurvey = { isLike ->
 									val likeLoggerText = if (isLike) "good" else "not good"
-									logger.log("details_webcam_vote", "${state.resortName} snow $likeLoggerText")
+									logger.log("details_webcam_vote", state.resortName)
 									onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
 								},
 								onShowSnackBar = { message, action ->
@@ -239,7 +236,7 @@ internal fun DetailScreen(
 								state = state,
 								submitSnowQualitySurvey = { isLike ->
 									val likeLoggerText = if (isLike) "good" else "not good"
-									logger.log("details_weather_vote", "${state.resortName} snow $likeLoggerText")
+									logger.log("details_weather_vote", state.resortName)
 									onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
 								},
 								onShowSnackBar = { message, action ->
@@ -256,7 +253,7 @@ internal fun DetailScreen(
 								state = state,
 								submitSnowQualitySurvey = { isLike ->
 									val likeLoggerText = if (isLike) "good" else "not good"
-									logger.log("details_slope_vote", "${state.resortName} snow $likeLoggerText")
+									logger.log("details_slope_vote", state.resortName)
 									onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
 								},
 								isCurrentPage = pagerState.currentPage == 2,
@@ -301,6 +298,7 @@ private fun DetailScreenPreview() {
 			resortWebKey = SkiResortWebKey.EDEN,
 			temperature = 7,
 			weatherCondition = WeatherCondition.SNOW,
+			openingDate = "2024-08-10",
 			weatherDescription = "눈이 내립니다.",
 			snowQualitySurveyResult = SnowQualitySurveyResult(10, 5, 3, "")
 		)

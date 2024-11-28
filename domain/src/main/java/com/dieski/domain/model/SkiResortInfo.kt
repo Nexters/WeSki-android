@@ -11,6 +11,7 @@ data class SkiResortInfo(
 	val resortWebKey: SkiResortWebKey,
 	val status: String,
 	val openSlopeCount: Int,
+	val openingDate: String,
 	val currentWeather: CurrentWeather,
 	val weeklyWeather: List<DailyWeather>
 ) {

@@ -176,7 +176,7 @@ internal fun HomeContent(
 					weatherCondition = resortWeatherInfo.currentWeather.condition,
 					currentTemperature = resortWeatherInfo.currentWeather.temperature,
 					weekWeatherInfoList = resortWeatherInfo.weeklyWeather,
-					status = resortWeatherInfo.status,
+					status = resortWeatherInfo.getResortOperatingStatus(),
 					onClick = {
 						logger.log("home_click_details", resortWeatherInfo.name)
 						onCardClick(resortWeatherInfo)
@@ -214,6 +214,7 @@ private fun HomeScreenPreview() {
 			id = 0,
 			webKey = SkiResortWebKey.O2,
 			operatingSlopeCount = 5,
+			openingDate = "2024-08-18",
 			currentWeather = SkiResortInfo.CurrentWeather(
 				condition = WeatherCondition.CLOUDY,
 				temperature = 7

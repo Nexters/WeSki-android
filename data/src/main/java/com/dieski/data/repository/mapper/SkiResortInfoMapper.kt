@@ -16,6 +16,7 @@ fun SkiResortInfoResponse.toDomain() = SkiResortInfo(
 	status = this.status,
 	resortWebKey = SkiResortWebKey.findByServerResortId(this.resortId),
 	openSlopeCount = this.openSlopeCount,
+	openingDate = this.openingDate,
 	currentWeather = this.currentWeatherResponse.toDomain(),
 	weeklyWeather = this.weeklyWeatherResponse.map { it.toDomain() }
 )

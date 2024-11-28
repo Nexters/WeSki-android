@@ -85,7 +85,7 @@ fun CongestionGraph(
 
 			Text(
 				modifier = Modifier.align(Alignment.Center),
-				text = "인기 시간대는 개장일 이후부터 확인할 수 있어요",
+				text = "인기 시간대는 추후 오픈 예정이에요",
 				style = WeskiTheme.typography.title3SemiBold,
 				color = WeskiColor.Main01
 			)
