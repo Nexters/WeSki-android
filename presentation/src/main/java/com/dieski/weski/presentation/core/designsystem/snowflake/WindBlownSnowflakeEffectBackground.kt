@@ -1,6 +1,5 @@
 package com.dieski.weski.presentation.core.designsystem.snowflake
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -8,7 +7,6 @@ import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
-import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.Handler
@@ -16,20 +14,16 @@ import android.os.Looper
 import android.util.Log
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
 import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.model.Snowflake
 import com.dieski.weski.presentation.core.util.dpToPx
-import com.dieski.weski.presentation.core.util.pxToDp
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.PI
 import kotlin.math.cos
@@ -56,6 +50,7 @@ fun WindBlownSnowflakeEffectBackground(
 		AndroidView(
 			modifier = modifier.fillMaxSize(),
 			factory = { context ->
+				Log.e("Test@@@", "maxWidth:$maxWidth screenWidth:$screenWidth")
 				SurfaceView(context).apply {
 					holder.setFormat(PixelFormat.TRANSLUCENT)
 
@@ -67,8 +62,15 @@ fun WindBlownSnowflakeEffectBackground(
 					val handler = Handler(Looper.getMainLooper())
 					val choreographer = android.view.Choreographer.getInstance()
 
+					val snowCount = if (screenWidth > 1500) {
+						400
+					} else if (screenWidth > 1000){
+						300
+					} else {
+						200
+					}
 					val bitmapList = mutableListOf<Bitmap>()
-					for (i in 0 until 400) {
+					for (i in 0 until snowCount) {
 						val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.snow_texture, null)
 						if (drawable != null) {
 							val bitmap: Bitmap = drawableToBitmap(drawable, 45, 45)
@@ -101,7 +103,7 @@ fun WindBlownSnowflakeEffectBackground(
 								val newX = it.offset.x + horizontalOffset
 								val newY = it.offset.y + verticalOffset
 
-								if (newX <= 0 || newY >= screenHeight) {
+								if (newY >= screenHeight) {
 									val x = Random.nextInt(screenWidth).toFloat()
 									val y = Random.nextInt(screenHeight).toFloat()
 
@@ -159,15 +161,12 @@ fun drawableToBitmap(
 	bitmapHeight: Int
 ): Bitmap {
 	if (drawable is BitmapDrawable) {
-		Log.w("Test1", "is BitmapDrawable")
 		return drawable.bitmap
 	}
 
 	val bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888)
 	val canvas = Canvas(bitmap)
 	drawable.setBounds(0, 0, canvas.width, canvas.height)
-	Log.e("TEst2", "bitmap ${bitmapWidth} ${bitmapHeight}")
-	Log.e("TEst2", "canvas ${canvas.width} ${canvas.height}")
 	drawable.draw(canvas)
 
 	return bitmap
