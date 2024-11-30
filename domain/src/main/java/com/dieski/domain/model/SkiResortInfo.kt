@@ -13,7 +13,8 @@ data class SkiResortInfo(
 	val openSlopeCount: Int,
 	val openingDate: String,
 	val currentWeather: CurrentWeather,
-	val weeklyWeather: List<DailyWeather>
+	val weeklyWeather: List<DailyWeather>,
+	val isBookmarked: Boolean = false,
 ) {
 	data class CurrentWeather(
 		val temperature: Int,

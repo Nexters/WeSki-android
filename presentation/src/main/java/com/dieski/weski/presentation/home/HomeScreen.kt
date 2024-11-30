@@ -115,14 +115,15 @@ private fun HomeScreen(
 		Box(
 			modifier = Modifier.fillMaxSize()
 		) {
-			if (!state.isLoading) {
-				HomeContent(
-					resortWeatherInfoList = state.resortWeatherInfoList,
-					onCardClick = { onAction(HomeEvent.ClickCard(it)) },
-					modifier = Modifier.fillMaxSize(),
-					lazyListState = lazyListState
-				)
-			} else {
+			HomeContent(
+				resortWeatherInfoList = state.resortWeatherInfoList,
+				onCardClick = { onAction(HomeEvent.ClickCard(it)) },
+				onClickBookmark = { resortId, bookmarked ->onAction(HomeEvent.ToggleBookmark(resortId, bookmarked)) },
+				modifier = Modifier.fillMaxSize(),
+				lazyListState = lazyListState
+			)
+
+			if (state.isLoading) {
 				LoadingIndicator()
 			}
 
@@ -155,6 +156,7 @@ internal fun HomeContent(
 	resortWeatherInfoList: List<HomeSkiResortInfo>,
 	modifier: Modifier = Modifier,
 	onCardClick: (HomeSkiResortInfo) -> Unit = {},
+	onClickBookmark: (Long, Boolean) -> Unit = {_, _ -> },
 	lazyListState: LazyListState = rememberLazyListState()
 ) {
 	val logger = LocalLoggerOwner.current
@@ -177,9 +179,13 @@ internal fun HomeContent(
 					currentTemperature = resortWeatherInfo.currentWeather.temperature,
 					weekWeatherInfoList = resortWeatherInfo.weeklyWeather,
 					status = resortWeatherInfo.getResortOperatingStatus(),
-					onClick = {
+					isBookmarked = resortWeatherInfo.isBookmarked,
+					onClickCard = {
 						logger.log("home_click_details", resortWeatherInfo.name)
 						onCardClick(resortWeatherInfo)
+					},
+					onClickBookmark = {
+						onClickBookmark(resortWeatherInfo.id, resortWeatherInfo.isBookmarked)
 					},
 					logWeatherCarouselScrolling = { isScrolling ->
 						if (isScrolling) {

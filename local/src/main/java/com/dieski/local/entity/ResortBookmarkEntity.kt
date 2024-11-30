@@ -7,13 +7,15 @@ import androidx.room.PrimaryKey
 /**
  *
  * @author   JGeun
- * @created  2024/11/12
+ * @created  2024/11/29
  */
-@Entity(tableName = "ResortSnowMakerSurveyRecord")
-data class ResortSnowMakerSurveyRecordEntity(
+@Entity(tableName = "ResortBookmark")
+data class ResortBookmarkEntity(
 	@PrimaryKey
 	@ColumnInfo("resort_id")
 	val resortId: Long,
-	@ColumnInfo("submit_date")
-	val submitDate: String
+	@ColumnInfo("bookmarked_date")
+	val bookmarkedDate: String,
+	@ColumnInfo("bookmarked")
+	val isBookmarked: Boolean
 )

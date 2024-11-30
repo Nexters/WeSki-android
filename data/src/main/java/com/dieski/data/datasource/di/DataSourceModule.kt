@@ -1,5 +1,9 @@
 package com.dieski.data.datasource.di
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import com.dieski.data.datasource.BookmarkDataSource
+import com.dieski.data.datasource.LocalBookmarkDataSource
 import com.dieski.data.datasource.LocalSnowMakerDataSource
 import com.dieski.data.datasource.RemoteSnowQualityDataSource
 import com.dieski.data.datasource.RemoteWeSkiDataSource
@@ -8,7 +12,9 @@ import com.dieski.data.datasource.SnowQualityDataSource
 import com.dieski.data.datasource.WeSkiDataSource
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
@@ -42,4 +48,11 @@ internal abstract class DataSourceModule {
 	abstract fun bindsLocalSnowQualityDataSource(
 		localSnowMakerDataSource: LocalSnowMakerDataSource
 	): SnowMakerSurveyRecordDataSource
+
+	@Binds
+	@Singleton
+	@Local
+	abstract fun bindsLocalBookmarkDataSource(
+		localBookmarkDataSource: LocalBookmarkDataSource
+	): BookmarkDataSource
 }

@@ -11,6 +11,7 @@ import com.dieski.domain.model.WebMobileData.Companion.WEB_MOBILE_URL
 import com.dieski.weski.presentation.core.base.UiEffect
 import com.dieski.weski.presentation.core.base.UiEvent
 import com.dieski.weski.presentation.core.base.UiState
+import com.dieski.weski.presentation.home.HomeEvent
 
 sealed interface DetailEvent : UiEvent {
 	data class Init(
@@ -20,6 +21,11 @@ sealed interface DetailEvent : UiEvent {
 	data object ClickBackButton : DetailEvent
 
 	data object ClickShareButton : DetailEvent
+
+	data class ToggleBookmark(
+		val resortId: Long,
+		val isBookmarked: Boolean
+	) : DetailEvent
 
 	data class ShowSnackBar(
 		val message: String,
@@ -39,6 +45,7 @@ data class DetailState(
 	val openSlopes: Int = 0,
 	val status: String = "",
 	val openingDate: String = "0000-00-00",
+	val isBookmarked: Boolean = false,
 	val temperature: Int = 0,
 	val weatherCondition: WeatherCondition = WeatherCondition.SUNNY,
 	val weatherDescription: String = "",

@@ -1,6 +1,7 @@
 package com.dieski.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -22,8 +23,23 @@ interface ResortSnowMakerSurveyRecordDao {
 		resortSnowMakerSurveyRecordEntity: ResortSnowMakerSurveyRecordEntity
 	)
 
-	@Query("SELECT * FROM ResortSnowMakerSurveyRecord WHERE resortId = :resortId")
+	@Query("SELECT * FROM ResortSnowMakerSurveyRecord WHERE resort_id = :resortId")
 	suspend fun findSnowMakerSurveyRecord(
 		resortId: Long
 	): ResortSnowMakerSurveyRecordEntity?
+
+	@Query("SELECT * FROM ResortSnowMakerSurveyRecord WHERE resort_id IN (:resortIdList)")
+	suspend fun findSnowMakerSurveyRecordList(
+		resortIdList: List<Long>
+	): List<ResortSnowMakerSurveyRecordEntity>
+
+	@Delete
+	suspend fun deleteResortSnowMakerSurveyRecord(
+		resortSnowMakerSurveyRecordEntity: ResortSnowMakerSurveyRecordEntity
+	)
+
+	@Query("DELETE FROM ResortSnowMakerSurveyRecord WHERE resort_id IN (:resortIdList)")
+	suspend fun deleteResortSnowMakerSurveyRecordList(
+		resortIdList: List<Long>
+	)
 }

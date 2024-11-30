@@ -191,6 +191,10 @@ internal fun DetailScreen(
 					status = state.getResortOperatingStatus(),
 					currentTemperature = state.temperature,
 					weatherCondition = state.weatherCondition,
+					isBookmarked = state.isBookmarked,
+					onClickBookmark = {
+						onAction(DetailEvent.ToggleBookmark(state.resortId, state.isBookmarked))
+					}
 				)
 			}
 

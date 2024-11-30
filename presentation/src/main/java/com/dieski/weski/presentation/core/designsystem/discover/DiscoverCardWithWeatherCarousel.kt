@@ -24,11 +24,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dieski.domain.model.SkiResortInfo.DailyWeather
 import com.dieski.domain.model.WeatherCondition
+import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.model.asWeatherIcon
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.debounceClickable
+import com.dieski.weski.presentation.core.util.debounceNoRippleClickable
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -46,7 +48,9 @@ fun DiscoverCardWithWeatherCarousel(
 	status: String,
 	currentTemperature: Int,
 	weekWeatherInfoList: ImmutableList<DailyWeather>,
-	onClick: () -> Unit,
+	isBookmarked: Boolean,
+	onClickCard: () -> Unit,
+	onClickBookmark: () -> Unit,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
 	cornerDp: Dp = 15.dp,
@@ -57,7 +61,7 @@ fun DiscoverCardWithWeatherCarousel(
 	Column(
 		modifier = modifier
 			.background(brush = glassMorphismBgColor, shape = RoundedCornerShape(cornerDp))
-			.debounceClickable { onClick() }
+			.debounceClickable { onClickCard() }
 			.padding(top = 12.dp, bottom = 16.dp)
 	) {
 		Column(
@@ -70,12 +74,30 @@ fun DiscoverCardWithWeatherCarousel(
 				modifier = Modifier.fillMaxWidth(),
 				verticalAlignment = Alignment.CenterVertically
 			) {
-				Text(
+				Row(
 					modifier = Modifier.weight(1f),
-					text = resortName,
-					style = WeskiTheme.typography.title1Bold,
-					color = WeskiColor.Gray90
-				)
+					verticalAlignment = Alignment.CenterVertically,
+					horizontalArrangement = Arrangement.spacedBy(4.dp)
+				) {
+					Text(
+						text = resortName,
+						style = WeskiTheme.typography.title1Bold,
+						color = WeskiColor.Gray90
+					)
+
+					val bookmarkIcon = if (isBookmarked) {
+						R.drawable.ic_resort_bookmark_filled
+					} else {
+						R.drawable.ic_resort_bookmark
+					}
+
+					Image(
+						modifier = Modifier.size(20.dp)
+							.debounceNoRippleClickable { onClickBookmark() },
+						painter = painterResource(bookmarkIcon),
+						contentDescription = "Bookmark Icon"
+					)
+				}
 
 				Spacer(modifier = Modifier.width(8.dp))
 
@@ -158,6 +180,8 @@ private fun DiscoverCardWithWeatherCarouselPreview() {
 		weatherCondition = WeatherCondition.SNOW,
 		weekWeatherInfoList = dailyWeatherLists,
 		status = "운영 중",
-		onClick = {}
+		isBookmarked = false,
+		onClickCard = {},
+		onClickBookmark = {}
 	)
 }

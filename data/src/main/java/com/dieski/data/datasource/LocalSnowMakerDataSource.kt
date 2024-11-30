@@ -39,4 +39,13 @@ class LocalSnowMakerDataSource @Inject constructor(
 			WResult.Error(DataError.Local.UnknownError)
 		}
 	}
+
+	override suspend fun deleteSnowMakerSurveyRecordList(resortIdList: List<Long>): WResult<Boolean, DataError> {
+		return try {
+			snowMakerSurveyRecordDao.deleteResortSnowMakerSurveyRecordList(resortIdList)
+			WResult.Success(true)
+		} catch (e: Exception) {
+			WResult.Error(DataError.Local.UnknownError)
+		}
+	}
 }

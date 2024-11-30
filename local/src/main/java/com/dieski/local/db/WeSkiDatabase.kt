@@ -17,7 +17,6 @@ import com.dieski.local.entity.ResortSnowMakerSurveyRecordEntity
 abstract class WeSkiDatabase :RoomDatabase() {
 	abstract fun resortSnowMakerSurveyRecordDao(): ResortSnowMakerSurveyRecordDao
 
-
 	companion object {
 		const val DATABASE_NAME = "weski.db"
 	}

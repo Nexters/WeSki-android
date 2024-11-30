@@ -1,20 +1,16 @@
 package com.dieski.weski.presentation.detail
 
-import androidx.lifecycle.SavedStateHandle
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.dieski.analytics.AnalyticsLogger
 import com.dieski.domain.model.SkiResortDetailInfo
-import com.dieski.domain.model.SnowQualitySurveyResult
-import com.dieski.domain.model.TodayForecast
-import com.dieski.domain.model.WeatherCondition
-import com.dieski.domain.model.WeekWeatherInfo
 import com.dieski.domain.model.result.DetailError
 import com.dieski.domain.model.result.SubmitError
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
-import com.dieski.domain.usecase.GetAllSkiResortsUseCase
+import com.dieski.domain.usecase.DeleteResortBookmarkUseCase
 import com.dieski.domain.usecase.GetSkiResortDetailInfoUseCase
-import com.dieski.domain.usecase.GetSkiResortWeatherInfoUseCase
+import com.dieski.domain.usecase.SaveResortBookmarkUseCase
 import com.dieski.domain.usecase.SubmitSnowQualitySurveyResultUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +21,8 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
 	private val getSkiResortDetailInfoUseCase: GetSkiResortDetailInfoUseCase,
 	private val submitSnowQualitySurveyResultUseCase: SubmitSnowQualitySurveyResultUseCase,
-	private val logger : AnalyticsLogger,
+	private val saveResortBookmarkUseCase: SaveResortBookmarkUseCase,
+	private val deleteResortBookmarkUseCase: DeleteResortBookmarkUseCase,
 ) : BaseViewModel<DetailEvent, DetailState, DetailEffect>() {
 
 	override fun createInitialState(): DetailState {
@@ -56,6 +53,14 @@ class DetailViewModel @Inject constructor(
 					webUrl = uiState.value.webcamWebUrl
 				)
 			)
+
+			is DetailEvent.ToggleBookmark -> {
+				val (resortId, isBookmarked) = event
+				viewModelScope.launch {
+					toggleResortBookmarked(resortId, isBookmarked)
+					fetchSkiResortData(resortId)
+				}
+			}
 
 			is DetailEvent.ShowSnackBar -> {
 				setEffect(DetailEffect.ShowSnackBar(event.message, event.action))
@@ -91,6 +96,7 @@ class DetailViewModel @Inject constructor(
 					resortName = skiResortDetailInfo.skiResortInfo.resortName,
 					resortWebKey = skiResortDetailInfo.skiResortInfo.resortWebKey,
 					openSlopes = skiResortDetailInfo.skiResortInfo.openSlopeCount,
+					isBookmarked = skiResortDetailInfo.skiResortInfo.isBookmarked,
 					status = skiResortDetailInfo.skiResortInfo.status,
 					openingDate = skiResortDetailInfo.skiResortInfo.openingDate,
 					temperature = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.temperature,
@@ -137,4 +143,12 @@ class DetailViewModel @Inject constructor(
 				}
 			}
 		}
+
+	private suspend fun toggleResortBookmarked(resortId: Long, isBookmarked:Boolean) {
+		if(isBookmarked.not()) {
+			saveResortBookmarkUseCase(resortId)
+		} else {
+			deleteResortBookmarkUseCase(resortId)
+		}
+	}
 }

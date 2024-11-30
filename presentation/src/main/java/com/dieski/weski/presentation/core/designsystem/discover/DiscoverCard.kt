@@ -22,10 +22,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dieski.domain.model.WeatherCondition
+import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.model.asWeatherIcon
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
+import com.dieski.weski.presentation.core.util.debounceNoRippleClickable
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 
 /**
@@ -39,6 +41,8 @@ fun DiscoverCard(
 	status: String,
 	weatherCondition: WeatherCondition,
 	currentTemperature: Int,
+	isBookmarked: Boolean,
+	onClickBookmark: () -> Unit,
 	modifier: Modifier = Modifier,
 	bgColor: Color = WeskiColor.Gray10,
 	cornerDp: Dp = 15.dp,
@@ -56,12 +60,30 @@ fun DiscoverCard(
 			modifier = Modifier.fillMaxWidth(),
 			verticalAlignment = Alignment.CenterVertically
 		) {
-			Text(
+			Row(
 				modifier = Modifier.weight(1f),
-				text = resortName,
-				style = WeskiTheme.typography.title1Bold,
-				color = WeskiColor.Gray90
-			)
+				verticalAlignment = Alignment.CenterVertically,
+				horizontalArrangement = Arrangement.spacedBy(4.dp)
+			) {
+				Text(
+					text = resortName,
+					style = WeskiTheme.typography.title1Bold,
+					color = WeskiColor.Gray90
+				)
+
+				val bookmarkIcon = if (isBookmarked) {
+					R.drawable.ic_resort_bookmark_filled
+				} else {
+					R.drawable.ic_resort_bookmark
+				}
+
+				Image(
+					modifier = Modifier.size(20.dp)
+						.debounceNoRippleClickable { onClickBookmark() },
+					painter = painterResource(bookmarkIcon),
+					contentDescription = "Bookmark Icon"
+				)
+			}
 
 			Spacer(modifier = Modifier.width(8.dp))
 
@@ -112,7 +134,9 @@ private fun DiscoverCardPreview() {
 		resortName = "용평스키장 모나",
 		currentTemperature = 7,
 		weatherCondition = WeatherCondition.SNOW,
-		status = "운영 중"
+		status = "운영 중",
+		isBookmarked = true,
+		onClickBookmark = {}
 	)
 }
 

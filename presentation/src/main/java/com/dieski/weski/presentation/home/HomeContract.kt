@@ -15,6 +15,11 @@ sealed interface HomeEvent : UiEvent {
 	) : HomeEvent
 
 	data object ClickScrollFloatButton : HomeEvent
+
+	data class ToggleBookmark(
+		val resortId: Long,
+		val isBookmarked: Boolean
+	) : HomeEvent
 }
 
 data class HomeState(

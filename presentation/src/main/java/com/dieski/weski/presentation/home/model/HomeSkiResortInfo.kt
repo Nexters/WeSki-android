@@ -21,6 +21,7 @@ data class HomeSkiResortInfo(
 	val openingDate: String,
 	val operatingSlopeCount: Int,
 	val currentWeather: SkiResortInfo.CurrentWeather,
+	val isBookmarked: Boolean = false,
 	val weeklyWeather: ImmutableList<DailyWeather>,
 ) {
 	fun getResortOperatingStatus(): String {
@@ -44,6 +45,7 @@ fun SkiResortInfo.toUiModel() = HomeSkiResortInfo(
 	status = this.status,
 	openingDate = this.openingDate,
 	operatingSlopeCount = this.openSlopeCount,
+	isBookmarked = this.isBookmarked,
 	currentWeather = this.currentWeather,
 	weeklyWeather = this.weeklyWeather.toPersistentList(),
 )

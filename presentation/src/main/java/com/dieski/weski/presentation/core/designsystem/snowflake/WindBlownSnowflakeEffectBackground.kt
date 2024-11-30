@@ -50,7 +50,6 @@ fun WindBlownSnowflakeEffectBackground(
 		AndroidView(
 			modifier = modifier.fillMaxSize(),
 			factory = { context ->
-				Log.e("Test@@@", "maxWidth:$maxWidth screenWidth:$screenWidth")
 				SurfaceView(context).apply {
 					holder.setFormat(PixelFormat.TRANSLUCENT)
 

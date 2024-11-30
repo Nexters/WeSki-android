@@ -15,6 +15,7 @@ android {
 dependencies {
 	implementation(projects.domain)
 
+	implementation(libs.androidx.datastore)
 	implementation(libs.androidx.room.ktx)
 	implementation(libs.androidx.room.runtime)
 	ksp(libs.androidx.room.compiler)

@@ -1,11 +1,14 @@
 package com.dieski.weski.presentation.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.dieski.analytics.AnalyticsLogger
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
+import com.dieski.domain.usecase.DeleteResortBookmarkUseCase
 import com.dieski.domain.usecase.GetAllSkiResortsUseCase
+import com.dieski.domain.usecase.SaveResortBookmarkUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
 import com.dieski.weski.presentation.home.model.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
 	private val getAllSkiResortsUseCase: GetAllSkiResortsUseCase,
-	private val logger: AnalyticsLogger
+	private val saveResortBookmarkUseCase: SaveResortBookmarkUseCase,
+	private val deleteResortBookmarkUseCase: DeleteResortBookmarkUseCase
 ) : BaseViewModel<HomeEvent, HomeState, HomeEffect>() {
 
 	/**
@@ -38,6 +42,15 @@ class HomeViewModel @Inject constructor(
 			is HomeEvent.ClickScrollFloatButton -> setEffect(
 				HomeEffect.ScrollToTop
 			)
+
+			is HomeEvent.ToggleBookmark -> {
+				viewModelScope.launch {
+					val (resortId, isBookmarked) = event
+					toggleResortBookmarked(resortId, isBookmarked)
+					fetchHomeData()
+				}
+
+			}
 		}
 	}
 
@@ -66,6 +79,14 @@ class HomeViewModel @Inject constructor(
 					resortWeatherInfoList = skiResortInfoListResult.map(SkiResortInfo::toUiModel).toPersistentList()
 				)
 			}
+		}
+	}
+
+	private suspend fun toggleResortBookmarked(resortId: Long, isBookmarked:Boolean) {
+		if(isBookmarked.not()) {
+			saveResortBookmarkUseCase(resortId)
+		} else {
+			deleteResortBookmarkUseCase(resortId)
 		}
 	}
 }
