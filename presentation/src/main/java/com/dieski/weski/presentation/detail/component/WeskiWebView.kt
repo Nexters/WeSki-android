@@ -2,17 +2,17 @@ package com.dieski.weski.presentation.detail.component
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dieski.weski.presentation.detail.common.WebViewAppInterface
 
@@ -24,42 +24,36 @@ fun WeskiWebView(
 	onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
     onPageFinished: () -> Unit = {},
 ) {
-    var viewRenderingComplete by remember { mutableStateOf(false) }
-    var loadingFinished by remember { mutableStateOf(false) }
+	var webViewHeight by remember { mutableIntStateOf(0) }
 
-	val webViewAppInterface by lazy { WebViewAppInterface(
-		onShowToast = { onShowSnackBar(it, null)} )
+	val webViewAppInterface by lazy {
+		WebViewAppInterface(
+			onShowToast = { onShowSnackBar(it, null) },
+			setHeight = { webViewHeight = it }
+		)
 	}
-
-    // webViewUrl 변경에 따른 rendering 초기화
-    LaunchedEffect(webViewUrl) {
-        viewRenderingComplete = false
-    }
-
-    // WebView가 보여지는 타이밍에 한번만 로드되도록 처리
-    LaunchedEffect(startRenderingNow) {
-        if (!viewRenderingComplete && startRenderingNow) {
-            viewRenderingComplete = startRenderingNow
-        }
-    }
 
     // Adds view to Compose
     AndroidView(
         modifier = modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+			.height(webViewHeight.dp),
         factory = { context ->
             WebView(context).apply {
                 settings.loadWithOverviewMode = true
                 settings.useWideViewPort = true
                 settings.setSupportZoom(true)
                 settings.javaScriptEnabled = true
-                settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
+				settings.setSupportMultipleWindows(true)
+				settings.javaScriptCanOpenWindowsAutomatically = true
+				setLayerType(WebView.LAYER_TYPE_NONE, null)
                 setBackgroundColor(Color.TRANSPARENT)
+				settings.mediaPlaybackRequiresUserGesture = false
 				addJavascriptInterface(webViewAppInterface, "Android")
                 webViewClient = object : WebViewClient() {
                     override fun onPageCommitVisible(view: WebView?, url: String?) {
                         super.onPageCommitVisible(view, url)
-                        onPageFinished()
+						onPageFinished()
                     }
 
 					override fun onScaleChanged(view: WebView?, oldScale: Float, newScale: Float) {
@@ -71,23 +65,17 @@ fun WeskiWebView(
 					}
 
 					override fun onPageFinished(view: WebView?, url: String?) {
-						if (url != webViewUrl) {
-							super.onPageFinished(view, url)
-						}
+						super.onPageFinished(view, url)
 					}
 
 					override fun doUpdateVisitedHistory(view: WebView?, url: String?, isReload: Boolean) {
-						if (url != webViewUrl) {
-							super.doUpdateVisitedHistory(view, url, isReload)
-						}
+						super.doUpdateVisitedHistory(view, url, isReload)
 					}
 				}
             }
         },
         update = { view ->
-            if (viewRenderingComplete) {
-				view.loadUrl(webViewUrl)
-            }
+			view.loadUrl(webViewUrl)
         },
     )
 }
