@@ -10,6 +10,12 @@ sealed interface Route {
 
 	@Serializable
 	data class Detail(val resortId: Long) : Route
+
+	@Serializable
+	data class WebcamConnect(
+		val resortId: Long,
+		val resortName: String
+	) : Route
 }
 
 

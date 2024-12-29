@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.dieski.weski.presentation.detail.navigation.detailNavGraph
+import com.dieski.weski.presentation.detail.navigation.webcamConnectNavGraph
 import com.dieski.weski.presentation.home.navigation.homeNavGraph
 
 @Composable
@@ -43,7 +44,18 @@ internal fun MainNavHost(
             detailNavGraph(
                 padding = padding,
                 onNavigateUp = navigator::popBackStackIfNotHome,
+                navigateToWebcamConnect = { resortId, resortName ->
+                    navigator.navigateToWebcamConnect(
+                        resortId = resortId,
+                        resortName = resortName
+                    )
+                },
                 onShowSnackBar = onShowSnackBar,
+            )
+
+            webcamConnectNavGraph(
+                padding = padding,
+                onNavigateUp = navigator::popBackStackIfNotHome,
             )
         }
     }

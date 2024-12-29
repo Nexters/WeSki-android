@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -36,12 +37,14 @@ import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.LocalLoggerOwner
 import com.dieski.weski.presentation.R
+import com.dieski.weski.presentation.core.common.BannerAds
 import com.dieski.weski.presentation.core.designsystem.button.scroll.ScrollFloatButton
 import com.dieski.weski.presentation.core.designsystem.component.LoadingIndicator
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCardWithWeatherCarousel
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffectBackground
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
+import com.dieski.weski.presentation.core.util.HOME_BOTTOM_BANNER_AD_UNIT_ID
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.home.model.HomeSkiResortInfo
 import com.dieski.weski.presentation.util.log
@@ -88,6 +91,14 @@ internal fun HomeRouter(
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(padding),
+		)
+
+		BannerAds(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(padding)
+				.align(Alignment.BottomCenter),
+			bannerAdUnitId = HOME_BOTTOM_BANNER_AD_UNIT_ID
 		)
 	}
 }

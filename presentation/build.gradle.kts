@@ -1,11 +1,32 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
 	id("weski.android.library")
 	id("weski.android.hilt")
 	id("weski.android.library.compose")
 }
 
+val properties = Properties().apply {
+	load(FileInputStream(rootProject.file("local.properties")))
+}
+
 android {
 	namespace = "com.dieski.weski.presentation"
+
+	defaultConfig {
+		buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+
+		buildConfigField("String", "DETAIL_SLOPE_BANNER1_AD_UNIT_ID", properties["DETAIL_SLOPE_BANNER1_AD_UNIT_ID"].toString())
+		buildConfigField("String", "DETAIL_SLOPE_BOTTOM_BANNER_AD_UNIT_ID", properties["DETAIL_SLOPE_BOTTOM_BANNER_AD_UNIT_ID"].toString())
+		buildConfigField("String", "DETAIL_WEATHER_BANNER1_AD_UNIT_ID", properties["DETAIL_WEATHER_BANNER1_AD_UNIT_ID"].toString())
+		buildConfigField("String", "DETAIL_WEATHER_BOTTOM_BANNER_AD_UNIT_ID", properties["DETAIL_WEATHER_BOTTOM_BANNER_AD_UNIT_ID"].toString())
+		buildConfigField("String", "DETAIL_WEBCAM_BANNER1_AD_UNIT_ID", properties["DETAIL_WEBCAM_BANNER1_AD_UNIT_ID"].toString())
+		buildConfigField("String", "DETAIL_WEBCAM_BOTTOM_BANNER_AD_UNIT_ID", properties["DETAIL_WEBCAM_BOTTOM_BANNER_AD_UNIT_ID"].toString())
+		buildConfigField("String", "HOME_BOTTOM_BANNER_AD_UNIT_ID", properties["HOME_BOTTOM_BANNER_AD_UNIT_ID"].toString())
+		buildConfigField("String", "HOME_FAVORITES_BANNER_AD_UNIT_ID", properties["HOME_FAVORITES_BANNER_AD_UNIT_ID"].toString())
+		buildConfigField("String", "HOME_NATIVE_BANNER1_AD_UNIT_ID", properties["HOME_NATIVE_BANNER1_AD_UNIT_ID"].toString())
+	}
 }
 
 dependencies {
@@ -19,6 +40,7 @@ dependencies {
 	implementation(libs.kotlin.collections.immutable)
 	debugImplementation(libs.bundles.androidx.compose.debug)
 	implementation(libs.coil.compose)
+	implementation(libs.play.services.ads)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)

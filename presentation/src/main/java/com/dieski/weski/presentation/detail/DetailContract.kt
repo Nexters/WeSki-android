@@ -35,6 +35,11 @@ sealed interface DetailEvent : UiEvent {
 	data class SubmitSnowQualitySurvey(
 		val isPositive: Boolean
 	) : DetailEvent
+
+	data class ClickWebcam(
+		val resortId: Long,
+		val resortName: String
+	) : DetailEvent
 }
 
 @Immutable
@@ -72,6 +77,11 @@ data class DetailState(
 
 sealed interface DetailEffect : UiEffect {
 	data object GoToBackScreen : DetailEffect
+
+	data class GoToWebcamConnect(
+		val resortId: Long,
+		val resortName: String
+	) : DetailEffect
 
 	data class ShareResortWebUrl(
 		val webUrl: String

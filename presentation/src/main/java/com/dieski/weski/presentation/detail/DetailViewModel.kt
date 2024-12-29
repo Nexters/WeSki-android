@@ -65,6 +65,10 @@ class DetailViewModel @Inject constructor(
 			is DetailEvent.ShowSnackBar -> {
 				setEffect(DetailEffect.ShowSnackBar(event.message, event.action))
 			}
+
+			is DetailEvent.ClickWebcam -> {
+				setEffect(DetailEffect.GoToWebcamConnect(event.resortId, event.resortName))
+			}
 		}
 	}
 

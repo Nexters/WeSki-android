@@ -6,6 +6,7 @@ plugins {
 	id("weski.android.hilt")
 	id("weski.android.application.compose")
 	id("weski.android.application.firebase")
+	alias(libs.plugins.google.services)
 }
 
 val properties = Properties().apply {
@@ -47,6 +48,10 @@ android {
 		}
 	}
 
+	defaultConfig {
+		manifestPlaceholders["ADMOB_APP_ID"] = properties["ADMOB_APP_ID"] as Any
+	}
+
 	buildFeatures {
 		buildConfig = true
 	}
@@ -66,6 +71,7 @@ dependencies {
 	implementation(libs.bundles.androidx.compose.navigation)
 	implementation(libs.kotlin.collections.immutable)
 	implementation(libs.firebase.analytics)
+	implementation(libs.play.services.ads)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)

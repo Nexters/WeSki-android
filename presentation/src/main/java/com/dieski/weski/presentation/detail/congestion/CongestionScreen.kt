@@ -1,6 +1,5 @@
 package com.dieski.weski.presentation.detail.congestion
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.dieski.weski.presentation.core.common.BannerAds
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
+import com.dieski.weski.presentation.core.util.DETAIL_SLOPE_BANNER1_AD_UNIT_ID
+import com.dieski.weski.presentation.core.util.DETAIL_SLOPE_BOTTOM_BANNER_AD_UNIT_ID
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.detail.DetailState
@@ -67,7 +69,7 @@ internal fun CongestionScreen(
 			WeskiWebView(
 				modifier = Modifier
 					.fillMaxWidth()
-					.padding(vertical = 32.dp, horizontal = 5.dp),
+					.padding(top = 32.dp, bottom = 32.dp, start= 5.dp, end = 5.dp),
 				webViewUrl = state.slopeWebUrl,
 				startRenderingNow = isCurrentPage,
 				onShowSnackBar = onShowSnackBar,
@@ -83,6 +85,12 @@ internal fun CongestionScreen(
 						.height(6.dp)
 						.background(WeskiColor.Gray20)
 				)
+				BannerAds(
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(horizontal = 28.dp, vertical = 17.dp),
+					bannerAdUnitId = DETAIL_SLOPE_BANNER1_AD_UNIT_ID
+				)
 
 				DetailSnowQualitySurvey(
 					totalNum = state.snowQualitySurveyResult.totalVotes,
@@ -91,6 +99,12 @@ internal fun CongestionScreen(
 						submitSnowQualitySurvey(isGood)
 					},
 					onShowSnackBar = onShowSnackBar
+				)
+
+				BannerAds(
+					modifier = Modifier
+						.fillMaxWidth(),
+					bannerAdUnitId = DETAIL_SLOPE_BOTTOM_BANNER_AD_UNIT_ID
 				)
 			}
 		}

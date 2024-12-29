@@ -9,6 +9,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.dieski.weski.presentation.core.navigation.Route
 import com.dieski.weski.presentation.detail.navigation.navigateDetail
+import com.dieski.weski.presentation.detail.navigation.navigateWebcamConnect
 
 internal class MainNavigator(
     val navController: NavHostController
@@ -44,6 +45,13 @@ internal class MainNavigator(
         resortId: Long,
     ) {
         navController.navigateDetail(resortId)
+    }
+
+    fun navigateToWebcamConnect(
+        resortId: Long,
+        resortName: String
+    ) {
+        navController.navigateWebcamConnect(resortId, resortName)
     }
 
     private fun popBackStack() {

@@ -1,0 +1,65 @@
+package com.dieski.weski.presentation.core.util
+
+import com.dieski.weski.presentation.BuildConfig
+
+/**
+ *
+ * @author   JGeun
+ * @created  2024/12/29
+ */
+private const val TEST_BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111"
+private const val TEST_NATIVE_AD_UNIT_ID = "ca-app-pub-3940256099942544/2247696110"
+
+val DETAIL_SLOPE_BANNER1_AD_UNIT_ID: String = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.DETAIL_SLOPE_BANNER1_AD_UNIT_ID
+}
+
+val DETAIL_SLOPE_BOTTOM_BANNER_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.DETAIL_SLOPE_BOTTOM_BANNER_AD_UNIT_ID
+}
+
+val DETAIL_WEATHER_BANNER1_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.DETAIL_WEATHER_BANNER1_AD_UNIT_ID
+}
+
+val DETAIL_WEATHER_BOTTOM_BANNER_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.DETAIL_WEATHER_BOTTOM_BANNER_AD_UNIT_ID
+}
+
+val DETAIL_WEBCAM_BANNER1_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.DETAIL_WEBCAM_BANNER1_AD_UNIT_ID
+}
+
+val DETAIL_WEBCAM_BOTTOM_BANNER_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.DETAIL_WEBCAM_BOTTOM_BANNER_AD_UNIT_ID
+}
+
+val HOME_BOTTOM_BANNER_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.HOME_BOTTOM_BANNER_AD_UNIT_ID
+}
+
+val HOME_FAVORITES_BANNER_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_BANNER_AD_UNIT_ID
+} else {
+	BuildConfig.HOME_FAVORITES_BANNER_AD_UNIT_ID
+}
+
+val HOME_NATIVE_BANNER1_AD_UNIT_ID = if (BuildConfig.DEBUG) {
+	TEST_NATIVE_AD_UNIT_ID
+} else {
+	BuildConfig.HOME_NATIVE_BANNER1_AD_UNIT_ID
+}

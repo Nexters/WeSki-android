@@ -20,9 +20,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dieski.domain.model.WeatherCondition
+import com.dieski.weski.presentation.core.common.BannerAds
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.designsystem.weather.WeatherTime
 import com.dieski.weski.presentation.core.designsystem.weather.WeatherWeek
+import com.dieski.weski.presentation.core.util.DETAIL_WEATHER_BANNER1_AD_UNIT_ID
+import com.dieski.weski.presentation.core.util.DETAIL_WEATHER_BOTTOM_BANNER_AD_UNIT_ID
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.detail.DetailState
@@ -135,11 +138,24 @@ internal fun WeatherScreen(
 
 		WeatherDividerLine()
 
+		BannerAds(
+			modifier = Modifier
+				.fillMaxWidth()
+				.padding(horizontal = 28.dp, vertical = 17.dp),
+			bannerAdUnitId = DETAIL_WEATHER_BANNER1_AD_UNIT_ID
+		)
+
 		DetailSnowQualitySurvey(
 			totalNum = state.snowQualitySurveyResult.totalVotes,
 			likeNum = state.snowQualitySurveyResult.positiveVotes,
 			onSubmit = { submitSnowQualitySurvey(it) },
 			onShowSnackBar = onShowSnackBar
+		)
+
+		BannerAds(
+			modifier = Modifier
+				.fillMaxWidth(),
+			bannerAdUnitId = DETAIL_WEATHER_BOTTOM_BANNER_AD_UNIT_ID
 		)
 	}
 }
