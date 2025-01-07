@@ -51,6 +51,10 @@ class HomeViewModel @Inject constructor(
 				}
 
 			}
+
+			HomeEvent.ClickShowServiceInfoReport -> setEffect(HomeEffect.ShowServiceInfoReport)
+			HomeEvent.ClickReportBug -> setEffect(HomeEffect.ReportBug)
+			HomeEvent.ClickWriteFeedbackReport -> setEffect(HomeEffect.WriteFeedbackReport)
 		}
 	}
 

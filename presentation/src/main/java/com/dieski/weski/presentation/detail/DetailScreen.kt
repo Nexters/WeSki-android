@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -30,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -38,6 +41,7 @@ import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.LocalLoggerOwner
+import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.designsystem.discover.DiscoverCard
 import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffectBackground
@@ -45,6 +49,7 @@ import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
+import com.dieski.weski.presentation.core.util.noRippleClickable
 import com.dieski.weski.presentation.detail.component.DetailFeedTab
 import com.dieski.weski.presentation.detail.component.TabItem
 import com.dieski.weski.presentation.detail.congestion.CongestionScreen
@@ -173,13 +178,27 @@ internal fun DetailScreen(
 		modifier = modifier.fillMaxSize(),
 	) {
 		WeskiHeader(
-			bgColor = if (cardVisibility) Color.Transparent else Color.White,
-			showBackButton = true,
-			showShareButton = true,
 			title = if (cardVisibility) null else state.resortName,
-			onClickBackButton = { onAction(DetailEvent.ClickBackButton) },
-			onShare = {
-				onAction(DetailEvent.ClickShareButton)
+			bgColor = if (cardVisibility) Color.Transparent else Color.White,
+			startIcon = {
+				Icon(
+					modifier = Modifier
+						.size(26.dp)
+						.noRippleClickable { onAction(DetailEvent.ClickBackButton) },
+					painter = painterResource(id = R.drawable.ic_arrow_back),
+					tint = Color.Black,
+					contentDescription = "뒤로가기"
+				)
+			},
+			endIcon = {
+				Icon(
+					modifier = Modifier
+						.size(26.dp)
+						.noRippleClickable { onAction(DetailEvent.ClickShareButton) },
+					painter = painterResource(id = R.drawable.icn_share),
+					tint = WeskiColor.Gray90,
+					contentDescription = "공유하기"
+				)
 			}
 		)
 		LazyColumn(

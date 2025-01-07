@@ -80,9 +80,9 @@ fun WebcamConnectScreen(
 	) {
 		WeskiHeader(
 			title = resortName,
-			showBackButton = true,
-			showShareButton = false,
-			onClickBackButton = navigateUp
+//			showBackButton = true,
+//			showShareButton = false,
+//			onClickBackButton = navigateUp
 		)
 
 		Column(

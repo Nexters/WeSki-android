@@ -20,6 +20,12 @@ sealed interface HomeEvent : UiEvent {
 		val resortId: Long,
 		val isBookmarked: Boolean
 	) : HomeEvent
+
+	data object ClickShowServiceInfoReport : HomeEvent
+
+	data object ClickWriteFeedbackReport : HomeEvent
+
+	data object ClickReportBug : HomeEvent
 }
 
 data class HomeState(
@@ -35,4 +41,10 @@ sealed interface HomeEffect : UiEffect {
 	data object ScrollToTop : HomeEffect
 
 	data class ShowSnackBar(val message: String, val action: String?) : HomeEffect
+
+	data object ShowServiceInfoReport : HomeEffect
+
+	data object WriteFeedbackReport :HomeEffect
+
+	data object ReportBug : HomeEffect
 }
