@@ -16,20 +16,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dieski.weski.presentation.detail.common.WebViewAppInterface
 
+sealed interface WebViewAction {
+	data class ShowToast(
+		val message: String
+	) : WebViewAction
+
+	data class GetHeight(
+		val height: Int
+	): WebViewAction
+
+	data class GetWebViewUrl(val url: String) : WebViewAction
+}
+
 @Composable
 fun WeskiWebView(
     modifier: Modifier = Modifier,
     webViewUrl: String,
-    startRenderingNow: Boolean = false,
-	onShowSnackBar: (String, String?) -> Unit = { _, _ -> },
     onPageFinished: () -> Unit = {},
+	onAction: (WebViewAction) -> Unit = {}
 ) {
 	var webViewHeight by remember { mutableIntStateOf(0) }
 
 	val webViewAppInterface by lazy {
 		WebViewAppInterface(
-			onShowToast = { onShowSnackBar(it, null) },
-			setHeight = { webViewHeight = it }
+			onShowToast = { onAction(WebViewAction.ShowToast(it)) },
+			setHeight = { webViewHeight = it },
+			openUrl = { onAction(WebViewAction.GetWebViewUrl(it)) }
 		)
 	}
 

@@ -23,6 +23,7 @@ import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.detail.DetailState
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
+import com.dieski.weski.presentation.detail.component.WebViewAction
 import com.dieski.weski.presentation.detail.component.WeskiWebView
 import com.dieski.weski.presentation.detail.congestion.component.CongestionGraph
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -71,10 +72,15 @@ internal fun CongestionScreen(
 					.fillMaxWidth()
 					.padding(top = 32.dp, bottom = 32.dp, start= 5.dp, end = 5.dp),
 				webViewUrl = state.slopeWebUrl,
-				startRenderingNow = isCurrentPage,
-				onShowSnackBar = onShowSnackBar,
 				onPageFinished = {
 					isWebViewFinished = true
+				},
+				onAction = {
+					when (it) {
+						is WebViewAction.ShowToast -> onShowSnackBar(it.message, null)
+						is WebViewAction.GetHeight -> {}
+						is WebViewAction.GetWebViewUrl -> {}
+					}
 				}
 			)
 

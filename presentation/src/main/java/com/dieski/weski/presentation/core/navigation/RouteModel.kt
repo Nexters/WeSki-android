@@ -1,7 +1,6 @@
 package com.dieski.weski.presentation.core.navigation
 
 import kotlinx.serialization.Serializable
-import kotlin.enums.enumEntries
 
 sealed interface Route {
 
@@ -12,9 +11,10 @@ sealed interface Route {
 	data class Detail(val resortId: Long) : Route
 
 	@Serializable
-	data class WebcamConnect(
+	data class ResortWebcamUrlView(
 		val resortId: Long,
-		val resortName: String
+		val resortName: String,
+		val url: String
 	) : Route
 }
 

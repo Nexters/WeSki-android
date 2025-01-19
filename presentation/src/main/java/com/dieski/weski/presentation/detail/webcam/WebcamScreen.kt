@@ -22,6 +22,7 @@ import com.dieski.weski.presentation.core.util.DETAIL_WEBCAM_BANNER1_AD_UNIT_ID
 import com.dieski.weski.presentation.core.util.DETAIL_WEBCAM_BOTTOM_BANNER_AD_UNIT_ID
 import com.dieski.weski.presentation.detail.DetailState
 import com.dieski.weski.presentation.detail.component.DetailSnowQualitySurvey
+import com.dieski.weski.presentation.detail.component.WebViewAction
 import com.dieski.weski.presentation.detail.component.WeskiWebView
 
 @Composable
@@ -29,7 +30,7 @@ internal fun WebcamScreen(
 	modifier: Modifier = Modifier,
 	state: DetailState = DetailState(),
 	submitSnowQualitySurvey: (isLike: Boolean) -> Unit,
-	isCurrentPage: Boolean = false,
+	navigateToWebView: (url: String) -> Unit = {},
 	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
 ) {
     var isWebViewFinished by remember { mutableStateOf(false) }
@@ -46,10 +47,15 @@ internal fun WebcamScreen(
 					.fillMaxWidth()
 					.background(Color.Transparent),
 				webViewUrl = state.webcamWebUrl,
-				startRenderingNow = isCurrentPage,
-				onShowSnackBar = onShowSnackBar,
 				onPageFinished = {
 					isWebViewFinished = true
+				},
+				onAction = { action ->
+					when(action) {
+						is WebViewAction.ShowToast -> onShowSnackBar(action.message, null)
+						is WebViewAction.GetHeight -> {}
+						is WebViewAction.GetWebViewUrl -> navigateToWebView(action.url)
+					}
 				}
 			)
 

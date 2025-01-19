@@ -7,9 +7,11 @@ import android.webkit.JavascriptInterface
  * @author   JGeun
  * @created  2024/11/03
  */
+
 class WebViewAppInterface(
 	private val onShowToast: (String) -> Unit,
-	private val setHeight: (Int) -> Unit = {}
+	private val setHeight: (Int) -> Unit = {},
+	private val openUrl: (String) -> Unit = {}
 ) {
 
 	@JavascriptInterface
@@ -20,5 +22,10 @@ class WebViewAppInterface(
 	@JavascriptInterface
 	fun setHeight(height: String) {
 		setHeight(height.toInt())
+	}
+
+	@JavascriptInterface
+	fun openUrl(url: String) {
+		openUrl(url)
 	}
 }

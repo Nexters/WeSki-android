@@ -1,8 +1,6 @@
 package com.dieski.weski.presentation.detail
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.dieski.analytics.AnalyticsLogger
 import com.dieski.domain.model.SkiResortDetailInfo
 import com.dieski.domain.model.result.DetailError
 import com.dieski.domain.model.result.SubmitError
@@ -67,7 +65,7 @@ class DetailViewModel @Inject constructor(
 			}
 
 			is DetailEvent.ClickWebcam -> {
-				setEffect(DetailEffect.GoToWebcamConnect(event.resortId, event.resortName))
+				setEffect(DetailEffect.GoToResortWebcamUrlConnect(event.resortId, event.resortName, event.webViewUrl))
 			}
 		}
 	}

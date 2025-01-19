@@ -11,7 +11,6 @@ import com.dieski.domain.model.WebMobileData.Companion.WEB_MOBILE_URL
 import com.dieski.weski.presentation.core.base.UiEffect
 import com.dieski.weski.presentation.core.base.UiEvent
 import com.dieski.weski.presentation.core.base.UiState
-import com.dieski.weski.presentation.home.HomeEvent
 
 sealed interface DetailEvent : UiEvent {
 	data class Init(
@@ -38,7 +37,8 @@ sealed interface DetailEvent : UiEvent {
 
 	data class ClickWebcam(
 		val resortId: Long,
-		val resortName: String
+		val resortName: String,
+		val webViewUrl: String
 	) : DetailEvent
 }
 
@@ -78,9 +78,10 @@ data class DetailState(
 sealed interface DetailEffect : UiEffect {
 	data object GoToBackScreen : DetailEffect
 
-	data class GoToWebcamConnect(
+	data class GoToResortWebcamUrlConnect(
 		val resortId: Long,
-		val resortName: String
+		val resortName: String,
+		val webViewUrl: String
 	) : DetailEffect
 
 	data class ShareResortWebUrl(

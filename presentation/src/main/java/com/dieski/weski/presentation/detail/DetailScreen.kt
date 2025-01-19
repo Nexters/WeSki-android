@@ -69,7 +69,7 @@ import android.graphics.Color as AndroidColor
 internal fun DetailRouter(
 	resortId: Long,
 	padding: PaddingValues,
-	navigateToWebcamConnect: (Long, String) -> Unit,
+	navigateToWebcamConnect: (Long, String, String) -> Unit,
 	onNavigateUp: () -> Unit,
 	onShowSnackBar: (message: String, action: String?) -> Unit,
 	viewModel: DetailViewModel = hiltViewModel()
@@ -92,8 +92,8 @@ internal fun DetailRouter(
 				context.startActivity(Intent.createChooser(intent, "${state.resortName}을 공유해보세요!"))
 			}
 
-			is DetailEffect.GoToWebcamConnect -> {
-				navigateToWebcamConnect(it.resortId, it.resortName)
+			is DetailEffect.GoToResortWebcamUrlConnect -> {
+				navigateToWebcamConnect(it.resortId, "name", it.webViewUrl)
 			}
 		}
 	}
@@ -161,7 +161,6 @@ internal fun DetailScreen(
 			.collect { currentPage ->
 				if (state.resortName.isEmpty()) return@collect
 
-//				onAction(DetailEvent.ClickWebcam(state.resortId, state.resortName))
 				val eventName = if (currentPage == 0) {
 					"details_tab_webcam"
 				} else if (currentPage == 1) {
@@ -250,14 +249,15 @@ internal fun DetailScreen(
 						when (page) {
 							0 -> WebcamScreen(
 								state = state,
-								isCurrentPage = pagerState.currentPage == 0,
 								submitSnowQualitySurvey = { isLike ->
-									val likeLoggerText = if (isLike) "good" else "not good"
 									logger.log("details_webcam_vote", state.resortName)
 									onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
 								},
 								onShowSnackBar = { message, action ->
 									onAction(DetailEvent.ShowSnackBar(message, action))
+								},
+								navigateToWebView = { url ->
+									onAction(DetailEvent.ClickWebcam(state.resortId, state.resortName, url))
 								}
 							)
 

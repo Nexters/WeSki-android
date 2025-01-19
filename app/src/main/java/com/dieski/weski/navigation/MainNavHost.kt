@@ -44,10 +44,11 @@ internal fun MainNavHost(
             detailNavGraph(
                 padding = padding,
                 onNavigateUp = navigator::popBackStackIfNotHome,
-                navigateToWebcamConnect = { resortId, resortName ->
+                navigateToWebcamConnect = { resortId, resortName, url ->
                     navigator.navigateToWebcamConnect(
                         resortId = resortId,
-                        resortName = resortName
+                        resortName = resortName,
+                        url = url
                     )
                 },
                 onShowSnackBar = onShowSnackBar,

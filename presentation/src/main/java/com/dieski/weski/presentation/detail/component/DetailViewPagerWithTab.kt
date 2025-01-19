@@ -103,7 +103,6 @@ internal fun DetailViewPagerWithTab(
 				when (page) {
 					0 -> WebcamScreen(
 						state = state,
-						isCurrentPage = pagerState.currentPage == 0,
 						submitSnowQualitySurvey = {
 							submitSnowQualitySurvey(it)
 						},

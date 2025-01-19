@@ -24,7 +24,7 @@ fun NavController.navigateDetail(
 
 fun NavGraphBuilder.detailNavGraph(
 	padding: PaddingValues,
-	navigateToWebcamConnect: (Long, String) -> Unit,
+	navigateToWebcamConnect: (Long, String, String) -> Unit,
 	onNavigateUp: () -> Unit,
 	onShowSnackBar: (String, String?) -> Unit,
 ) {
@@ -43,10 +43,11 @@ fun NavGraphBuilder.detailNavGraph(
 
 fun NavController.navigateWebcamConnect(
 	resortId: Long,
-	resortName: String
+	resortName: String,
+	url: String
 ) {
 	navigate(
-		Route.WebcamConnect(resortId, resortName)
+		Route.ResortWebcamUrlView(resortId, resortName, url)
 	)
 }
 
@@ -54,12 +55,13 @@ fun NavGraphBuilder.webcamConnectNavGraph(
 	padding: PaddingValues,
 	onNavigateUp: () -> Unit,
 ) {
-	composable<Route.WebcamConnect> { navBackStackEntry ->
-		val webcamConnect = navBackStackEntry.toRoute<Route.WebcamConnect>()
+	composable<Route.ResortWebcamUrlView> { navBackStackEntry ->
+		val resortWebcamUrlView = navBackStackEntry.toRoute<Route.ResortWebcamUrlView>()
 
 		WebcamConnectRouter(
-			resortId = webcamConnect.resortId,
-			resortName = webcamConnect.resortName,
+			resortId = resortWebcamUrlView.resortId,
+			resortName = resortWebcamUrlView.resortName,
+			url = resortWebcamUrlView.url,
 			padding = padding,
 			onNavigateUp = onNavigateUp,
 		)

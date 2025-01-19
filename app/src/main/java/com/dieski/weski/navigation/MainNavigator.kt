@@ -49,9 +49,10 @@ internal class MainNavigator(
 
     fun navigateToWebcamConnect(
         resortId: Long,
-        resortName: String
+        resortName: String,
+        url: String
     ) {
-        navController.navigateWebcamConnect(resortId, resortName)
+        navController.navigateWebcamConnect(resortId, resortName, url)
     }
 
     private fun popBackStack() {
