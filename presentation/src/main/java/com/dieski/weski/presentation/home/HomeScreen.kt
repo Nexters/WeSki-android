@@ -72,6 +72,7 @@ import com.dieski.weski.presentation.core.util.noRippleClickable
 import com.dieski.weski.presentation.home.model.HomeSkiResortInfo
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import com.dieski.weski.presentation.util.log
+import com.google.android.gms.ads.AdSize
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -212,12 +213,6 @@ private fun HomeScreen(
 					}
 				}
 			}
-
-			BannerAds(
-				modifier = Modifier
-					.fillMaxWidth(),
-				bannerAdUnitId = HOME_BOTTOM_BANNER_AD_UNIT_ID
-			)
 		}
 
 		ReportPopup(
@@ -364,7 +359,12 @@ internal fun HomeContent(
 		}
 
 		item {
-			Spacer(modifier = Modifier.height(45.dp))
+			BannerAds(
+				modifier = Modifier
+					.fillMaxWidth()
+					.height(AdSize.BANNER.height.dp),
+				bannerAdUnitId = HOME_BOTTOM_BANNER_AD_UNIT_ID
+			)
 		}
 	}
 }
