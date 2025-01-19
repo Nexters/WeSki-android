@@ -1,8 +1,6 @@
 package com.dieski.weski.presentation.home
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.dieski.analytics.AnalyticsLogger
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
@@ -48,6 +46,9 @@ class HomeViewModel @Inject constructor(
 					val (resortId, isBookmarked) = event
 					toggleResortBookmarked(resortId, isBookmarked)
 					fetchHomeData()
+					if (isBookmarked.not()) {
+						setEffect(HomeEffect.OpenBookmarkPopup)
+					}
 				}
 
 			}

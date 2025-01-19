@@ -2,6 +2,7 @@ package com.dieski.weski.presentation.home
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Space
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -44,11 +45,11 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -66,8 +67,10 @@ import com.dieski.weski.presentation.core.designsystem.header.WeskiHeader
 import com.dieski.weski.presentation.core.designsystem.snowflake.WindBlownSnowflakeEffectBackground
 import com.dieski.weski.presentation.core.designsystem.token.WeskiColor
 import com.dieski.weski.presentation.core.util.HOME_BOTTOM_BANNER_AD_UNIT_ID
+import com.dieski.weski.presentation.core.util.HOME_FAVORITES_BANNER_AD_UNIT_ID
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.core.util.debounceClickable
+import com.dieski.weski.presentation.core.util.debounceNoRippleClickable
 import com.dieski.weski.presentation.core.util.noRippleClickable
 import com.dieski.weski.presentation.home.model.HomeSkiResortInfo
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
@@ -88,6 +91,7 @@ internal fun HomeRouter(
 	val state by viewModel.uiState.collectAsStateWithLifecycle()
 	val coroutineScope = rememberCoroutineScope()
 	val lazyListState = rememberLazyListState()
+	var showBookmarkPopup by remember { mutableStateOf(false) }
 
 	viewModel.effects.collectWithLifecycle {
 		when (it) {
@@ -114,6 +118,10 @@ internal fun HomeRouter(
 				val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
 				context.startActivity(intent)
 			}
+
+			HomeEffect.OpenBookmarkPopup -> {
+				showBookmarkPopup = true
+			}
 		}
 	}
 
@@ -130,6 +138,8 @@ internal fun HomeRouter(
 			state = state,
 			onAction = viewModel::handleEvent,
 			lazyListState = lazyListState,
+			showBookmarkPopup = showBookmarkPopup,
+			onDismissBookmarkPopup = { showBookmarkPopup = false },
 			modifier = Modifier
 				.fillMaxSize()
 				.padding(padding),
@@ -143,6 +153,8 @@ private fun HomeScreen(
 	onAction: (HomeEvent) -> Unit,
 	modifier: Modifier = Modifier,
 	lazyListState: LazyListState = rememberLazyListState(),
+	showBookmarkPopup: Boolean = false,
+	onDismissBookmarkPopup: () -> Unit = {}
 ) {
 	val isTop by remember { derivedStateOf { lazyListState.canScrollBackward } }
 	var reportIconOffset by remember { mutableStateOf(Offset.Zero) }
@@ -183,7 +195,7 @@ private fun HomeScreen(
 				HomeContent(
 					resortWeatherInfoList = state.resortWeatherInfoList,
 					onCardClick = { onAction(HomeEvent.ClickCard(it)) },
-					onClickBookmark = { resortId, bookmarked ->onAction(HomeEvent.ToggleBookmark(resortId, bookmarked)) },
+					onClickBookmark = { resortId, bookmarked -> onAction(HomeEvent.ToggleBookmark(resortId, bookmarked)) },
 					modifier = Modifier.fillMaxSize(),
 					lazyListState = lazyListState
 				)
@@ -226,6 +238,74 @@ private fun HomeScreen(
 				}
 			}
 		)
+
+		if (showBookmarkPopup) {
+			BookmarkPopup(
+				onDismiss = onDismissBookmarkPopup,
+				modifier = Modifier
+			)
+		}
+	}
+}
+
+@Composable
+private fun BookmarkPopup(
+	onDismiss: () -> Unit,
+	modifier: Modifier = Modifier
+) {
+	Box(
+		modifier = modifier.fillMaxSize()
+			.background(WeskiColor.Gray100.copy(alpha = 0.5f))
+			.noRippleClickable { onDismiss() }
+	) {
+		Column(
+			modifier = Modifier.widthIn(max = 316.dp)
+				.background(color = WeskiColor.White, shape = RoundedCornerShape(20.dp))
+				.align(Alignment.Center)
+				.padding(top = 38.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
+		) {
+			Text(
+				text = "이 스키장을 즐겨찾기 했어요!",
+				style = WeskiTheme.typography.title2SemiBold,
+				color = WeskiColor.Gray100,
+				textAlign = TextAlign.Center,
+				modifier = Modifier.fillMaxWidth()
+					.padding(horizontal = 26.dp)
+			)
+
+			Spacer(Modifier.height(10.dp))
+
+			Text(
+				text = "선택한 스키장을 상단에서 고정해서 매일 확인해볼 수 있어요",
+				style = WeskiTheme.typography.body1Regular,
+				color = WeskiColor.Gray60,
+				textAlign = TextAlign.Center,
+				modifier = Modifier.fillMaxWidth()
+					.padding(horizontal = 26.dp)
+			)
+
+			Spacer(Modifier.height(18.dp))
+
+			BannerAds(
+				modifier = Modifier
+					.fillMaxWidth()
+					.height(AdSize.BANNER.height.dp),
+				bannerAdUnitId = HOME_FAVORITES_BANNER_AD_UNIT_ID
+			)
+
+			Spacer(Modifier.height(18.dp))
+
+			Text(
+				modifier = Modifier.fillMaxWidth()
+					.background(shape = RoundedCornerShape(8.dp), color = WeskiColor.Main01)
+					.noRippleClickable { onDismiss() }
+					.padding(vertical = 16.5.dp),
+				text = "확인",
+				style = WeskiTheme.typography.title3SemiBold,
+				color = WeskiColor.White,
+				textAlign = TextAlign.Center
+			)
+		}
 	}
 }
 

@@ -42,6 +42,8 @@ sealed interface HomeEffect : UiEffect {
 
 	data class ShowSnackBar(val message: String, val action: String?) : HomeEffect
 
+	data object OpenBookmarkPopup : HomeEffect
+
 	data object ShowServiceInfoReport : HomeEffect
 
 	data object WriteFeedbackReport :HomeEffect
