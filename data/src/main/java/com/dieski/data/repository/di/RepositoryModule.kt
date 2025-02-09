@@ -1,7 +1,9 @@
 package com.dieski.data.repository.di
 
+import com.dieski.data.repository.DefaultPlatformConfigRepository
 import com.dieski.data.repository.DefaultSnowQualityRepository
 import com.dieski.data.repository.DefaultWeskiRepository
+import com.dieski.domain.repository.PlatformConfigRepository
 import com.dieski.domain.repository.SnowQualityRepository
 import com.dieski.domain.repository.WeSkiRepository
 import dagger.Binds
@@ -31,4 +33,10 @@ internal abstract class RepositoryModule {
 	abstract fun bindsSnowQualityRepository(
 		defaultSnowQualityRepository: DefaultSnowQualityRepository
 	): SnowQualityRepository
+
+	@Binds
+	@Singleton
+	abstract fun bindsPlatformConfigRepository(
+		defaultPlatformConfigRepository: DefaultPlatformConfigRepository
+	): PlatformConfigRepository
 }
