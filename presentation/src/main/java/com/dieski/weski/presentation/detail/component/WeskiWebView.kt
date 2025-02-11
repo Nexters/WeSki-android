@@ -36,12 +36,11 @@ fun WeskiWebView(
 	onAction: (WebViewAction) -> Unit = {}
 ) {
 	var webViewHeight by remember { mutableIntStateOf(0) }
-
 	val webViewAppInterface by lazy {
 		WebViewAppInterface(
 			onShowToast = { onAction(WebViewAction.ShowToast(it)) },
-			setHeight = { webViewHeight = it },
-			openUrl = { onAction(WebViewAction.GetWebViewUrl(it)) }
+			onSetHeight = { webViewHeight = it },
+			onOpenUrl = { onAction(WebViewAction.GetWebViewUrl(it)) }
 		)
 	}
 

@@ -1,6 +1,5 @@
 package com.dieski.data.datasource
 
-import android.util.Log
 import com.dieski.analytics.AnalyticsLogger
 import com.dieski.domain.model.platform.PlatformType
 import com.dieski.domain.model.platform.PlatformVersion
@@ -24,7 +23,6 @@ class DefaultRemotePlatformConfigDataSource @Inject constructor(
 	override fun checkPlatformVersionForForcedUpdate(
 		platformVersion: PlatformVersion
 	): Flow<PlatformForceUpdateCheckResult?> = flow {
-		Log.w("Test@@@", "platformVersion: ${platformVersion.value}")
 		when (val result = weSkiService.checkPlatformVersionForForcedUpdate(platformVersion.value)) {
 			is NetworkResult.Success -> {
 				val responsePlatformType = PlatformType.findByValue(result.data.platform)

@@ -10,8 +10,8 @@ import android.webkit.JavascriptInterface
 
 class WebViewAppInterface(
 	private val onShowToast: (String) -> Unit,
-	private val setHeight: (Int) -> Unit = {},
-	private val openUrl: (String) -> Unit = {}
+	private val onSetHeight: (Int) -> Unit = {},
+	private val onOpenUrl: (String) -> Unit = {}
 ) {
 
 	@JavascriptInterface
@@ -21,11 +21,11 @@ class WebViewAppInterface(
 
 	@JavascriptInterface
 	fun setHeight(height: String) {
-		setHeight(height.toInt())
+		onSetHeight(height.toInt())
 	}
 
 	@JavascriptInterface
 	fun openUrl(url: String) {
-		openUrl(url)
+		onOpenUrl(url)
 	}
 }

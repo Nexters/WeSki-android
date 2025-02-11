@@ -28,7 +28,7 @@ import com.dieski.weski.presentation.detail.component.WeskiWebView
 @Composable
 internal fun WebcamScreen(
 	modifier: Modifier = Modifier,
-	state: DetailState = DetailState(),
+	state: DetailState,
 	submitSnowQualitySurvey: (isLike: Boolean) -> Unit,
 	navigateToWebView: (url: String) -> Unit = {},
 	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
@@ -54,7 +54,9 @@ internal fun WebcamScreen(
 					when(action) {
 						is WebViewAction.ShowToast -> onShowSnackBar(action.message, null)
 						is WebViewAction.GetHeight -> {}
-						is WebViewAction.GetWebViewUrl -> navigateToWebView(action.url)
+						is WebViewAction.GetWebViewUrl -> {
+							navigateToWebView(action.url)
+						}
 					}
 				}
 			)

@@ -1,6 +1,5 @@
 package com.dieski.analytics
 
-import android.util.Log
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.crashlytics.ktx.crashlytics

@@ -8,7 +8,6 @@ package com.dieski.domain.model
 data class SkiResortInfo(
 	val resortId: Long,
 	val resortName: String,
-	val resortWebKey: SkiResortWebKey,
 	val status: String,
 	val openSlopeCount: Int,
 	val openingDate: String,

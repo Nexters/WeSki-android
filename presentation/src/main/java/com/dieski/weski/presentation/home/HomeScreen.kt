@@ -55,7 +55,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortInfo.DailyWeather
-import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.LocalLoggerOwner
 import com.dieski.weski.presentation.R
@@ -465,7 +464,6 @@ private fun HomeScreenPreview() {
 		HomeSkiResortInfo(
 			name = "용평스키장 모나",
 			id = 0,
-			webKey = SkiResortWebKey.O2,
 			operatingSlopeCount = 5,
 			openingDate = "2024-08-18",
 			currentWeather = SkiResortInfo.CurrentWeather(

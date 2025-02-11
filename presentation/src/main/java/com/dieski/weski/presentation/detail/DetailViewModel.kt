@@ -13,6 +13,7 @@ import com.dieski.domain.usecase.SubmitSnowQualitySurveyResultUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -65,7 +66,7 @@ class DetailViewModel @Inject constructor(
 			}
 
 			is DetailEvent.ClickWebcam -> {
-				setEffect(DetailEffect.GoToResortWebcamUrlConnect(event.resortId, event.resortName, event.webViewUrl))
+				setEffect(DetailEffect.GoToResortWebcamUrlConnect(uiState.value.resortId, uiState.value.resortName, event.webViewUrl))
 			}
 		}
 	}
@@ -92,11 +93,11 @@ class DetailViewModel @Inject constructor(
 				}
 			}
 
+			Timber.d("fetchSkiResortData: $skiResortDetailInfo")
 			setState {
 				copy(
 					resortId = skiResortDetailInfo.skiResortInfo.resortId,
 					resortName = skiResortDetailInfo.skiResortInfo.resortName,
-					resortWebKey = skiResortDetailInfo.skiResortInfo.resortWebKey,
 					openSlopes = skiResortDetailInfo.skiResortInfo.openSlopeCount,
 					isBookmarked = skiResortDetailInfo.skiResortInfo.isBookmarked,
 					status = skiResortDetailInfo.skiResortInfo.status,

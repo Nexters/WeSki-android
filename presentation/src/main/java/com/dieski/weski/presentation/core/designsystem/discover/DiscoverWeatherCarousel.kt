@@ -1,6 +1,5 @@
 package com.dieski.weski.presentation.core.designsystem.discover
 
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed

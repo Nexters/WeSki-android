@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -113,6 +114,7 @@ fun WebcamConnectScreen(
 				verticalArrangement = Arrangement.Center
 			){
 				Image(
+					modifier = Modifier.width(86.dp).height(53.dp),
 					painter = painterResource(R.drawable.img_webcam_connect),
 					contentDescription = "webcam connect",
 				)

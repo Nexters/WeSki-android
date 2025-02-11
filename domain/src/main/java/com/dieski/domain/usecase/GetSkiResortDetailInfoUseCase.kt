@@ -1,6 +1,5 @@
 package com.dieski.domain.usecase
 
-import android.util.Log
 import com.dieski.domain.dispatchers.Dispatcher
 import com.dieski.domain.dispatchers.WeSkiDispatchers
 import com.dieski.domain.model.SkiResortDetailInfo

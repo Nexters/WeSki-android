@@ -2,7 +2,6 @@ package com.dieski.weski.presentation.detail
 
 import androidx.compose.runtime.Immutable
 import com.dieski.domain.model.SkiResortWeatherInfo
-import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WebMobileData.Companion.SLOPE_PARAM
@@ -36,17 +35,13 @@ sealed interface DetailEvent : UiEvent {
 	) : DetailEvent
 
 	data class ClickWebcam(
-		val resortId: Long,
-		val resortName: String,
 		val webViewUrl: String
 	) : DetailEvent
 }
 
-@Immutable
 data class DetailState(
 	val resortId: Long = -1L,
 	val resortName: String = "",
-	val resortWebKey: SkiResortWebKey = SkiResortWebKey.NONE,
 	val openSlopes: Int = 0,
 	val status: String = "",
 	val openingDate: String = "0000-00-00",
@@ -58,8 +53,8 @@ data class DetailState(
 	val weeklyWeather: List<SkiResortWeatherInfo.DailyWeather> = emptyList(),
 	val snowQualitySurveyResult: SnowQualitySurveyResult = SnowQualitySurveyResult.EMPTY
 ) : UiState {
-	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortWebKey.serverResortId}"
-	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}${resortWebKey.serverResortId}"
+	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortId}"
+	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}${resortId}"
 
 	fun getResortOperatingStatus(): String {
 		return try {

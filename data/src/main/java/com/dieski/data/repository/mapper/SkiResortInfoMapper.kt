@@ -2,7 +2,6 @@ package com.dieski.data.repository.mapper
 
 import com.dieski.remote.model.response.SkiResortInfoResponse
 import com.dieski.domain.model.SkiResortInfo
-import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.WeatherCondition
 
 /**
@@ -14,7 +13,6 @@ fun SkiResortInfoResponse.toDomain() = SkiResortInfo(
 	resortId = this.resortId,
 	resortName = this.resortName,
 	status = this.status,
-	resortWebKey = SkiResortWebKey.findByServerResortId(this.resortId),
 	openSlopeCount = this.openSlopeCount,
 	openingDate = this.openingDate,
 	currentWeather = this.currentWeatherResponse.toDomain(),

@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dieski.domain.model.SkiResortWebKey
 import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.LocalLoggerOwner
@@ -51,8 +50,8 @@ import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.core.util.noRippleClickable
 import com.dieski.weski.presentation.detail.component.DetailFeedTab
-import com.dieski.weski.presentation.detail.component.TabItem
 import com.dieski.weski.presentation.detail.congestion.CongestionScreen
+import com.dieski.weski.presentation.detail.model.TabItem
 import com.dieski.weski.presentation.detail.weather.WeatherScreen
 import com.dieski.weski.presentation.detail.webcam.WebcamScreen
 import com.dieski.weski.presentation.util.log
@@ -93,7 +92,7 @@ internal fun DetailRouter(
 			}
 
 			is DetailEffect.GoToResortWebcamUrlConnect -> {
-				navigateToWebcamConnect(it.resortId, "name", it.webViewUrl)
+				navigateToWebcamConnect(it.resortId, it.resortName, it.webViewUrl)
 			}
 		}
 	}
@@ -239,58 +238,56 @@ internal fun DetailScreen(
 			}
 
 			item {
-				if (state.resortWebKey != SkiResortWebKey.NONE) {
-					HorizontalPager(
-						modifier = Modifier
-							.fillMaxSize()
-							.background(WeskiColor.White),
-						state = pagerState,
-					) { page ->
-						when (page) {
-							0 -> WebcamScreen(
-								state = state,
-								submitSnowQualitySurvey = { isLike ->
-									logger.log("details_webcam_vote", state.resortName)
-									onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
-								},
-								onShowSnackBar = { message, action ->
-									onAction(DetailEvent.ShowSnackBar(message, action))
-								},
-								navigateToWebView = { url ->
-									onAction(DetailEvent.ClickWebcam(state.resortId, state.resortName, url))
-								}
-							)
+				HorizontalPager(
+					modifier = Modifier
+						.fillMaxSize()
+						.background(WeskiColor.White),
+					state = pagerState,
+				) { page ->
+					when (page) {
+						0 -> WebcamScreen(
+							state = state,
+							submitSnowQualitySurvey = { isLike ->
+								logger.log("details_webcam_vote", state.resortName)
+								onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
+							},
+							onShowSnackBar = { message, action ->
+								onAction(DetailEvent.ShowSnackBar(message, action))
+							},
+							navigateToWebView = { url ->
+								onAction(DetailEvent.ClickWebcam(url))
+							}
+						)
 
-							1 -> WeatherScreen(
-								state = state,
-								submitSnowQualitySurvey = { isLike ->
-									val likeLoggerText = if (isLike) "good" else "not good"
-									logger.log("details_weather_vote", state.resortName)
-									onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
-								},
-								onShowSnackBar = { message, action ->
-									onAction(DetailEvent.ShowSnackBar(message, action))
-								},
-								logWeatherTimeRowScrolling = { isScrolling ->
-									if (isScrolling) {
-										logger.log("details_weather_daily weather_swipe", state.resortName)
-									}
+						1 -> WeatherScreen(
+							state = state,
+							submitSnowQualitySurvey = { isLike ->
+								val likeLoggerText = if (isLike) "good" else "not good"
+								logger.log("details_weather_vote", state.resortName)
+								onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
+							},
+							onShowSnackBar = { message, action ->
+								onAction(DetailEvent.ShowSnackBar(message, action))
+							},
+							logWeatherTimeRowScrolling = { isScrolling ->
+								if (isScrolling) {
+									logger.log("details_weather_daily weather_swipe", state.resortName)
 								}
-							)
+							}
+						)
 
-							2 -> CongestionScreen(
-								state = state,
-								submitSnowQualitySurvey = { isLike ->
-									val likeLoggerText = if (isLike) "good" else "not good"
-									logger.log("details_slope_vote", state.resortName)
-									onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
-								},
-								isCurrentPage = pagerState.currentPage == 2,
-								onShowSnackBar = { message, action ->
-									onAction(DetailEvent.ShowSnackBar(message, action))
-								}
-							)
-						}
+						2 -> CongestionScreen(
+							state = state,
+							submitSnowQualitySurvey = { isLike ->
+								val likeLoggerText = if (isLike) "good" else "not good"
+								logger.log("details_slope_vote", state.resortName)
+								onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
+							},
+							isCurrentPage = pagerState.currentPage == 2,
+							onShowSnackBar = { message, action ->
+								onAction(DetailEvent.ShowSnackBar(message, action))
+							}
+						)
 					}
 				}
 			}
@@ -324,7 +321,6 @@ private fun DetailScreenPreview() {
 		state = DetailState(
 			resortId = 0,
 			resortName = "용평스키장 모나",
-			resortWebKey = SkiResortWebKey.EDEN,
 			temperature = 7,
 			weatherCondition = WeatherCondition.SNOW,
 			openingDate = "2024-08-10",
