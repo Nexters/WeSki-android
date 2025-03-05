@@ -20,7 +20,6 @@ android {
 
 dependencies {
 	implementation(projects.domain)
-	implementation(projects.remote)
 	implementation(projects.analytics)
 
 	implementation(libs.kotlin.serialization.json)

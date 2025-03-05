@@ -1,9 +1,9 @@
-package com.dieski.data.datasource
+package com.dieski.remote.datasource
 
 import com.dieski.analytics.AnalyticsLogger
-import com.dieski.data.repository.mapper.toDomain
-import com.dieski.domain.model.SkiResortInfo
-import com.dieski.domain.model.SkiResortWeatherInfo
+import com.dieski.data.datasource.remote.ResortRemoteDataSource
+import com.dieski.data.model.ResortInfoDto
+import com.dieski.data.model.ResortWeatherInfoDto
 import com.dieski.domain.network.onFailure
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
@@ -16,28 +16,28 @@ import javax.inject.Inject
  * @author   JGeun
  * @created  2024/10/06
  */
-class RemoteWeSkiDataSource @Inject constructor(
+class ResortRemoteDataSourceImpl @Inject constructor(
 	private val weSkiService: WeSkiService,
 	private val logger: AnalyticsLogger
-) : WeSkiDataSource {
+) : ResortRemoteDataSource {
 
-	override suspend fun fetchAllSkiResortsInfo(): WResult<List<SkiResortInfo>, DataError> {
+	override suspend fun fetchAllSkiResortsInfo(): WResult<List<ResortInfoDto>, DataError> {
 		return weSkiService.fetchAllSkiResortsInfo()
 			.onFailure {
 				logger.logError(throwable, "WeSkiDataSource - fetchingSnowQualitySurveyResult()에서 발생")
 			}
 			.toResult { skiResortInfoList ->
-				skiResortInfoList.map { it.toDomain() }
+				skiResortInfoList.map { it.toData() }
 			}
 	}
 
-	override suspend fun fetchSkiResortWeatherInfo(resortId: Long): WResult<SkiResortWeatherInfo, DataError> {
+	override suspend fun fetchSkiResortWeatherInfo(resortId: Long): WResult<ResortWeatherInfoDto, DataError> {
 		return weSkiService.fetchSkiResortWeatherInfo(resortId)
 			.onFailure {
 				logger.logError(throwable, "WeSkiDataSource - fetchSkiResortWeatherInfo()에서 발생")
 			}
 			.toResult { skiResortWeatherInfoResponse ->
-				skiResortWeatherInfoResponse.toDomain()
+				skiResortWeatherInfoResponse.toData()
 			}
 	}
 }

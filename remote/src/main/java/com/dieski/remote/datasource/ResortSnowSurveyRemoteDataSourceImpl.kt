@@ -1,8 +1,8 @@
-package com.dieski.data.datasource
+package com.dieski.remote.datasource
 
 import com.dieski.analytics.AnalyticsLogger
-import com.dieski.data.repository.mapper.toDomain
-import com.dieski.domain.model.SnowQualitySurveyResult
+import com.dieski.data.datasource.remote.ResortSnowSurveyRemoteDataSource
+import com.dieski.data.model.TotalResortSnowSurveyDto
 import com.dieski.domain.network.onFailure
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
@@ -15,10 +15,10 @@ import javax.inject.Inject
  * @author   JGeun
  * @created  2024/09/14
  */
-class RemoteSnowQualityDataSource @Inject constructor(
+class ResortSnowSurveyRemoteDataSourceImpl @Inject constructor(
 	private val snowQualityService: SnowQualityService,
 	private val logger: AnalyticsLogger
-) : SnowQualityDataSource {
+) : ResortSnowSurveyRemoteDataSource {
 
 	override suspend fun submitSnowQualitySurvey(
 		resortId: Long,
@@ -33,12 +33,12 @@ class RemoteSnowQualityDataSource @Inject constructor(
 			}
 
 
-	override suspend fun fetchingSnowQualitySurveyResult(resortId: Long): WResult<SnowQualitySurveyResult, DataError> =
+	override suspend fun fetchingSnowQualitySurveyResult(resortId: Long): WResult<TotalResortSnowSurveyDto, DataError> =
 		snowQualityService.fetchSnowQualitySurveyResult(resortId)
 			.onFailure {
 				logger.logError(throwable, "SnowQualityService - fetchingSnowQualitySurveyResult()에서 발생")
 			}
 			.toResult {
-				it.toDomain()
+				it.toData()
 			}
 }

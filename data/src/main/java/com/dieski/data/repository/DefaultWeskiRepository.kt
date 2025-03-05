@@ -1,14 +1,14 @@
 package com.dieski.data.repository
 
 import com.dieski.data.datasource.local.ResortLocalDataSource
-import com.dieski.data.datasource.WeSkiDataSource
-import com.dieski.data.datasource.di.Local
-import com.dieski.data.datasource.di.Remote
+import com.dieski.data.datasource.remote.ResortRemoteDataSource
+import com.dieski.data.toDomain
+import com.dieski.data.toDomainModel
+import com.dieski.domain.dispatchers.Dispatcher
+import com.dieski.domain.dispatchers.WeSkiDispatchers
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortWeatherInfo
 import com.dieski.domain.repository.WeSkiRepository
-import com.dieski.domain.dispatchers.Dispatcher
-import com.dieski.domain.dispatchers.WeSkiDispatchers
 import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,7 +23,7 @@ import javax.inject.Inject
  * @created  2024/08/13
  */
 internal class DefaultWeskiRepository @Inject constructor(
-	@Remote private val remoteWeSkiDataSource: WeSkiDataSource,
+	private val resortRemoteDataSource: ResortRemoteDataSource,
 	private val resortLocalDataSource: ResortLocalDataSource,
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : WeSkiRepository {
@@ -31,10 +31,10 @@ internal class DefaultWeskiRepository @Inject constructor(
 	override suspend fun fetchAllSkiResortsInfo(): WResult<List<SkiResortInfo>, WError> {
 		return withContext(ioDispatcher) {
 			val bookmarkedResortIdSet = resortLocalDataSource.bookmarkedResortIdSet.first()
-			when (val result = remoteWeSkiDataSource.fetchAllSkiResortsInfo()) {
+			when (val result = resortRemoteDataSource.fetchAllSkiResortsInfo()) {
 				is WResult.Success -> {
 					withContext(Dispatchers.Default) {
-						val data = result.data.map {
+						val data = result.data.toDomain().map {
 							it.copy(
 								isBookmarked = bookmarkedResortIdSet.contains(it.resortId)
 							)
@@ -46,14 +46,21 @@ internal class DefaultWeskiRepository @Inject constructor(
 						WResult.Success(data)
 					}
 				}
-				is WResult.Error -> result
+
+				is WResult.Error -> result.toDomainModel()
 			}
 		}
 	}
 
 	override suspend fun fetchSkiResortWeatherInfo(resortId: Long): WResult<SkiResortWeatherInfo, WError> {
 		return withContext(ioDispatcher) {
-			remoteWeSkiDataSource.fetchSkiResortWeatherInfo(resortId)
+			when (val result = resortRemoteDataSource.fetchSkiResortWeatherInfo(resortId)) {
+				is WResult.Success -> {
+					WResult.Success(result.data.toDomain())
+				}
+
+				is WResult.Error -> result.toDomainModel()
+			}
 		}
 	}
 

@@ -1,8 +1,6 @@
 package com.dieski.data.repository
 
-import com.dieski.data.datasource.RemotePlatformConfigDataSource
-import com.dieski.data.datasource.di.Remote
-import com.dieski.data.repository.mapper.toDomain
+import com.dieski.data.datasource.remote.PlatformConfigRemoteDataSource
 import com.dieski.domain.dispatchers.Dispatcher
 import com.dieski.domain.dispatchers.WeSkiDispatchers
 import com.dieski.domain.model.PlatformUpdateCheckResult
@@ -20,14 +18,14 @@ import javax.inject.Inject
  * @created  2025/02/10
  */
 class DefaultPlatformConfigRepository @Inject constructor(
-	@Remote private val remotePlatformConfigDataSource: RemotePlatformConfigDataSource,
+	private val platformConfigRemoteDataSource: PlatformConfigRemoteDataSource,
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : PlatformConfigRepository {
 
 	override fun checkPlatformVersionForForcedUpdate(
 		platformVersion: PlatformVersion
 	): Flow<PlatformUpdateCheckResult?> =
-		remotePlatformConfigDataSource.checkPlatformVersionForForcedUpdate(platformVersion)
+		platformConfigRemoteDataSource.checkPlatformVersionForForcedUpdate(platformVersion)
 			.map { it?.toDomain() }
 			.flowOn(ioDispatcher)
 }

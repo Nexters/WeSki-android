@@ -1,9 +1,7 @@
 package com.dieski.remote.service
 
 import com.dieski.domain.network.NetworkResult
-import com.dieski.remote.model.request.SubmitSnowQualitySurveyRequest
-import com.dieski.remote.model.response.SnowQualitySurveyResultResponse
-import retrofit2.http.Body
+import com.dieski.remote.model.response.TotalResortSnowSurveyResponse
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -20,10 +18,10 @@ interface SnowQualityService {
 	suspend fun submitSnowQualitySurvey(
 		@Path("resortId") resortId: Long,
 		@Query("isPositive") isPositive: Boolean
-	) : NetworkResult<Unit>
+	): NetworkResult<Unit>
 
 	@GET("/api/snow-maker/{resortId}")
 	suspend fun fetchSnowQualitySurveyResult(
 		@Path("resortId") resortId: Long
-	) : NetworkResult<SnowQualitySurveyResultResponse>
+	): NetworkResult<TotalResortSnowSurveyResponse>
 }

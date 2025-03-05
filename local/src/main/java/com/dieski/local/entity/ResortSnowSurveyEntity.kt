@@ -3,7 +3,7 @@ package com.dieski.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.dieski.data.model.ResortSnowSurveyDto
+import com.dieski.data.model.MyResortSnowSurveyDto
 import com.dieski.local.LocalMapper
 import com.dieski.local.room.RoomConstant
 
@@ -20,15 +20,15 @@ data class ResortSnowSurveyEntity(
 
 	@ColumnInfo("submit_date")
 	val submitDate: String
-): LocalMapper<ResortSnowSurveyDto> {
-	override fun toData(): ResortSnowSurveyDto =
-		ResortSnowSurveyDto(
+) : LocalMapper<MyResortSnowSurveyDto> {
+	override fun toData(): MyResortSnowSurveyDto =
+		MyResortSnowSurveyDto(
 			resortId,
 			submitDate
 		)
 }
 
-fun ResortSnowSurveyDto.toLocal(): ResortSnowSurveyEntity =
+fun MyResortSnowSurveyDto.toLocal(): ResortSnowSurveyEntity =
 	ResortSnowSurveyEntity(
 		resortId,
 		submitDate

@@ -2,9 +2,9 @@ package com.dieski.remote.service
 
 import com.dieski.domain.model.platform.PlatformType
 import com.dieski.domain.network.NetworkResult
-import com.dieski.remote.model.response.PlatformForceUpdateCheckResult
+import com.dieski.remote.model.response.PlatformForceUpdateResponse
 import com.dieski.remote.model.response.SkiResortInfoResponse
-import com.dieski.remote.model.response.SkiResortWeatherInfoResponse
+import com.dieski.remote.model.response.ResortWeatherInfoResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -22,11 +22,11 @@ interface WeSkiService {
 	@GET("/api/weather/{resortId}")
 	suspend fun fetchSkiResortWeatherInfo(
 		@Path("resortId") resortId: Long
-	): NetworkResult<SkiResortWeatherInfoResponse>
+	): NetworkResult<ResortWeatherInfoResponse>
 
 	@GET("/api/app-version")
-	suspend fun checkPlatformVersionForForcedUpdate(
+	suspend fun getPlatformForceUpdateStatus(
 		@Query("version") version: String,
 		@Query("platform") platform: String = PlatformType.ANDROID.value,
-	): NetworkResult<PlatformForceUpdateCheckResult>
+	): NetworkResult<PlatformForceUpdateResponse>
 }

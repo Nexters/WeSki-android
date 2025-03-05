@@ -1,9 +1,7 @@
 package com.dieski.local.datasource
 
 import com.dieski.data.datasource.local.ResortSnowSurveyLocalDataSource
-import com.dieski.data.model.ResortSnowSurveyDto
-import com.dieski.data.repository.mapper.toDomain
-import com.dieski.domain.model.ResortSnowMakerSurveyRecord
+import com.dieski.data.model.MyResortSnowSurveyDto
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
 import com.dieski.local.entity.ResortSnowSurveyEntity
@@ -33,7 +31,7 @@ class ResortSnowSurveyLocalDataSourceIImpl @Inject constructor(
 		}
 	}
 
-	override suspend fun getSurveyByResortId(resortId: Long): WResult<ResortSnowSurveyDto?, DataError> {
+	override suspend fun getSurveyByResortId(resortId: Long): WResult<MyResortSnowSurveyDto?, DataError> {
 		return try {
 			val snowMakerSurveyRecordDao = resortSnowSurveyDao.getSurveyByResortId(resortId)
 			WResult.Success(snowMakerSurveyRecordDao?.toData())

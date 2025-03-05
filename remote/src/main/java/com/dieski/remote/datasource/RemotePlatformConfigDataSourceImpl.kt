@@ -1,10 +1,11 @@
-package com.dieski.data.datasource
+package com.dieski.remote.datasource
 
 import com.dieski.analytics.AnalyticsLogger
+import com.dieski.data.datasource.remote.PlatformConfigRemoteDataSource
+import com.dieski.data.model.PlatformForceUpdateDto
 import com.dieski.domain.model.platform.PlatformType
 import com.dieski.domain.model.platform.PlatformVersion
 import com.dieski.domain.network.NetworkResult
-import com.dieski.remote.model.response.PlatformForceUpdateCheckResult
 import com.dieski.remote.service.WeSkiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -15,15 +16,15 @@ import javax.inject.Inject
  * @author   JGeun
  * @created  2025/02/09
  */
-class DefaultRemotePlatformConfigDataSource @Inject constructor(
+class RemotePlatformConfigDataSourceImpl @Inject constructor(
 	private val weSkiService: WeSkiService,
 	private val logger: AnalyticsLogger,
-) : RemotePlatformConfigDataSource {
+) : PlatformConfigRemoteDataSource {
 
 	override fun checkPlatformVersionForForcedUpdate(
 		platformVersion: PlatformVersion
-	): Flow<PlatformForceUpdateCheckResult?> = flow {
-		when (val result = weSkiService.checkPlatformVersionForForcedUpdate(platformVersion.value)) {
+	): Flow<PlatformForceUpdateDto?> = flow {
+		when (val result = weSkiService.getPlatformForceUpdateStatus(platformVersion.value)) {
 			is NetworkResult.Success -> {
 				val responsePlatformType = PlatformType.findByValue(result.data.platform)
 				if (responsePlatformType != PlatformType.ANDROID) {
@@ -33,8 +34,9 @@ class DefaultRemotePlatformConfigDataSource @Inject constructor(
 					)
 					emit(null)
 				}
-				emit(result.data)
+				emit(result.data.toData())
 			}
+
 			is NetworkResult.Failure -> {
 				logger.logError(result.throwable, "DefaultRemotePlatformConfigDataSource - checkPlatformForceUpdateMinAppVersion()에서 발생")
 				emit(null)

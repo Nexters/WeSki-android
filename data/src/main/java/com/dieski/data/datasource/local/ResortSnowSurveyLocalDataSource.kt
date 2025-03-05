@@ -1,7 +1,6 @@
 package com.dieski.data.datasource.local
 
-import com.dieski.data.model.ResortSnowSurveyDto
-import com.dieski.domain.model.ResortSnowMakerSurveyRecord
+import com.dieski.data.model.MyResortSnowSurveyDto
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
 
@@ -19,7 +18,7 @@ interface ResortSnowSurveyLocalDataSource {
 
 	suspend fun getSurveyByResortId(
 		resortId: Long
-	): WResult<ResortSnowSurveyDto?, DataError>
+	): WResult<MyResortSnowSurveyDto?, DataError>
 
 	suspend fun deleteSurveysByResortIds(
 		resortIdList: List<Long>

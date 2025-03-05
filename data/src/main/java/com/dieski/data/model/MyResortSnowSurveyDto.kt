@@ -7,7 +7,7 @@ import com.dieski.domain.model.ResortSnowMakerSurveyRecord
  * @author   JGeun
  * @created  2025/03/05
  */
-data class ResortSnowSurveyDto(
+data class MyResortSnowSurveyDto(
 	val resortId: Long,
 	val submitDate: String
 ) : DataMapper<ResortSnowMakerSurveyRecord> {
