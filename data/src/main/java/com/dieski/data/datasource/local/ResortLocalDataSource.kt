@@ -1,4 +1,4 @@
-package com.dieski.data.datasource
+package com.dieski.data.datasource.local
 
 import kotlinx.coroutines.flow.Flow
 
@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
  * @author   JGeun
  * @created  2024/11/30
  */
-interface BookmarkDataSource {
+interface ResortLocalDataSource {
 	val bookmarkedResortIdSet: Flow<Set<Long>>
 
 	suspend fun saveResortBookmark(resortId: Long)

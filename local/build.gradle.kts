@@ -13,6 +13,7 @@ android {
 }
 
 dependencies {
+	implementation(projects.data)
 	implementation(projects.domain)
 
 	implementation(libs.androidx.datastore)

@@ -2,8 +2,9 @@ package com.dieski.local.di
 
 import android.content.Context
 import androidx.room.Room
-import com.dieski.local.dao.ResortSnowMakerSurveyRecordDao
-import com.dieski.local.db.WeSkiDatabase
+import com.dieski.local.room.RoomConstant
+import com.dieski.local.room.dao.ResortSnowSurveyDao
+import com.dieski.local.room.WeSkiDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,15 +23,19 @@ object DatabaseModule {
 
 	@Singleton
 	@Provides
-	fun providesWeSkiDatabase(
+	fun provideWeSkiDatabase(
 		@ApplicationContext context: Context
 	): WeSkiDatabase =
-		Room.databaseBuilder(context, WeSkiDatabase::class.java, WeSkiDatabase.DATABASE_NAME)
+		Room.databaseBuilder(
+			context,
+			WeSkiDatabase::class.java,
+			RoomConstant.ROOM_DB_NAME
+		).fallbackToDestructiveMigration()
 			.build()
 
 	@Singleton
 	@Provides
-	fun providesSnowMakerSurveyRecordDao(
+	fun provideResortSnowSurveyDao(
 		weSkiDatabase: WeSkiDatabase
-	): ResortSnowMakerSurveyRecordDao = weSkiDatabase.resortSnowMakerSurveyRecordDao()
+	): ResortSnowSurveyDao = weSkiDatabase.resortSnowSurveyDao()
 }

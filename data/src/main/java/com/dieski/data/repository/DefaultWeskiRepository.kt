@@ -1,6 +1,6 @@
 package com.dieski.data.repository
 
-import com.dieski.data.datasource.BookmarkDataSource
+import com.dieski.data.datasource.local.ResortLocalDataSource
 import com.dieski.data.datasource.WeSkiDataSource
 import com.dieski.data.datasource.di.Local
 import com.dieski.data.datasource.di.Remote
@@ -24,13 +24,13 @@ import javax.inject.Inject
  */
 internal class DefaultWeskiRepository @Inject constructor(
 	@Remote private val remoteWeSkiDataSource: WeSkiDataSource,
-	@Local private val localBookmarkDataSource: BookmarkDataSource,
+	private val resortLocalDataSource: ResortLocalDataSource,
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : WeSkiRepository {
 
 	override suspend fun fetchAllSkiResortsInfo(): WResult<List<SkiResortInfo>, WError> {
 		return withContext(ioDispatcher) {
-			val bookmarkedResortIdSet = localBookmarkDataSource.bookmarkedResortIdSet.first()
+			val bookmarkedResortIdSet = resortLocalDataSource.bookmarkedResortIdSet.first()
 			when (val result = remoteWeSkiDataSource.fetchAllSkiResortsInfo()) {
 				is WResult.Success -> {
 					withContext(Dispatchers.Default) {
@@ -59,13 +59,13 @@ internal class DefaultWeskiRepository @Inject constructor(
 
 	override suspend fun saveResortBookmark(resortId: Long) {
 		withContext(ioDispatcher) {
-			localBookmarkDataSource.saveResortBookmark(resortId)
+			resortLocalDataSource.saveResortBookmark(resortId)
 		}
 	}
 
 	override suspend fun deleteResortBookmark(resortId: Long) {
 		withContext(ioDispatcher) {
-			localBookmarkDataSource.deleteResortBookmark(resortId)
+			resortLocalDataSource.deleteResortBookmark(resortId)
 		}
 	}
 }
