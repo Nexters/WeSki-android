@@ -12,8 +12,8 @@ import com.dieski.domain.repository.WeSkiRepository
 import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -28,27 +28,17 @@ internal class DefaultWeskiRepository @Inject constructor(
 	@Dispatcher(WeSkiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher
 ) : WeSkiRepository {
 
-	override suspend fun fetchAllSkiResortsInfo(): WResult<List<SkiResortInfo>, WError> {
-		return withContext(ioDispatcher) {
-			val bookmarkedResortIdSet = resortLocalDataSource.bookmarkedResortIdSet.first()
-			when (val result = resortRemoteDataSource.fetchAllSkiResortsInfo()) {
-				is WResult.Success -> {
-					withContext(Dispatchers.Default) {
-						val data = result.data.toDomain().map {
-							it.copy(
-								isBookmarked = bookmarkedResortIdSet.contains(it.resortId)
-							)
-						}.sortedBy {
-							val index = bookmarkedResortIdSet.indexOf(it.resortId)
-							if (index != -1) index else Int.MAX_VALUE
-						}
-
-						WResult.Success(data)
-					}
-				}
-
-				is WResult.Error -> result.toDomainModel()
-			}
+	override fun getSkiResortList(): Flow<List<SkiResortInfo>> = combine(
+		resortRemoteDataSource.getSkiResortList(),
+		resortLocalDataSource.bookmarkedResortIdSet
+	) {  skiResortList, bookmarkedIdSet ->
+		skiResortList.toDomain().map {
+			it.copy(
+				isBookmarked = bookmarkedIdSet.contains(it.resortId)
+			)
+		}.sortedBy {
+			val index = bookmarkedIdSet.indexOf(it.resortId)
+			if (index != -1) index else Int.MAX_VALUE
 		}
 	}
 

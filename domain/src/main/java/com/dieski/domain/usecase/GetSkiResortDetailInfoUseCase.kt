@@ -8,11 +8,12 @@ import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GetSkiResortDetailInfoUseCase @Inject constructor(
-    private val getAllSkiResortsUseCase: GetAllSkiResortsUseCase,
+    private val getSkiResortListUseCase: GetSkiResortListUseCase,
     private val getWeatherInfoUseCase: GetSkiResortWeatherInfoUseCase,
     private val getSnowQualitySurveyResultUseCase: GetSnowQualitySurveyResultUseCase,
     @Dispatcher(WeSkiDispatchers.DEFAULT) private val defaultDispatcher: CoroutineDispatcher
@@ -20,16 +21,15 @@ class GetSkiResortDetailInfoUseCase @Inject constructor(
     suspend operator fun invoke(
         resortId: Long,
     ): WResult<SkiResortDetailInfo, WError> = withContext(defaultDispatcher) {
-        val allSkiResortsResultDeferred = async { getAllSkiResortsUseCase() }
+        val allSkiResortsResult = getSkiResortListUseCase().first()
         val skiResultWeatherInfoResultDeferred = async { getWeatherInfoUseCase(resortId) }
         val snowQualitySurveyResultDeferred = async { getSnowQualitySurveyResultUseCase(resortId) }
 
-        val allSkiResortsResult = allSkiResortsResultDeferred.await()
         val skiResultWeatherInfoResult = skiResultWeatherInfoResultDeferred.await()
         val snowQualitySurveyResult = snowQualitySurveyResultDeferred.await()
 
-        if (allSkiResortsResult is WResult.Success && skiResultWeatherInfoResult is WResult.Success && snowQualitySurveyResult is WResult.Success) {
-            val skiResortInfo = allSkiResortsResult.data.firstOrNull { it.resortId == resortId }
+        if (skiResultWeatherInfoResult is WResult.Success && snowQualitySurveyResult is WResult.Success) {
+            val skiResortInfo = allSkiResortsResult.firstOrNull { it.resortId == resortId }
             if (skiResortInfo != null) {
                 WResult.Success(
                     SkiResortDetailInfo(
@@ -41,8 +41,6 @@ class GetSkiResortDetailInfoUseCase @Inject constructor(
             } else {
                 WResult.Error(DetailError("resortId에 해당하는 스키장이 없습니다."))
             }
-        } else if (allSkiResortsResult is WResult.Error) {
-            WResult.Error(allSkiResortsResult.error)
         } else if (skiResultWeatherInfoResult is WResult.Error) {
             WResult.Error(skiResultWeatherInfoResult.error)
         } else if (snowQualitySurveyResult is WResult.Error) {

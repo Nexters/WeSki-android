@@ -2,6 +2,10 @@ package com.dieski.weski.presentation.core.base
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,6 +14,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
 
 abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect> : ViewModel() {
 
@@ -58,4 +64,17 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
 			}
 		}
 	}
+
+	open fun handleError(throwable: Throwable?) {
+		handleError(throwable)
+	}
+
+	private val coroutineExceptionHandler =
+		CoroutineExceptionHandler { _, exception -> handleError(exception) }
+
+	fun launch(
+		context: CoroutineContext = EmptyCoroutineContext,
+		start: CoroutineStart = CoroutineStart.DEFAULT,
+		block: suspend CoroutineScope.() -> Unit,
+	): Job = viewModelScope.launch(context + coroutineExceptionHandler, start, block)
 }

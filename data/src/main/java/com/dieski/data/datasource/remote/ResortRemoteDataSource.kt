@@ -4,6 +4,7 @@ import com.dieski.data.model.ResortInfoDto
 import com.dieski.data.model.ResortWeatherInfoDto
 import com.dieski.domain.result.DataError
 import com.dieski.domain.result.WResult
+import kotlinx.coroutines.flow.Flow
 
 /**
  *
@@ -12,7 +13,7 @@ import com.dieski.domain.result.WResult
  */
 interface ResortRemoteDataSource {
 
-	suspend fun fetchAllSkiResortsInfo(): WResult<List<ResortInfoDto>, DataError>
+	fun getSkiResortList(): Flow<List<ResortInfoDto>>
 
 	suspend fun fetchSkiResortWeatherInfo(
 		resortId: Long

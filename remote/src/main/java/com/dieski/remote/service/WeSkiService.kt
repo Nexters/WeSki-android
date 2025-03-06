@@ -16,8 +16,8 @@ import retrofit2.http.Query
  */
 interface WeSkiService {
 
-	@GET("/api/ski-resorts")
-	suspend fun fetchAllSkiResortsInfo(): NetworkResult<List<SkiResortInfoResponse>>
+	@GET("api/ski-resorts")
+	suspend fun getSkiResortList(): NetworkResult<List<SkiResortInfoResponse>>
 
 	@GET("/api/weather/{resortId}")
 	suspend fun fetchSkiResortWeatherInfo(

@@ -43,10 +43,10 @@ inline fun <T : Any> NetworkResult<T>.onSuccess(crossinline onResult: NetworkRes
 }
 
 @OptIn(ExperimentalContracts::class)
-inline fun <T : Any> NetworkResult<T>.onFailure(crossinline onResult: NetworkResult.Failure.() -> Unit): NetworkResult<T> {
+inline fun <T : Any> NetworkResult<T>.onFailure(crossinline onResult: NetworkResult.Failure.(throwable: Throwable?) -> Unit): NetworkResult<T> {
 	contract { callsInPlace(onResult, InvocationKind.AT_MOST_ONCE) }
 	if (this is NetworkResult.Failure) {
-		onResult(this)
+		onResult(this.throwable)
 	}
 	return this
 }

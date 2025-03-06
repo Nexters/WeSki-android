@@ -2,9 +2,9 @@ package com.dieski.domain.repository
 
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortWeatherInfo
-import com.dieski.domain.model.SnowQualitySurveyResult
 import com.dieski.domain.result.WError
 import com.dieski.domain.result.WResult
+import kotlinx.coroutines.flow.Flow
 
 /**
  *
@@ -13,7 +13,7 @@ import com.dieski.domain.result.WResult
  */
 interface WeSkiRepository {
 
-	suspend fun fetchAllSkiResortsInfo() : WResult<List<SkiResortInfo>, WError>
+	fun getSkiResortList() : Flow<List<SkiResortInfo>>
 
 	suspend fun fetchSkiResortWeatherInfo(resortId: Long) : WResult<SkiResortWeatherInfo, WError>
 
