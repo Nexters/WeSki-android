@@ -1,9 +1,6 @@
 package com.dieski.weski.presentation.home
 
-import androidx.lifecycle.viewModelScope
 import com.dieski.domain.model.SkiResortInfo
-import com.dieski.domain.result.DataError
-import com.dieski.domain.result.WResult
 import com.dieski.domain.usecase.DeleteResortBookmarkUseCase
 import com.dieski.domain.usecase.GetSkiResortListUseCase
 import com.dieski.domain.usecase.SaveResortBookmarkUseCase
@@ -12,7 +9,6 @@ import com.dieski.weski.presentation.home.model.toUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,15 +39,8 @@ class HomeViewModel @Inject constructor(
 			)
 
 			is HomeEvent.ToggleBookmark -> {
-				viewModelScope.launch {
-					val (resortId, isBookmarked) = event
-					toggleResortBookmarked(resortId, isBookmarked)
-					fetchHomeData()
-					if (isBookmarked.not()) {
-						setEffect(HomeEffect.OpenBookmarkPopup)
-					}
-				}
-
+				val (resortId, isBookmarked) = event
+				toggleResortBookmarked(resortId, isBookmarked)
 			}
 
 			HomeEvent.ClickShowServiceInfoReport -> setEffect(HomeEffect.ShowServiceInfoReport)
@@ -74,11 +63,20 @@ class HomeViewModel @Inject constructor(
 		}
 	}
 
-	private suspend fun toggleResortBookmarked(resortId: Long, isBookmarked:Boolean) {
-		if(isBookmarked.not()) {
-			saveResortBookmarkUseCase(resortId)
-		} else {
-			deleteResortBookmarkUseCase(resortId)
+	private fun toggleResortBookmarked(resortId: Long, isBookmarked:Boolean) {
+		launch {
+			val bookmarkResult: Result<Unit> = if(isBookmarked.not()) {
+				saveResortBookmarkUseCase(resortId)
+			} else {
+				deleteResortBookmarkUseCase(resortId)
+			}
+
+			if (bookmarkResult.isSuccess) {
+				fetchHomeData()
+				if (isBookmarked.not()) {
+					setEffect(HomeEffect.OpenBookmarkPopup)
+				}
+			}
 		}
 	}
 }

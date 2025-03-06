@@ -6,6 +6,7 @@ import com.dieski.data.toDomain
 import com.dieski.data.toDomainModel
 import com.dieski.domain.dispatchers.Dispatcher
 import com.dieski.domain.dispatchers.WeSkiDispatchers
+import com.dieski.domain.extension.runSuspendCatching
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortWeatherInfo
 import com.dieski.domain.repository.WeSkiRepository
@@ -54,15 +55,11 @@ internal class DefaultWeskiRepository @Inject constructor(
 		}
 	}
 
-	override suspend fun saveResortBookmark(resortId: Long) {
-		withContext(ioDispatcher) {
-			resortLocalDataSource.saveResortBookmark(resortId)
-		}
+	override suspend fun saveResortBookmark(resortId: Long) = runSuspendCatching {
+		resortLocalDataSource.saveResortBookmark(resortId)
 	}
 
-	override suspend fun deleteResortBookmark(resortId: Long) {
-		withContext(ioDispatcher) {
-			resortLocalDataSource.deleteResortBookmark(resortId)
-		}
+	override suspend fun deleteResortBookmark(resortId: Long) = runSuspendCatching {
+		resortLocalDataSource.deleteResortBookmark(resortId)
 	}
 }

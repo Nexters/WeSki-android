@@ -13,5 +13,5 @@ class SaveResortBookmarkUseCase @Inject constructor(
 ){
 	suspend operator fun invoke(
 		resortId: Long
-	): Unit = weSkiRepository.saveResortBookmark(resortId)
+	): Result<Unit> = weSkiRepository.saveResortBookmark(resortId)
 }

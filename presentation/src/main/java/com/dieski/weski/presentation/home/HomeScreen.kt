@@ -74,7 +74,6 @@ import com.dieski.weski.presentation.core.util.noRippleClickable
 import com.dieski.weski.presentation.home.model.HomeSkiResortInfo
 import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import com.dieski.weski.presentation.util.log
-import com.google.android.gms.ads.AdSize
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
@@ -285,12 +284,12 @@ private fun BookmarkPopup(
 
 			Spacer(Modifier.height(18.dp))
 
-			BannerAds(
-				modifier = Modifier
-					.fillMaxWidth()
-					.height(AdSize.BANNER.height.dp),
-				bannerAdUnitId = HOME_FAVORITES_BANNER_AD_UNIT_ID
-			)
+//			BannerAds(
+//				modifier = Modifier
+//					.fillMaxWidth()
+//					.height(AdSize.BANNER.height.dp),
+//				bannerAdUnitId = HOME_FAVORITES_BANNER_AD_UNIT_ID
+//			)
 
 			Spacer(Modifier.height(18.dp))
 
@@ -437,14 +436,14 @@ internal fun HomeContent(
 			}
 		}
 
-		item {
-			BannerAds(
-				modifier = Modifier
-					.fillMaxWidth()
-					.height(AdSize.BANNER.height.dp),
-				bannerAdUnitId = HOME_BOTTOM_BANNER_AD_UNIT_ID
-			)
-		}
+//		item {
+//			BannerAds(
+//				modifier = Modifier
+//					.fillMaxWidth()
+//					.height(AdSize.BANNER.height.dp),
+//				bannerAdUnitId = HOME_BOTTOM_BANNER_AD_UNIT_ID
+//			)
+//		}
 	}
 }
 

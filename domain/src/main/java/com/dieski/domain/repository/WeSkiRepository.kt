@@ -17,7 +17,7 @@ interface WeSkiRepository {
 
 	suspend fun fetchSkiResortWeatherInfo(resortId: Long) : WResult<SkiResortWeatherInfo, WError>
 
-	suspend fun saveResortBookmark(resortId: Long)
+	suspend fun saveResortBookmark(resortId: Long): Result<Unit>
 
-	suspend fun deleteResortBookmark(resortId: Long)
+	suspend fun deleteResortBookmark(resortId: Long): Result<Unit>
 }

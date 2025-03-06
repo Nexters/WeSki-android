@@ -13,5 +13,5 @@ class DeleteResortBookmarkUseCase @Inject constructor(
 ){
 	suspend operator fun invoke(
 		resortId: Long
-	): Unit = weSkiRepository.deleteResortBookmark(resortId)
+	): Result<Unit> = weSkiRepository.deleteResortBookmark(resortId)
 }
