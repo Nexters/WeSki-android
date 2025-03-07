@@ -1,10 +1,6 @@
 package com.dieski.domain.usecase
 
-import com.dieski.domain.model.SnowQualitySurveyResult
-import com.dieski.domain.model.result.SubmitError
 import com.dieski.domain.repository.SnowQualityRepository
-import com.dieski.domain.result.WError
-import com.dieski.domain.result.WResult
 import javax.inject.Inject
 
 /**
@@ -18,20 +14,8 @@ class SubmitSnowQualitySurveyResultUseCase @Inject constructor(
 	suspend operator fun invoke(
 		resortId: Long,
 		isPositive:Boolean
-	): WResult<SnowQualitySurveyResult, WError> {
+	): Result<Unit> {
 		// 에러 여부와 상관없이 데이터 전송
-		val submitResult = snowQualityRepository.submitSnowQualitySurvey(resortId, isPositive)
-		return when (submitResult) {
-			is WResult.Success -> {
-				if (!submitResult.data) {
-					WResult.Error(SubmitError)
-				} else {
-					snowQualityRepository.fetchSnowQualitySurveyResult(resortId)
-				}
-			}
-			is WResult.Error -> {
-				WResult.Error(submitResult.error)
-			}
-		}
+		return snowQualityRepository.submitSnowQualitySurvey(resortId, isPositive)
 	}
 }

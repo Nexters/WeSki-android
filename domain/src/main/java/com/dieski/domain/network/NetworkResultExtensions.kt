@@ -1,7 +1,5 @@
 package com.dieski.domain.network
 
-import com.dieski.domain.result.DataError
-import com.dieski.domain.result.WResult
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind
 import kotlin.contracts.contract
@@ -69,4 +67,9 @@ inline fun <T : Any> NetworkResult<T>.onNetworkException(
 		onResult(this)
 	}
 	return this
+}
+
+inline fun <T> NetworkResult<T>.getOrThrow(): T = when (this) {
+	is NetworkResult.Success -> data
+	is NetworkResult.Failure -> throw throwable
 }

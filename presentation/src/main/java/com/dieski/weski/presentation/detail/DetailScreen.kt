@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.dieski.domain.model.SnowQualitySurveyResult
+import com.dieski.domain.model.TotalResortSnowQualitySurvey
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.LocalLoggerOwner
 import com.dieski.weski.presentation.R
@@ -106,11 +106,11 @@ internal fun DetailRouter(
 	Box(
 		modifier = Modifier.fillMaxSize()
 	) {
-		WindBlownSnowflakeEffectBackground(
-			modifier = Modifier
-				.fillMaxSize()
-				.background(Color.Transparent)
-		)
+//		WindBlownSnowflakeEffectBackground(
+//			modifier = Modifier
+//				.fillMaxSize()
+//				.background(Color.Transparent)
+//		)
 
 		DetailScreen(
 			state = state,
@@ -325,7 +325,7 @@ private fun DetailScreenPreview() {
 			weatherCondition = WeatherCondition.SNOW,
 			openingDate = "2024-08-10",
 			weatherDescription = "눈이 내립니다.",
-			snowQualitySurveyResult = SnowQualitySurveyResult(10, 5, 3, "")
+			totalResortSnowQualitySurvey = TotalResortSnowQualitySurvey(10, 5, 3, "")
 		)
 	)
 }

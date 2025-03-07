@@ -66,7 +66,7 @@ abstract class BaseViewModel<Event : UiEvent, State : UiState, Effect : UiEffect
 	}
 
 	open fun handleError(throwable: Throwable?) {
-		handleError(throwable)
+
 	}
 
 	private val coroutineExceptionHandler =

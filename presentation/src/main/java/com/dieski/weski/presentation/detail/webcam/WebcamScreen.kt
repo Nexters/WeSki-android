@@ -78,8 +78,8 @@ internal fun WebcamScreen(
 				)
 
 				DetailSnowQualitySurvey(
-					totalNum = state.snowQualitySurveyResult.totalVotes,
-					likeNum = state.snowQualitySurveyResult.positiveVotes,
+					totalNum = state.totalResortSnowQualitySurvey.totalVotes,
+					likeNum = state.totalResortSnowQualitySurvey.positiveVotes,
 					onSubmit = { isGood ->
 						submitSnowQualitySurvey(isGood)
 					},

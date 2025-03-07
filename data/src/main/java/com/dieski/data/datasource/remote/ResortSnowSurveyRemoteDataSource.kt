@@ -1,8 +1,6 @@
 package com.dieski.data.datasource.remote
 
 import com.dieski.data.model.TotalResortSnowSurveyDto
-import com.dieski.domain.result.DataError
-import com.dieski.domain.result.WResult
 
 /**
  *
@@ -14,9 +12,7 @@ interface ResortSnowSurveyRemoteDataSource {
 	suspend fun submitSnowQualitySurvey(
 		resortId: Long,
 		isPositive: Boolean
-	): WResult<Boolean, DataError>
+	): Result<Unit>
 
-	suspend fun fetchingSnowQualitySurveyResult(
-		resortId: Long
-	): WResult<TotalResortSnowSurveyDto, DataError>
+	suspend fun getTotalResortSnowQualitySurvey(resortId: Long): Result<TotalResortSnowSurveyDto>
 }

@@ -1,8 +1,6 @@
 package com.dieski.data.datasource.local
 
 import com.dieski.data.model.MyResortSnowSurveyDto
-import com.dieski.domain.result.DataError
-import com.dieski.domain.result.WResult
 
 /**
  *
@@ -14,13 +12,13 @@ interface ResortSnowSurveyLocalDataSource {
 	suspend fun saveSurvey(
 		resortId: Long,
 		submitDate: String
-	): WResult<Boolean, DataError>
+	): Result<Unit>
 
 	suspend fun getSurveyByResortId(
 		resortId: Long
-	): WResult<MyResortSnowSurveyDto?, DataError>
+	): MyResortSnowSurveyDto?
 
 	suspend fun deleteSurveysByResortIds(
 		resortIdList: List<Long>
-	): WResult<Boolean, DataError>
+	): Result<Unit>
 }

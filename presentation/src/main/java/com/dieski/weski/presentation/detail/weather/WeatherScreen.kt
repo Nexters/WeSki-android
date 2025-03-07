@@ -146,8 +146,8 @@ internal fun WeatherScreen(
 		)
 
 		DetailSnowQualitySurvey(
-			totalNum = state.snowQualitySurveyResult.totalVotes,
-			likeNum = state.snowQualitySurveyResult.positiveVotes,
+			totalNum = state.totalResortSnowQualitySurvey.totalVotes,
+			likeNum = state.totalResortSnowQualitySurvey.positiveVotes,
 			onSubmit = { submitSnowQualitySurvey(it) },
 			onShowSnackBar = onShowSnackBar
 		)

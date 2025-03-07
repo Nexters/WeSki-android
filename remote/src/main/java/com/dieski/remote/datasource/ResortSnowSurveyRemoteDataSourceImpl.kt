@@ -3,10 +3,9 @@ package com.dieski.remote.datasource
 import com.dieski.analytics.AnalyticsLogger
 import com.dieski.data.datasource.remote.ResortSnowSurveyRemoteDataSource
 import com.dieski.data.model.TotalResortSnowSurveyDto
+import com.dieski.domain.extension.runSuspendCatching
+import com.dieski.domain.network.getOrThrow
 import com.dieski.domain.network.onFailure
-import com.dieski.domain.result.DataError
-import com.dieski.domain.result.WResult
-import com.dieski.domain.result.toResult
 import com.dieski.remote.service.SnowQualityService
 import javax.inject.Inject
 
@@ -23,22 +22,23 @@ class ResortSnowSurveyRemoteDataSourceImpl @Inject constructor(
 	override suspend fun submitSnowQualitySurvey(
 		resortId: Long,
 		isPositive: Boolean
-	): WResult<Boolean, DataError> =
+	): Result<Unit> = runSuspendCatching {
 		snowQualityService.submitSnowQualitySurvey(resortId, isPositive)
 			.onFailure {
 				logger.logError(throwable, "SnowQualityService - submitSnowQualitySurvey()에서 발생")
 			}
-			.toResult {
-				true
-			}
+			.getOrThrow()
+	}
 
-
-	override suspend fun fetchingSnowQualitySurveyResult(resortId: Long): WResult<TotalResortSnowSurveyDto, DataError> =
-		snowQualityService.fetchSnowQualitySurveyResult(resortId)
+	override suspend fun getTotalResortSnowQualitySurvey(resortId: Long): Result<TotalResortSnowSurveyDto> = runSuspendCatching {
+		snowQualityService.getTotalResortSnowQualitySurvey(resortId)
 			.onFailure {
-				logger.logError(throwable, "SnowQualityService - fetchingSnowQualitySurveyResult()에서 발생")
+				logger.logError(
+					throwable,
+					"SnowQualityService - getTotalResortSnowQualitySurvey()에서 발생"
+				)
 			}
-			.toResult {
-				it.toData()
-			}
+			.getOrThrow()
+			.toData()
+	}
 }

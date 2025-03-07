@@ -19,8 +19,8 @@ interface WeSkiService {
 	@GET("api/ski-resorts")
 	suspend fun getSkiResortList(): NetworkResult<List<SkiResortInfoResponse>>
 
-	@GET("/api/weather/{resortId}")
-	suspend fun fetchSkiResortWeatherInfo(
+	@GET("api/weather/{resortId}")
+	suspend fun getSkiResortWeatherInfo(
 		@Path("resortId") resortId: Long
 	): NetworkResult<ResortWeatherInfoResponse>
 

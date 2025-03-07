@@ -1,25 +1,25 @@
 package com.dieski.weski.presentation.detail
 
 import androidx.lifecycle.viewModelScope
-import com.dieski.domain.model.SkiResortDetailInfo
-import com.dieski.domain.model.result.DetailError
-import com.dieski.domain.model.result.SubmitError
-import com.dieski.domain.result.DataError
-import com.dieski.domain.result.WResult
+import com.dieski.domain.model.exception.SnowSurveyAlreadyExistException
 import com.dieski.domain.usecase.DeleteResortBookmarkUseCase
-import com.dieski.domain.usecase.GetSkiResortDetailInfoUseCase
+import com.dieski.domain.usecase.GetSkiResortListUseCase
+import com.dieski.domain.usecase.GetSkiResortWeatherInfoUseCase
+import com.dieski.domain.usecase.GetTotalResortSnowQualitySurveyUseCase
 import com.dieski.domain.usecase.SaveResortBookmarkUseCase
 import com.dieski.domain.usecase.SubmitSnowQualitySurveyResultUseCase
 import com.dieski.weski.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class DetailViewModel @Inject constructor(
-	private val getSkiResortDetailInfoUseCase: GetSkiResortDetailInfoUseCase,
-	private val submitSnowQualitySurveyResultUseCase: SubmitSnowQualitySurveyResultUseCase,
+	private val getSkiResortListUseCase: GetSkiResortListUseCase,
+	private val getSkiResortWeatherInfoUseCase: GetSkiResortWeatherInfoUseCase,
+	private val getTotalResortSnowQualitySurveyUseCase: GetTotalResortSnowQualitySurveyUseCase,
+	private val submitSnowQualitySurveyUseCase: SubmitSnowQualitySurveyResultUseCase,
 	private val saveResortBookmarkUseCase: SaveResortBookmarkUseCase,
 	private val deleteResortBookmarkUseCase: DeleteResortBookmarkUseCase,
 ) : BaseViewModel<DetailEvent, DetailState, DetailEffect>() {
@@ -71,44 +71,25 @@ class DetailViewModel @Inject constructor(
 		}
 	}
 
-	private fun fetchSkiResortData(
-		resortId: Long,
-	) {
-		viewModelScope.launch {
-			val skiResortDetailInfo: SkiResortDetailInfo = when(val result = getSkiResortDetailInfoUseCase(resortId)) {
-				is WResult.Success -> result.data
-				is WResult.Error -> {
-					when(result.error) {
-						is DetailError -> {
-							setEffect(DetailEffect.ShowSnackBar((result.error as DetailError).message, null))
-						}
-						is DataError.Network.ServerError -> {
-							setEffect(DetailEffect.ShowSnackBar("서버 에러가 발생하여 설문 결과를 불러오지 못했습니다.", null))
-						}
-						is DataError.Network.TimeoutError -> {
-							setEffect(DetailEffect.ShowSnackBar("응답 시간을 초과하여 설문 결과를 불러오지 못했습니다.", null))
-						}
-					}
-					return@launch
-				}
-			}
-
-			Timber.d("fetchSkiResortData: $skiResortDetailInfo")
+	private fun fetchSkiResortData(resortId: Long) {
+		launch {
+			val skiResortInfo = getSkiResortListUseCase().first().firstOrNull { it.resortId == resortId } ?: return@launch
 			setState {
-				copy(
-					resortId = skiResortDetailInfo.skiResortInfo.resortId,
-					resortName = skiResortDetailInfo.skiResortInfo.resortName,
-					openSlopes = skiResortDetailInfo.skiResortInfo.openSlopeCount,
-					isBookmarked = skiResortDetailInfo.skiResortInfo.isBookmarked,
-					status = skiResortDetailInfo.skiResortInfo.status,
-					openingDate = skiResortDetailInfo.skiResortInfo.openingDate,
-					temperature = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.temperature,
-					weatherCondition = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.condition,
-					weatherDescription = skiResortDetailInfo.skiResortWeatherInfo.currentWeather.description,
-					todayWeatherByTime = skiResortDetailInfo.skiResortWeatherInfo.todayWeatherByTime,
-					weeklyWeather = skiResortDetailInfo.skiResortWeatherInfo.weeklyWeather,
-					snowQualitySurveyResult = skiResortDetailInfo.snowQualitySurveyResult
-				)
+				this.updateBySkiResortInfo(skiResortInfo)
+			}
+		}
+
+		launch {
+			val skiResortWeatherInfo = getSkiResortWeatherInfoUseCase(resortId).first()
+			setState {
+				this.updateByWeatherInfo(skiResortWeatherInfo)
+			}
+		}
+
+		launch {
+			val totalResortSnowQualitySurvey = getTotalResortSnowQualitySurveyUseCase(resortId).first()
+			setState {
+				this.updateByTotalSurvey(totalResortSnowQualitySurvey)
 			}
 		}
 	}
@@ -117,35 +98,30 @@ class DetailViewModel @Inject constructor(
 		resortId: Long,
 		isPositive: Boolean
 	) {
-		viewModelScope.launch {
-			val snowMakingSurveyResult = when(val result = submitSnowQualitySurveyResultUseCase(resortId, isPositive)) {
-				is WResult.Success -> {
-					setEffect(DetailEffect.ShowSnackBar("고마워요! 투표의 결과가 반영되었어요", null))
-					result.data
-				}
-				is WResult.Error -> {
-					when (result.error) {
-						is DataError.Network.ServerError -> {
-							setEffect(DetailEffect.ShowSnackBar("서버 에러가 발생하여 설문 결과가 저장되지 않았습니다.", null))
-						}
-						is DataError.Network.TimeoutError -> {
-							setEffect(DetailEffect.ShowSnackBar("응답 시간을 초과하여 설문 결과를 불러오지 못했습니다.", null))
-						}
-						is SubmitError -> {
-							setEffect(DetailEffect.ShowSnackBar("오늘은 이미 설문조사를 완료하셨습니다.", null))
-						}
+		launch {
+			val submitSurvey = submitSnowQualitySurveyUseCase(resortId, isPositive)
+			if (submitSurvey.isSuccess) {
+				setEffect(DetailEffect.ShowSnackBar("고마워요! 투표의 결과가 반영되었어요", null))
+				loadTotalSnowQualitySurvey(resortId)
+			} else {
+				when(submitSurvey.exceptionOrNull()) {
+					is SnowSurveyAlreadyExistException -> {
+						setEffect(DetailEffect.ShowSnackBar("오늘은 이미 설문조사를 완료하셨습니다.", null))
 					}
-					return@launch
-				}
-			}
-
-				setState {
-					copy(
-						snowQualitySurveyResult = snowMakingSurveyResult
-					)
+					else -> {
+						setEffect(DetailEffect.ShowSnackBar("예상치 못한 문제가 발생하여 설문 결과가 저장되지 않았습니다", null))
+					}
 				}
 			}
 		}
+	}
+
+	private suspend fun loadTotalSnowQualitySurvey(resortId: Long) {
+		val totalResortSnowQualitySurvey = getTotalResortSnowQualitySurveyUseCase(resortId).first()
+		setState {
+			this.updateByTotalSurvey(totalResortSnowQualitySurvey)
+		}
+	}
 
 	private suspend fun toggleResortBookmarked(resortId: Long, isBookmarked:Boolean) {
 		if(isBookmarked.not()) {

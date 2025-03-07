@@ -7,10 +7,8 @@ import com.dieski.data.model.ResortWeatherInfoDto
 import com.dieski.domain.dispatchers.Dispatcher
 import com.dieski.domain.dispatchers.WeSkiDispatchers
 import com.dieski.domain.network.NetworkResult
+import com.dieski.domain.network.getOrThrow
 import com.dieski.domain.network.onFailure
-import com.dieski.domain.result.DataError
-import com.dieski.domain.result.WResult
-import com.dieski.domain.result.toResult
 import com.dieski.remote.service.WeSkiService
 import com.dieski.remote.toData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -31,22 +29,21 @@ class ResortRemoteDataSourceImpl @Inject constructor(
 ) : ResortRemoteDataSource {
 
 	override fun getSkiResortList(): Flow<List<ResortInfoDto>> = flow {
-		when (val response = weSkiService.getSkiResortList()) {
+		val skiResortList = weSkiService.getSkiResortList()
+			.onFailure {
+				logger.logError(throwable, "WeSkiDataSource - getSkiResortList()에서 발생")
+			}
+			.getOrThrow()
+			.toData()
+		emit (skiResortList)
+	}
+
+	override fun getSkiResortWeatherInfo(resortId: Long): Flow<ResortWeatherInfoDto> = flow {
+		when (val response = weSkiService.getSkiResortWeatherInfo(resortId)) {
 			is NetworkResult.Success -> emit(response.data.toData())
 			is NetworkResult.Failure -> {
-				logger.logError(response.throwable, "WeSkiDataSource - getSkiResortList()에서 발생")
-				emit(emptyList())
+				logger.logError(response.throwable, "WeSkiDataSource - fetchSkiResortWeatherInfo()에서 발생")
 			}
 		}
 	}.flowOn(ioDispatcher)
-
-	override suspend fun fetchSkiResortWeatherInfo(resortId: Long): WResult<ResortWeatherInfoDto, DataError> {
-		return weSkiService.fetchSkiResortWeatherInfo(resortId)
-			.onFailure {
-				logger.logError(throwable, "WeSkiDataSource - fetchSkiResortWeatherInfo()에서 발생")
-			}
-			.toResult { skiResortWeatherInfoResponse ->
-				skiResortWeatherInfoResponse.toData()
-			}
-	}
 }

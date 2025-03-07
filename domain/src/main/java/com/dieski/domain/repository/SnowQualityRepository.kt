@@ -1,8 +1,7 @@
 package com.dieski.domain.repository
 
-import com.dieski.domain.model.SnowQualitySurveyResult
-import com.dieski.domain.result.WError
-import com.dieski.domain.result.WResult
+import com.dieski.domain.model.TotalResortSnowQualitySurvey
+import kotlinx.coroutines.flow.Flow
 
 /**
  *
@@ -14,9 +13,9 @@ interface SnowQualityRepository {
 	suspend fun submitSnowQualitySurvey(
 		resortId: Long,
 		isPositive: Boolean
-	) :WResult<Boolean, WError>
+	): Result<Unit>
 
-	suspend fun fetchSnowQualitySurveyResult(
+	fun getTotalResortSnowQualitySurvey(
 		resortId: Long
-	) : WResult<SnowQualitySurveyResult, WError>
+	) : Flow<TotalResortSnowQualitySurvey>
 }

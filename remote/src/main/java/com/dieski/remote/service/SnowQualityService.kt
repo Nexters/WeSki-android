@@ -20,8 +20,8 @@ interface SnowQualityService {
 		@Query("isPositive") isPositive: Boolean
 	): NetworkResult<Unit>
 
-	@GET("/api/snow-maker/{resortId}")
-	suspend fun fetchSnowQualitySurveyResult(
+	@GET("api/snow-maker/{resortId}")
+	suspend fun getTotalResortSnowQualitySurvey(
 		@Path("resortId") resortId: Long
 	): NetworkResult<TotalResortSnowSurveyResponse>
 }

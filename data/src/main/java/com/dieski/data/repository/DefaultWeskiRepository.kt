@@ -10,12 +10,10 @@ import com.dieski.domain.extension.runSuspendCatching
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortWeatherInfo
 import com.dieski.domain.repository.WeSkiRepository
-import com.dieski.domain.result.WError
-import com.dieski.domain.result.WResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
@@ -43,17 +41,9 @@ internal class DefaultWeskiRepository @Inject constructor(
 		}
 	}
 
-	override suspend fun fetchSkiResortWeatherInfo(resortId: Long): WResult<SkiResortWeatherInfo, WError> {
-		return withContext(ioDispatcher) {
-			when (val result = resortRemoteDataSource.fetchSkiResortWeatherInfo(resortId)) {
-				is WResult.Success -> {
-					WResult.Success(result.data.toDomain())
-				}
+	override fun getSkiResortWeatherInfo(resortId: Long): Flow<SkiResortWeatherInfo> =
+		 resortRemoteDataSource.getSkiResortWeatherInfo(resortId).map { it.toDomainModel() }
 
-				is WResult.Error -> result.toDomainModel()
-			}
-		}
-	}
 
 	override suspend fun saveResortBookmark(resortId: Long) = runSuspendCatching {
 		resortLocalDataSource.saveResortBookmark(resortId)

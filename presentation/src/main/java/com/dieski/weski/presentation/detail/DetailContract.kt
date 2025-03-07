@@ -1,8 +1,9 @@
 package com.dieski.weski.presentation.detail
 
-import androidx.compose.runtime.Immutable
+import com.dieski.domain.model.SkiResortDetailInfo
+import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortWeatherInfo
-import com.dieski.domain.model.SnowQualitySurveyResult
+import com.dieski.domain.model.TotalResortSnowQualitySurvey
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.domain.model.WebMobileData.Companion.SLOPE_PARAM
 import com.dieski.domain.model.WebMobileData.Companion.WEBCAM_PARAM
@@ -51,7 +52,7 @@ data class DetailState(
 	val weatherDescription: String = "",
 	val todayWeatherByTime: List<SkiResortWeatherInfo.HourlyWeather> = emptyList(),
 	val weeklyWeather: List<SkiResortWeatherInfo.DailyWeather> = emptyList(),
-	val snowQualitySurveyResult: SnowQualitySurveyResult = SnowQualitySurveyResult.EMPTY
+	val totalResortSnowQualitySurvey: TotalResortSnowQualitySurvey = TotalResortSnowQualitySurvey.EMPTY
 ) : UiState {
 	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortId}"
 	val slopeWebUrl get() = "${WEB_MOBILE_URL}${SLOPE_PARAM}${resortId}"
@@ -68,6 +69,27 @@ data class DetailState(
 			"예상치 못한 이슈가 발생했어요"
 		}
 	}
+
+	fun updateBySkiResortInfo(skiResortInfo: SkiResortInfo): DetailState = this.copy(
+		resortId = skiResortInfo.resortId,
+		resortName = skiResortInfo.resortName,
+		openSlopes = skiResortInfo.openSlopeCount,
+		isBookmarked = skiResortInfo.isBookmarked,
+		status = skiResortInfo.status,
+		openingDate = skiResortInfo.openingDate,
+	)
+
+	fun updateByWeatherInfo(weatherInfo: SkiResortWeatherInfo) = this.copy(
+		temperature = weatherInfo.currentWeather.temperature,
+		weatherCondition = weatherInfo.currentWeather.condition,
+		weatherDescription = weatherInfo.currentWeather.description,
+		todayWeatherByTime = weatherInfo.todayWeatherByTime,
+		weeklyWeather = weatherInfo.weeklyWeather,
+	)
+
+	fun updateByTotalSurvey(totalSurvey: TotalResortSnowQualitySurvey) = this.copy(
+		totalResortSnowQualitySurvey = totalSurvey
+	)
 }
 
 sealed interface DetailEffect : UiEffect {

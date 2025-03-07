@@ -1,7 +1,7 @@
 package com.dieski.data.model
 
 import com.dieski.data.DataMapper
-import com.dieski.domain.model.SnowQualitySurveyResult
+import com.dieski.domain.model.TotalResortSnowQualitySurvey
 
 /**
  *
@@ -13,9 +13,9 @@ data class TotalResortSnowSurveyDto(
 	val totalVotes: Int,
 	val positiveVotes: Int,
 	val status: String
-) : DataMapper<SnowQualitySurveyResult> {
-	override fun toDomain(): SnowQualitySurveyResult {
-		return SnowQualitySurveyResult(
+) : DataMapper<TotalResortSnowQualitySurvey> {
+	override fun toDomain(): TotalResortSnowQualitySurvey {
+		return TotalResortSnowQualitySurvey(
 			resortId = resortId,
 			totalVotes = totalVotes,
 			positiveVotes = positiveVotes,

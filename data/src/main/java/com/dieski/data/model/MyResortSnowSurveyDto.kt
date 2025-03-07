@@ -2,6 +2,7 @@ package com.dieski.data.model
 
 import com.dieski.data.DataMapper
 import com.dieski.domain.model.ResortSnowMakerSurveyRecord
+import com.dieski.domain.util.DateUtil
 
 /**
  * @author   JGeun
@@ -17,4 +18,12 @@ data class MyResortSnowSurveyDto(
 			submitDate = submitDate
 		)
 	}
+
+	fun checkSubmitDateIsToday(): Boolean {
+		return submitDate == DateUtil.createYYYYMMDDFormat()
+	}
+}
+
+fun MyResortSnowSurveyDto?.submitAvailable(): Boolean {
+	return this == null || this.checkSubmitDateIsToday().not()
 }
