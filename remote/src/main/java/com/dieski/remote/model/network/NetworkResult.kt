@@ -1,4 +1,4 @@
-package com.dieski.domain.network
+package com.dieski.remote.model.network
 
 /**
  *

@@ -5,7 +5,7 @@ import com.dieski.data.datasource.remote.PlatformConfigRemoteDataSource
 import com.dieski.data.model.PlatformForceUpdateDto
 import com.dieski.domain.model.platform.PlatformType
 import com.dieski.domain.model.platform.PlatformVersion
-import com.dieski.domain.network.NetworkResult
+import com.dieski.remote.model.network.NetworkResult
 import com.dieski.remote.service.WeSkiService
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

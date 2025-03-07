@@ -139,8 +139,8 @@
 }
 
 # Keep NetworkResult and its subclasses
--keep class com.dieski.domain.network.NetworkResult { *; }
--keep class com.dieski.domain.network.NetworkResult$* { *; }
+-keep class com.dieski.remote.model.network.NetworkResult { *; }
+-keep class com.dieski.remote.model.network.NetworkResult$* { *; }
 
 # Keep NetworkResult and its subclasses
 -keep class com.dieski.domain.exception.WeskiException { *; }

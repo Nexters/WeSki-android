@@ -1,7 +1,7 @@
 package com.dieski.remote.service
 
 import com.dieski.domain.model.platform.PlatformType
-import com.dieski.domain.network.NetworkResult
+import com.dieski.remote.model.network.NetworkResult
 import com.dieski.remote.model.response.PlatformForceUpdateResponse
 import com.dieski.remote.model.response.SkiResortInfoResponse
 import com.dieski.remote.model.response.ResortWeatherInfoResponse

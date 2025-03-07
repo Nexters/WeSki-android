@@ -6,9 +6,9 @@ import com.dieski.data.model.ResortInfoDto
 import com.dieski.data.model.ResortWeatherInfoDto
 import com.dieski.domain.dispatchers.Dispatcher
 import com.dieski.domain.dispatchers.WeSkiDispatchers
-import com.dieski.domain.network.NetworkResult
-import com.dieski.domain.network.getOrThrow
-import com.dieski.domain.network.onFailure
+import com.dieski.remote.model.network.NetworkResult
+import com.dieski.remote.model.network.getOrThrow
+import com.dieski.remote.model.network.onFailure
 import com.dieski.remote.service.WeSkiService
 import com.dieski.remote.toData
 import kotlinx.coroutines.CoroutineDispatcher

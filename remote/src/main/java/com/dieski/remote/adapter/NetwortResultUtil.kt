@@ -1,6 +1,6 @@
 package com.dieski.remote.adapter
 
-import com.dieski.domain.network.NetworkResult
+import com.dieski.remote.model.network.NetworkResult
 import retrofit2.Response
 import java.io.IOException
 

@@ -4,8 +4,8 @@ import com.dieski.analytics.AnalyticsLogger
 import com.dieski.data.datasource.remote.ResortSnowSurveyRemoteDataSource
 import com.dieski.data.model.TotalResortSnowSurveyDto
 import com.dieski.domain.extension.runSuspendCatching
-import com.dieski.domain.network.getOrThrow
-import com.dieski.domain.network.onFailure
+import com.dieski.remote.model.network.getOrThrow
+import com.dieski.remote.model.network.onFailure
 import com.dieski.remote.service.SnowQualityService
 import javax.inject.Inject
 
