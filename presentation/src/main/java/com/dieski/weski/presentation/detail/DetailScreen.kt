@@ -106,11 +106,11 @@ internal fun DetailRouter(
 	Box(
 		modifier = Modifier.fillMaxSize()
 	) {
-//		WindBlownSnowflakeEffectBackground(
-//			modifier = Modifier
-//				.fillMaxSize()
-//				.background(Color.Transparent)
-//		)
+		WindBlownSnowflakeEffectBackground(
+			modifier = Modifier
+				.fillMaxSize()
+				.background(Color.Transparent)
+		)
 
 		DetailScreen(
 			state = state,
