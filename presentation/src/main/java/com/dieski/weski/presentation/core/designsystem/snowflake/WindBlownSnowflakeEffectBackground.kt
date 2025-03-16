@@ -3,19 +3,18 @@ package com.dieski.weski.presentation.core.designsystem.snowflake
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.PixelFormat
 import android.graphics.PorterDuff
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Handler
-import android.os.Looper
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.viewinterop.AndroidView
@@ -23,7 +22,6 @@ import androidx.core.content.res.ResourcesCompat
 import com.dieski.weski.presentation.R
 import com.dieski.weski.presentation.core.model.Snowflake
 import com.dieski.weski.presentation.core.util.dpToPx
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -40,7 +38,7 @@ fun WindBlownSnowflakeEffectBackground(
 	modifier: Modifier = Modifier
 ) {
 	val amplitude = 6f
-	val isRunning = AtomicBoolean(true)
+	val isRunning = remember { mutableStateOf(true) }
 
 	BoxWithConstraints {
 		val screenWidth: Int = maxWidth.dpToPx().toInt()
@@ -55,95 +53,73 @@ fun WindBlownSnowflakeEffectBackground(
 					val paint = Paint().apply {
 						color = Color.WHITE
 						style = Paint.Style.FILL
-					}
-					val snowflakes = mutableListOf<Snowflake>()
-					val handler = Handler(Looper.getMainLooper())
-					val choreographer = android.view.Choreographer.getInstance()
-
-					val snowCount = if (screenWidth > 1500) {
-						400
-					} else if (screenWidth > 1000){
-						300
-					} else {
-						200
-					}
-					val bitmapList = mutableListOf<Bitmap>()
-					for (i in 0 until snowCount) {
-						val drawable = ResourcesCompat.getDrawable(context.resources, R.drawable.snow_texture, null)
-						if (drawable != null) {
-							val bitmap: Bitmap = drawableToBitmap(drawable, 45, 45)
-							bitmapList.add(bitmap)
-						}
+						isAntiAlias = true
 					}
 
-					bitmapList.forEach { _ ->
-						val x = Random.nextInt(screenWidth).toFloat()
-						val y = Random.nextInt(screenHeight).toFloat()
+					val bitmapCache = ResourcesCompat.getDrawable(
+						context.resources, R.drawable.snow_texture, null
+					)?.let { drawableToBitmap(it, 45, 45) }
 
-						val snowflake = Snowflake(
-							offset = Offset(x, -y),
+					val backgroundBitmap = ResourcesCompat.getDrawable(
+						context.resources, R.drawable.img_background, null
+					)?.let { drawableToBitmap(it, screenWidth, screenHeight) }
+
+					val snowflakes = List(200) {
+						Snowflake(
+							offset = Offset(
+								Random.nextInt(screenWidth).toFloat(),
+								Random.nextInt(screenHeight).toFloat()
+							),
 							angle = Random.nextFloat() * (PI / 2).toFloat() + (PI / 4).toFloat(),
 							createTime = System.currentTimeMillis()
 						)
-
-						snowflakes.add(snowflake)
 					}
 
-					val drawSnowflake = object : Runnable {
+					val drawRunnable = object : Runnable {
 						override fun run() {
-							if (!isRunning.get()) return
+							if (!isRunning.value) return
 
-							snowflakes.forEach {
-								val angle = it.angle
-								val horizontalOffset = amplitude * cos(angle)
-								val verticalOffset = amplitude * sin(angle)
+							snowflakes.forEach { flake ->
+								val angle = flake.angle
+								val newX = flake.offset.x + amplitude * cos(angle)
+								val newY = flake.offset.y + amplitude * sin(angle)
 
-								val newX = it.offset.x + horizontalOffset
-								val newY = it.offset.y + verticalOffset
-
-								if (newY >= screenHeight) {
-									val x = Random.nextInt(screenWidth).toFloat()
-									val y = Random.nextInt(screenHeight).toFloat()
-
-									it.offset = Offset(x, -y)
+								flake.offset = if (newY >= screenHeight) {
+									Offset(Random.nextInt(screenWidth).toFloat(), 0f)
 								} else {
-									it.offset = Offset(newX, newY)
+									Offset(newX, newY)
 								}
 							}
 
-							val bg = drawableToBitmap(
-								ResourcesCompat.getDrawable(context.resources, R.drawable.img_background, null)!!,
-								screenWidth,
-								screenHeight
-							)
-							val canvas: Canvas? = holder.lockHardwareCanvas()
-							canvas?.let {
-								it.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-								it.drawBitmap(bg, Matrix(), paint)
+							val canvas = holder.lockCanvas()
+							canvas?.apply {
+								drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
 
-								bitmapList.forEachIndexed { index, bitmap ->
-									val light = snowflakes[index]
-									it.drawBitmap(bitmap, light.offset.x, light.offset.y, paint)
+								backgroundBitmap?.let { drawBitmap(it, 0f, 0f, paint) }
+
+								snowflakes.forEach { flake ->
+									bitmapCache?.let {
+										drawBitmap(it, flake.offset.x, flake.offset.y, paint)
+									}
 								}
 
-								holder.unlockCanvasAndPost(it)
+								holder.unlockCanvasAndPost(this)
 							}
 
-							choreographer.postFrameCallback { run() }
+							postDelayed(this, 12L) // 60FPS 유지
 						}
 					}
 
 					holder.addCallback(object : SurfaceHolder.Callback {
 						override fun surfaceCreated(holder: SurfaceHolder) {
-							isRunning.set(true)
-							handler.post(drawSnowflake)
+							isRunning.value = true
+							post(drawRunnable)
 						}
 
 						override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
 						override fun surfaceDestroyed(holder: SurfaceHolder) {
-							isRunning.set(false)
-							handler.removeCallbacks(drawSnowflake)
+							isRunning.value = false
 						}
 					})
 				}
