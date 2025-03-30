@@ -12,6 +12,7 @@ import com.dieski.weski.presentation.core.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,6 +75,7 @@ class DetailViewModel @Inject constructor(
 	private fun fetchSkiResortData(resortId: Long) {
 		launch {
 			val skiResortInfo = getSkiResortListUseCase().first().firstOrNull { it.resortId == resortId } ?: return@launch
+			Timber.d("DetailViewModel", "fetchSkiResortData: $skiResortInfo")
 			setState {
 				this.updateBySkiResortInfo(skiResortInfo)
 			}
@@ -81,6 +83,7 @@ class DetailViewModel @Inject constructor(
 
 		launch {
 			val skiResortWeatherInfo = getSkiResortWeatherInfoUseCase(resortId).first()
+			Timber.d("DetailViewModel", "skiResortWeatherInfo: $skiResortWeatherInfo")
 			setState {
 				this.updateByWeatherInfo(skiResortWeatherInfo)
 			}
@@ -88,6 +91,7 @@ class DetailViewModel @Inject constructor(
 
 		launch {
 			val totalResortSnowQualitySurvey = getTotalResortSnowQualitySurveyUseCase(resortId).first()
+			Timber.d("DetailViewModel", "totalResortSnowQualitySurvey: $totalResortSnowQualitySurvey")
 			setState {
 				this.updateByTotalSurvey(totalResortSnowQualitySurvey)
 			}

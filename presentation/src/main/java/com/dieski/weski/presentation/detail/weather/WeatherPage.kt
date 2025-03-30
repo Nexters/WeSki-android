@@ -18,6 +18,9 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dieski.domain.model.WeatherCondition
 import com.dieski.weski.presentation.core.common.BannerAds
@@ -36,13 +39,15 @@ import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @Composable
-internal fun WeatherScreen(
+internal fun WeatherPage(
 	modifier: Modifier = Modifier,
 	state: DetailState = DetailState(),
 	submitSnowQualitySurvey: (isLike: Boolean) -> Unit = {},
 	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> },
-	logWeatherTimeRowScrolling: (Boolean) -> Unit = {}
+	logWeatherTimeRowScrolling: (Boolean) -> Unit = {},
+	updatePageHeight: (Dp) -> Unit = {}
 ) {
+	val density  = LocalDensity.current
 	val weatherTimeLazyRowListState = rememberLazyListState()
 	val isScrolling by remember { derivedStateOf { weatherTimeLazyRowListState.isScrollInProgress } }
 
@@ -54,6 +59,9 @@ internal fun WeatherScreen(
 		modifier = modifier
 			.fillMaxSize()
 			.background(WeskiColor.White)
+			.onSizeChanged {
+				with(density) { updatePageHeight(it.height.toDp()) }
+			}
 	) {
 		WeatherScreenWeatherInfoTextBox()
 
@@ -256,5 +264,5 @@ private fun WeatherScreenWeatherInfoTextBox() {
 @ThemePreviews
 @Composable
 private fun WeatherScreenPreview() {
-	WeatherScreen()
+	WeatherPage()
 }

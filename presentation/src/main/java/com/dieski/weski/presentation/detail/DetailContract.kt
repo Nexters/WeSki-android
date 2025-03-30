@@ -1,6 +1,6 @@
 package com.dieski.weski.presentation.detail
 
-import com.dieski.domain.model.SkiResortDetailInfo
+import androidx.compose.runtime.Stable
 import com.dieski.domain.model.SkiResortInfo
 import com.dieski.domain.model.SkiResortWeatherInfo
 import com.dieski.domain.model.TotalResortSnowQualitySurvey
@@ -11,6 +11,9 @@ import com.dieski.domain.model.WebMobileData.Companion.WEB_MOBILE_URL
 import com.dieski.weski.presentation.core.base.UiEffect
 import com.dieski.weski.presentation.core.base.UiEvent
 import com.dieski.weski.presentation.core.base.UiState
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 
 sealed interface DetailEvent : UiEvent {
 	data class Init(
@@ -40,6 +43,7 @@ sealed interface DetailEvent : UiEvent {
 	) : DetailEvent
 }
 
+@Stable
 data class DetailState(
 	val resortId: Long = -1L,
 	val resortName: String = "",
@@ -50,8 +54,8 @@ data class DetailState(
 	val temperature: Int = 0,
 	val weatherCondition: WeatherCondition = WeatherCondition.SUNNY,
 	val weatherDescription: String = "",
-	val todayWeatherByTime: List<SkiResortWeatherInfo.HourlyWeather> = emptyList(),
-	val weeklyWeather: List<SkiResortWeatherInfo.DailyWeather> = emptyList(),
+	val todayWeatherByTime: ImmutableList<SkiResortWeatherInfo.HourlyWeather> = persistentListOf(),
+	val weeklyWeather: ImmutableList<SkiResortWeatherInfo.DailyWeather> = persistentListOf(),
 	val totalResortSnowQualitySurvey: TotalResortSnowQualitySurvey = TotalResortSnowQualitySurvey.EMPTY
 ) : UiState {
 	val webcamWebUrl get() = "${WEB_MOBILE_URL}${WEBCAM_PARAM}${resortId}"
@@ -83,8 +87,8 @@ data class DetailState(
 		temperature = weatherInfo.currentWeather.temperature,
 		weatherCondition = weatherInfo.currentWeather.condition,
 		weatherDescription = weatherInfo.currentWeather.description,
-		todayWeatherByTime = weatherInfo.todayWeatherByTime,
-		weeklyWeather = weatherInfo.weeklyWeather,
+		todayWeatherByTime = weatherInfo.todayWeatherByTime.toPersistentList(),
+		weeklyWeather = weatherInfo.weeklyWeather.toPersistentList(),
 	)
 
 	fun updateByTotalSurvey(totalSurvey: TotalResortSnowQualitySurvey) = this.copy(

@@ -1,5 +1,6 @@
 package com.dieski.weski.presentation.detail.webcam
 
+import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,12 +27,14 @@ import com.dieski.weski.presentation.detail.component.WebViewAction
 import com.dieski.weski.presentation.detail.component.WeskiWebView
 
 @Composable
-internal fun WebcamScreen(
+internal fun WebcamPage(
 	modifier: Modifier = Modifier,
 	state: DetailState,
+	webView: WebView? = null,
 	submitSnowQualitySurvey: (isLike: Boolean) -> Unit,
 	navigateToWebView: (url: String) -> Unit = {},
-	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
+	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> },
+	updateWebcamWebView: (WebView) -> Unit
 ) {
     var isWebViewFinished by remember { mutableStateOf(false) }
 
@@ -47,6 +50,7 @@ internal fun WebcamScreen(
 					.fillMaxWidth()
 					.background(Color.Transparent),
 				webViewUrl = state.webcamWebUrl,
+				prevWebView = webView,
 				onPageFinished = {
 					isWebViewFinished = true
 				},
@@ -58,9 +62,9 @@ internal fun WebcamScreen(
 							navigateToWebView(action.url)
 						}
 					}
-				}
+				},
+				updateWebView = updateWebcamWebView
 			)
-
 
 			if (isWebViewFinished) {
 				BannerAds(

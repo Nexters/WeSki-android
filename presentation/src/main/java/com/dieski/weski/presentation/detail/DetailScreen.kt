@@ -2,6 +2,7 @@ package com.dieski.weski.presentation.detail
 
 import android.app.Activity
 import android.content.Intent
+import android.webkit.WebView
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.geometry.Rect
@@ -52,8 +54,8 @@ import com.dieski.weski.presentation.core.util.noRippleClickable
 import com.dieski.weski.presentation.detail.component.DetailFeedTab
 import com.dieski.weski.presentation.detail.congestion.CongestionScreen
 import com.dieski.weski.presentation.detail.model.TabItem
-import com.dieski.weski.presentation.detail.weather.WeatherScreen
-import com.dieski.weski.presentation.detail.webcam.WebcamScreen
+import com.dieski.weski.presentation.detail.weather.WeatherPage
+import com.dieski.weski.presentation.detail.webcam.WebcamPage
 import com.dieski.weski.presentation.util.log
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.coroutines.launch
@@ -153,6 +155,8 @@ internal fun DetailScreen(
 		pageCount = { tabItemList.size }
 	)
 
+	var webcamWebView by remember { mutableStateOf<WebView?> (null) }
+	var slopeWebView by remember { mutableStateOf<WebView?>(null) }
 	val logger = LocalLoggerOwner.current
 
 	LaunchedEffect(pagerState.currentPage) {
@@ -243,10 +247,12 @@ internal fun DetailScreen(
 						.fillMaxSize()
 						.background(WeskiColor.White),
 					state = pagerState,
+					verticalAlignment = Alignment.Top
 				) { page ->
 					when (page) {
-						0 -> WebcamScreen(
+						0 -> WebcamPage(
 							state = state,
+							webView = webcamWebView,
 							submitSnowQualitySurvey = { isLike ->
 								logger.log("details_webcam_vote", state.resortName)
 								onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
@@ -256,10 +262,13 @@ internal fun DetailScreen(
 							},
 							navigateToWebView = { url ->
 								onAction(DetailEvent.ClickWebcam(url))
+							},
+							updateWebcamWebView = {
+								webcamWebView = it
 							}
 						)
 
-						1 -> WeatherScreen(
+						1 -> WeatherPage(
 							state = state,
 							submitSnowQualitySurvey = { isLike ->
 								val likeLoggerText = if (isLike) "good" else "not good"
@@ -278,14 +287,17 @@ internal fun DetailScreen(
 
 						2 -> CongestionScreen(
 							state = state,
+							webView = slopeWebView,
 							submitSnowQualitySurvey = { isLike ->
 								val likeLoggerText = if (isLike) "good" else "not good"
 								logger.log("details_slope_vote", state.resortName)
 								onAction(DetailEvent.SubmitSnowQualitySurvey(isLike))
 							},
-							isCurrentPage = pagerState.currentPage == 2,
 							onShowSnackBar = { message, action ->
 								onAction(DetailEvent.ShowSnackBar(message, action))
+							},
+							updateWebView = {
+								slopeWebView = it
 							}
 						)
 					}

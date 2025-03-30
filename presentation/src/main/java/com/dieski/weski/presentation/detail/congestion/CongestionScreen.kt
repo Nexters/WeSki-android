@@ -1,5 +1,6 @@
 package com.dieski.weski.presentation.detail.congestion
 
+import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,10 +33,10 @@ import com.dieski.weski.presentation.ui.theme.WeskiTheme
 internal fun CongestionScreen(
 	modifier: Modifier = Modifier,
 	state: DetailState = DetailState(),
-	isCurrentPage: Boolean = false,
-	isWebViewActive: Boolean = true,
+	webView: WebView? = null,
 	submitSnowQualitySurvey: (isLike: Boolean) -> Unit = {},
-	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> }
+	onShowSnackBar: (message: String, action: String?) -> Unit = { _, _ -> },
+	updateWebView: (WebView) -> Unit = {}
 ) {
 	var isWebViewFinished by remember { mutableStateOf(false) }
 
@@ -72,6 +73,7 @@ internal fun CongestionScreen(
 					.fillMaxWidth()
 					.padding(top = 32.dp, bottom = 32.dp, start= 5.dp, end = 5.dp),
 				webViewUrl = state.slopeWebUrl,
+				prevWebView = webView,
 				onPageFinished = {
 					isWebViewFinished = true
 				},
@@ -81,7 +83,8 @@ internal fun CongestionScreen(
 						is WebViewAction.GetHeight -> {}
 						is WebViewAction.GetWebViewUrl -> {}
 					}
-				}
+				},
+				updateWebView = updateWebView
 			)
 
 			if (isWebViewFinished)  {
@@ -122,6 +125,6 @@ internal fun CongestionScreen(
 @Composable
 private fun CongestionScreenPreview() {
 	WeskiTheme {
-		CongestionScreen(isCurrentPage = true)
+		CongestionScreen()
 	}
 }
