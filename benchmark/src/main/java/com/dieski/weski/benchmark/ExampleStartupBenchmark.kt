@@ -1,6 +1,8 @@
 package com.dieski.weski.benchmark
 
+import android.content.Intent
 import androidx.benchmark.macro.CompilationMode
+import androidx.benchmark.macro.MacrobenchmarkScope
 import androidx.benchmark.macro.StartupMode
 import androidx.benchmark.macro.StartupTimingMetric
 import androidx.benchmark.macro.junit4.MacrobenchmarkRule
@@ -35,5 +37,16 @@ class ExampleStartupBenchmark {
     ) {
         pressHome()
         startActivityAndWait()
+        startMainActivityAndWait()
     }
+}
+
+private fun MacrobenchmarkScope.startMainActivityAndWait() {
+    val intent =  Intent().apply {
+        setPackage("com.dieski.weski")
+        setClassName("com.dieski.weski", "com.dieski.weski.MainActivity")
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
+    startActivityAndWait(intent)
 }
