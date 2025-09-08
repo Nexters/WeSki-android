@@ -113,17 +113,30 @@
 
 # Application rules
 
-# Change here com.yourcompany.yourpackage
--keepclassmembers @kotlinx.serialization.Serializable class com.dieski.remote.r.** {
+# Keep all serializable classes in remote module
+-keepclassmembers @kotlinx.serialization.Serializable class com.dieski.remote.** {
     # lookup for plugin generated serializable classes
     *** Companion;
     # lookup for serializable objects
     *** INSTANCE;
     kotlinx.serialization.KSerializer serializer(...);
 }
+
+# Keep all data classes in data module
+-keepclassmembers @kotlinx.serialization.Serializable class com.dieski.data.** {
+    *** Companion;
+    *** INSTANCE;
+    kotlinx.serialization.KSerializer serializer(...);
+}
+
 # lookup for plugin generated serializable classes
 -if @kotlinx.serialization.Serializable class com.dieski.remote.**
--keepclassmembers class com.teampophory.<1>$Companion {
+-keepclassmembers class com.dieski.remote.<1>$Companion {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+
+-if @kotlinx.serialization.Serializable class com.dieski.data.**
+-keepclassmembers class com.dieski.data.<1>$Companion {
     kotlinx.serialization.KSerializer serializer(...);
 }
 
@@ -137,6 +150,13 @@
 -keep class com.dieski.remote.** {
     @kotlinx.serialization.SerialName <fields>;
 }
+
+# Keep all response and request models completely
+-keep class com.dieski.remote.model.response.** { *; }
+-keep class com.dieski.remote.model.request.** { *; }
+
+# Keep Retrofit service interfaces
+-keep interface com.dieski.remote.service.** { *; }
 
 # Keep NetworkResult and its subclasses
 -keep class com.dieski.remote.model.network.NetworkResult { *; }
@@ -153,3 +173,14 @@
 
 -dontwarn android.media.LoudnessCodecController$OnLoudnessCodecUpdateListener
 -dontwarn android.media.LoudnessCodecController
+
+-dontwarn com.google.firebase.ktx.Firebase
+-dontwarn com.google.firebase.ktx.FirebaseKt
+
+##---------------Begin: BuildConfig ----------
+# Keep all BuildConfig classes and their fields
+-keep class **.BuildConfig { *; }
+-keepclassmembers class **.BuildConfig {
+    public static <fields>;
+}
+##---------------End: BuildConfig ----------

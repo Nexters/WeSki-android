@@ -35,6 +35,27 @@ fun DiscoverWeatherCarousel(
 	val lazyRowState = rememberLazyListState()
 	val isScrolling by remember { derivedStateOf { lazyRowState.isScrollInProgress } }
 
+	// Calendar 계산을 캐싱하여 성능 최적화
+	val dayOfWeekCache = remember {
+		val cal = Calendar.getInstance()
+		val todayDayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+		Array(7) { index ->
+			var nWeek = ((todayDayOfWeek + index) % 8)
+			if (nWeek == 0) nWeek += 1
+
+			when (nWeek) {
+				1 -> "일"
+				2 -> "월"
+				3 -> "화"
+				4 -> "수"
+				5 -> "목"
+				6 -> "금"
+				7 -> "토"
+				else -> ""
+			}
+		}
+	}
+
 	LaunchedEffect(isScrolling) {
 		logRowScrolling(isScrolling)
 	}
@@ -48,7 +69,7 @@ fun DiscoverWeatherCarousel(
 		) { index, weatherInfo ->
 			key(weatherInfo.day) {
 				DiscoverWeather(
-					day = doDayOfWeek(index)+"요일",
+					day = "${dayOfWeekCache.getOrElse(index) { "" }}요일",
 					weatherCondition = weatherInfo.condition,
 					avgTemperature = weatherInfo.maxTemperature,
 					minTemperature = weatherInfo.minTemperature,
@@ -59,29 +80,6 @@ fun DiscoverWeatherCarousel(
 	}
 }
 
-private fun doDayOfWeek(index: Int): String? {
-	val cal: Calendar = Calendar.getInstance()
-	var strWeek: String? = null
-	var nWeek: Int = ((cal.get(Calendar.DAY_OF_WEEK) + index) % 8)
-	if (nWeek == 0) nWeek += 1
-
-	if (nWeek == 1) {
-		strWeek = "일"
-	} else if (nWeek == 2) {
-		strWeek = "월"
-	} else if (nWeek == 3) {
-		strWeek = "화"
-	} else if (nWeek == 4) {
-		strWeek = "수"
-	} else if (nWeek == 5) {
-		strWeek = "목"
-	} else if (nWeek == 6) {
-		strWeek = "금"
-	} else if (nWeek == 7) {
-		strWeek = "토"
-	}
-	return strWeek
-}
 
 @ThemePreviews
 @DevicePreviews

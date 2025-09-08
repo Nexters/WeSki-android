@@ -6,15 +6,48 @@ plugins {
 	id("weski.android.hilt")
 }
 
-val properties = Properties().apply {
-	load(FileInputStream(rootProject.file("local.properties")))
-}
-
 android {
 	namespace = "com.dieski.remote"
 
-	defaultConfig {
-		buildConfigField("String", "BASE_URL", properties["BASE_URL"].toString())
+	buildTypes {
+		debug {
+			val debugProperties = Properties().apply {
+				val debugPropertiesFile = rootProject.file("local.debug.properties")
+				if (debugPropertiesFile.exists()) {
+					load(FileInputStream(debugPropertiesFile))
+				} else {
+					// Fallback to default local.properties
+					load(FileInputStream(rootProject.file("local.properties")))
+				}
+			}
+			buildConfigField("String", "BASE_URL", debugProperties["BASE_URL"].toString())
+		}
+
+		create("benchmark") {
+			initWith(buildTypes.getByName("debug"))
+			val debugProperties = Properties().apply {
+				val debugPropertiesFile = rootProject.file("local.debug.properties")
+				if (debugPropertiesFile.exists()) {
+					load(FileInputStream(debugPropertiesFile))
+				} else {
+					load(FileInputStream(rootProject.file("local.properties")))
+				}
+			}
+			buildConfigField("String", "BASE_URL", debugProperties["BASE_URL"].toString())
+		}
+
+		release {
+			val releaseProperties = Properties().apply {
+				val releasePropertiesFile = rootProject.file("local.release.properties")
+				if (releasePropertiesFile.exists()) {
+					load(FileInputStream(releasePropertiesFile))
+				} else {
+					// Fallback to default local.properties
+					load(FileInputStream(rootProject.file("local.properties")))
+				}
+			}
+			buildConfigField("String", "BASE_URL", releaseProperties["BASE_URL"].toString())
+		}
 	}
 
 	buildFeatures {

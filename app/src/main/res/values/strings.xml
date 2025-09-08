@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Weski</string>
+    <string name="channel_id">weski-channel-v1</string>
+    <string name="channel_name">weski</string>
+    <string name="channel_group_name">weski-channel-group-v1</string>
+    <string name="interrupt_channel_id">interrupt_notification_channel_id</string>
+    <string name="interrupt_channel_name">interrupt_notification_channel_name</string>
 </resources>

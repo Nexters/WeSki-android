@@ -100,11 +100,13 @@ internal fun HomeRouter(
 					lazyListState.animateScrollToItem(0)
 				}
 			}
+
 			HomeEffect.ShowServiceInfoReport -> {
 				val url = "https://lizzie00.notion.site/weski"
 				val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
 				context.startActivity(intent)
 			}
+
 			HomeEffect.ReportBug -> {
 				val url = "https://joey.team/block?block_id=oPWTFUezsWA61tdpDRoD&id=SoD0lftsYVQBUT65Hcpgp9mIBzj2"
 				val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
@@ -130,7 +132,9 @@ internal fun HomeRouter(
 	Box(
 		modifier = Modifier.fillMaxSize()
 	) {
-		WindBlownSnowflakeEffectBackground()
+		WindBlownSnowflakeEffectBackground(
+			isScrolling = lazyListState.isScrollInProgress
+		)
 
 		HomeScreen(
 			state = state,
@@ -156,7 +160,7 @@ private fun HomeScreen(
 ) {
 	val isTop by remember { derivedStateOf { lazyListState.canScrollBackward } }
 	var reportIconOffset by remember { mutableStateOf(Offset.Zero) }
-	var showReportPopup by remember { mutableStateOf(false)}
+	var showReportPopup by remember { mutableStateOf(false) }
 
 	Box(
 		modifier = Modifier
@@ -229,7 +233,7 @@ private fun HomeScreen(
 			isShowing = showReportPopup,
 			offset = reportIconOffset,
 			onReportAction = {
-				when(it) {
+				when (it) {
 					ReportPopupItem.SHOW_SERVICE_INFO -> onAction(HomeEvent.ClickShowServiceInfoReport)
 					ReportPopupItem.WRITE_FEEDBACK -> onAction(HomeEvent.ClickWriteFeedbackReport)
 					ReportPopupItem.REPORT_BUG -> onAction(HomeEvent.ClickReportBug)
@@ -252,12 +256,14 @@ private fun BookmarkPopup(
 	modifier: Modifier = Modifier
 ) {
 	Box(
-		modifier = modifier.fillMaxSize()
+		modifier = modifier
+			.fillMaxSize()
 			.background(WeskiColor.Gray100.copy(alpha = 0.5f))
 			.noRippleClickable { onDismiss() }
 	) {
 		Column(
-			modifier = Modifier.widthIn(max = 316.dp)
+			modifier = Modifier
+				.widthIn(max = 316.dp)
 				.background(color = WeskiColor.White, shape = RoundedCornerShape(20.dp))
 				.align(Alignment.Center)
 				.padding(top = 38.dp, bottom = 20.dp, start = 20.dp, end = 20.dp)
@@ -267,7 +273,8 @@ private fun BookmarkPopup(
 				style = WeskiTheme.typography.title2SemiBold,
 				color = WeskiColor.Gray100,
 				textAlign = TextAlign.Center,
-				modifier = Modifier.fillMaxWidth()
+				modifier = Modifier
+					.fillMaxWidth()
 					.padding(horizontal = 26.dp)
 			)
 
@@ -278,7 +285,8 @@ private fun BookmarkPopup(
 				style = WeskiTheme.typography.body1Regular,
 				color = WeskiColor.Gray60,
 				textAlign = TextAlign.Center,
-				modifier = Modifier.fillMaxWidth()
+				modifier = Modifier
+					.fillMaxWidth()
 					.padding(horizontal = 26.dp)
 			)
 
@@ -294,7 +302,8 @@ private fun BookmarkPopup(
 			Spacer(Modifier.height(18.dp))
 
 			Text(
-				modifier = Modifier.fillMaxWidth()
+				modifier = Modifier
+					.fillMaxWidth()
 					.background(shape = RoundedCornerShape(8.dp), color = WeskiColor.Main01)
 					.noRippleClickable { onDismiss() }
 					.padding(vertical = 16.5.dp),
@@ -338,7 +347,7 @@ private fun ReportPopup(
 		Column(
 			modifier = Modifier
 				.absoluteOffset {
-					IntOffset(offset.x.toInt()-boxWidthPx, offset.y.toInt()+8)
+					IntOffset(offset.x.toInt() - boxWidthPx, offset.y.toInt() + 8)
 				}
 				.background(color = Color.White, shape = RoundedCornerShape(10.dp))
 				.padding(vertical = 6.dp, horizontal = 4.dp)
@@ -396,7 +405,7 @@ internal fun HomeContent(
 	resortWeatherInfoList: List<HomeSkiResortInfo>,
 	modifier: Modifier = Modifier,
 	onCardClick: (HomeSkiResortInfo) -> Unit = {},
-	onClickBookmark: (Long, Boolean) -> Unit = {_, _ -> },
+	onClickBookmark: (Long, Boolean) -> Unit = { _, _ -> },
 	lazyListState: LazyListState = rememberLazyListState()
 ) {
 	val logger = LocalLoggerOwner.current
@@ -409,12 +418,13 @@ internal fun HomeContent(
 		state = lazyListState
 	) {
 		items(
-			resortWeatherInfoList
+			resortWeatherInfoList,
+			key = { it.id },
+			contentType = { "resort_card" }
 		) { resortWeatherInfo ->
-			key(resortWeatherInfo) {
+			key(resortWeatherInfo.id) {
 				DiscoverCardWithWeatherCarousel(
 					resortName = resortWeatherInfo.name,
-					operatingSlopeCount = resortWeatherInfo.operatingSlopeCount,
 					weatherCondition = resortWeatherInfo.currentWeather.condition,
 					currentTemperature = resortWeatherInfo.currentWeather.temperature,
 					weekWeatherInfoList = resortWeatherInfo.weeklyWeather,
@@ -436,7 +446,9 @@ internal fun HomeContent(
 			}
 		}
 
-		item {
+		item(
+			contentType = "banner_ad"
+		) {
 			BannerAds(
 				modifier = Modifier
 					.fillMaxWidth()

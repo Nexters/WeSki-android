@@ -9,10 +9,6 @@ plugins {
 	alias(libs.plugins.google.services)
 }
 
-val properties = Properties().apply {
-	load(FileInputStream(rootProject.file("local.properties")))
-}
-
 android {
 	namespace = "com.dieski.weski"
 
@@ -29,27 +25,51 @@ android {
 
 	buildTypes {
 		debug {
+			val debugProperties = Properties().apply {
+				val debugPropertiesFile = rootProject.file("local.debug.properties")
+				if (debugPropertiesFile.exists()) {
+					load(FileInputStream(debugPropertiesFile))
+				} else {
+					load(FileInputStream(rootProject.file("local.properties")))
+				}
+			}
 			isMinifyEnabled = false
 			isDebuggable = true
 			proguardFiles(
 				getDefaultProguardFile("proguard-android-optimize.txt"),
 				"proguard-project.txt"
 			)
+			manifestPlaceholders["ADMOB_APP_ID"] = debugProperties["ADMOB_APP_ID"] as Any
 		}
         create("benchmark") {
+			val debugProperties = Properties().apply {
+				val debugPropertiesFile = rootProject.file("local.debug.properties")
+				if (debugPropertiesFile.exists()) {
+					load(FileInputStream(debugPropertiesFile))
+				} else {
+					load(FileInputStream(rootProject.file("local.properties")))
+				}
+			}
             initWith(buildTypes.getByName("debug"))
             matchingFallbacks += listOf("release")
             isDebuggable = false
+			manifestPlaceholders["ADMOB_APP_ID"] = debugProperties["ADMOB_APP_ID"] as Any
         }
         release {
+			val releaseProperties = Properties().apply {
+				val releasePropertiesFile = rootProject.file("local.release.properties")
+				if (releasePropertiesFile.exists()) {
+					load(FileInputStream(releasePropertiesFile))
+				} else {
+					load(FileInputStream(rootProject.file("local.properties")))
+				}
+			}
+			isDebuggable = false
 			isMinifyEnabled = true
 			signingConfig = signingConfigs.getByName("debug")
 			proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+			manifestPlaceholders["ADMOB_APP_ID"] = releaseProperties["ADMOB_APP_ID"] as Any
 		}
-	}
-
-	defaultConfig {
-		manifestPlaceholders["ADMOB_APP_ID"] = properties["ADMOB_APP_ID"] as Any
 	}
 
 	buildFeatures {
@@ -73,6 +93,9 @@ dependencies {
 	implementation(libs.kotlin.collections.immutable)
 	implementation(libs.firebase.analytics)
 	implementation(libs.play.services.ads)
+
+//	implementation(libs.firebase.messaging.ktx)
+	implementation(libs.firebase.messaging)
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)

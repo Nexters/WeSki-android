@@ -38,11 +38,15 @@ dependencies {
 	implementation(libs.dagger.hilt.android)
 	implementation(libs.bundles.androidx.compose.navigation)
 	implementation(libs.kotlin.collections.immutable)
+	implementation(libs.androidx.compose.ui.tooling)
 	debugImplementation(libs.bundles.androidx.compose.debug)
 	implementation(libs.coil.compose)
 	implementation(libs.play.services.ads)
+	implementation("androidx.activity:activity-ktx:1.2.2")
+	implementation("androidx.fragment:fragment-ktx:1.3.2")
 
 	testImplementation(libs.junit)
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)
+	debugImplementation(libs.androidx.compose.ui.tooling)
 }

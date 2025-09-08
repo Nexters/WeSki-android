@@ -35,7 +35,8 @@ import kotlin.random.Random
  */
 @Composable
 fun WindBlownSnowflakeEffectBackground(
-	modifier: Modifier = Modifier
+	modifier: Modifier = Modifier,
+	isScrolling: Boolean = false
 ) {
 	val amplitude = 6f
 	val isRunning = remember { mutableStateOf(true) }
@@ -79,15 +80,18 @@ fun WindBlownSnowflakeEffectBackground(
 						override fun run() {
 							if (!isRunning.value) return
 
-							snowflakes.forEach { flake ->
-								val angle = flake.angle
-								val newX = flake.offset.x + amplitude * cos(angle)
-								val newY = flake.offset.y + amplitude * sin(angle)
+							// 스크롤 중이 아닐 때만 snowflake 위치 업데이트
+							if (!isScrolling) {
+								snowflakes.forEach { flake ->
+									val angle = flake.angle
+									val newX = flake.offset.x + amplitude * cos(angle)
+									val newY = flake.offset.y + amplitude * sin(angle)
 
-								flake.offset = if (newY >= screenHeight) {
-									Offset(Random.nextInt(screenWidth).toFloat(), 0f)
-								} else {
-									Offset(newX, newY)
+									flake.offset = if (newY >= screenHeight) {
+										Offset(Random.nextInt(screenWidth).toFloat(), 0f)
+									} else {
+										Offset(newX, newY)
+									}
 								}
 							}
 
@@ -106,7 +110,9 @@ fun WindBlownSnowflakeEffectBackground(
 								holder.unlockCanvasAndPost(this)
 							}
 
-							postDelayed(this, 12L) // 60FPS 유지
+							// 스크롤 중일 때는 프레임레이트를 낮춤 (30FPS)
+							val delay = if (isScrolling) 33L else 12L
+							postDelayed(this, delay)
 						}
 					}
 
