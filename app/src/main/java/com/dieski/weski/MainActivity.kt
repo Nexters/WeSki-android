@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
 				logger = logger,
 				navigator = rememberMainNavigator(),
 			)
-			getFCMToken()
+//			getFCMToken()
 //			var showRationale by remember { mutableStateOf(false) }
 //
 //			val launcher = rememberLauncherForActivityResult(
