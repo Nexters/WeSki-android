@@ -39,6 +39,7 @@ dependencies {
 	implementation(libs.bundles.androidx.compose.navigation)
 	implementation(libs.kotlin.collections.immutable)
 	implementation(libs.androidx.compose.ui.tooling)
+	implementation(libs.firebase.messaging)
 	debugImplementation(libs.bundles.androidx.compose.debug)
 	implementation(libs.androidx.media3.exoplayer)
 	implementation(libs.coil.compose)

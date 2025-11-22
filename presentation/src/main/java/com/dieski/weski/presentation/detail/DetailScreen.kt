@@ -8,15 +8,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -35,7 +40,13 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,13 +62,17 @@ import com.dieski.weski.presentation.core.util.DevicePreviews
 import com.dieski.weski.presentation.core.util.ThemePreviews
 import com.dieski.weski.presentation.core.util.collectWithLifecycle
 import com.dieski.weski.presentation.core.util.noRippleClickable
+import com.dieski.weski.presentation.core.util.skiResortOpeningDatePassed
 import com.dieski.weski.presentation.detail.component.DetailFeedTab
+import com.dieski.weski.presentation.detail.component.DetailResortOpenNotificationDialog
 import com.dieski.weski.presentation.detail.congestion.CongestionScreen
 import com.dieski.weski.presentation.detail.model.TabItem
 import com.dieski.weski.presentation.detail.weather.WeatherPage
 import com.dieski.weski.presentation.detail.webcam.WebcamPage
+import com.dieski.weski.presentation.ui.theme.WeskiTheme
 import com.dieski.weski.presentation.util.log
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.graphics.Color as AndroidColor
 
@@ -75,6 +90,9 @@ internal fun DetailRouter(
 	onShowSnackBar: (message: String, action: String?) -> Unit,
 	viewModel: DetailViewModel = hiltViewModel()
 ) {
+	// 2025년 스키장 개장 후엔 제거해도 됨.
+	var showOpenNotificationDialog by remember { mutableStateOf(false) }
+	var showPermissionSuccessDialog by remember { mutableStateOf(false) }
 	val state by viewModel.uiState.collectAsStateWithLifecycle()
 	val context = LocalContext.current
 
@@ -105,6 +123,22 @@ internal fun DetailRouter(
 		)
 	}
 
+	LaunchedEffect(state.openingDate) {
+		if (state.openingDate != "0000-00-00") {
+			val isOpeningDateNotPassed = skiResortOpeningDatePassed(state.openingDate).not()
+			if (isOpeningDateNotPassed) {
+				showOpenNotificationDialog = true
+			}
+		}
+	 }
+
+	LaunchedEffect(showPermissionSuccessDialog) {
+		 if(showPermissionSuccessDialog) {
+			 delay(3000L)
+			 showPermissionSuccessDialog = false
+		 }
+	}
+
 	Box(
 		modifier = Modifier.fillMaxSize()
 	) {
@@ -121,6 +155,23 @@ internal fun DetailRouter(
 				.fillMaxSize()
 				.padding(padding)
 		)
+
+		if (showOpenNotificationDialog) {
+			DetailResortOpenNotificationDialog(
+				onDismiss = {
+					showOpenNotificationDialog = false
+				},
+				onShowPermissionSuccessDialog = {
+					showPermissionSuccessDialog = true
+				}
+			)
+		}
+
+		if (showPermissionSuccessDialog) {
+			PermissionSuccessPopup(
+				onDismiss = {}
+			)
+		}
 	}
 }
 
@@ -307,6 +358,51 @@ internal fun DetailScreen(
 	}
 }
 
+@Composable
+private fun PermissionSuccessPopup(
+	onDismiss: () -> Unit,
+	modifier: Modifier = Modifier
+) {
+	Box(
+		modifier = modifier
+			.fillMaxSize()
+			.noRippleClickable { onDismiss() }
+	) {
+		Column(
+			modifier = Modifier
+				.widthIn(max = 316.dp)
+				.background(color = Color.Black.copy(alpha = 0.6f), shape = RoundedCornerShape(20.dp))
+				.align(Alignment.Center)
+				.padding(all = 24.dp),
+			horizontalAlignment = Alignment.CenterHorizontally
+		) {
+			Icon(
+				modifier = Modifier.size(32.dp),
+				painter = painterResource(R.drawable.icn_check),
+				contentDescription = "",
+				tint = WeskiColor.White,
+			)
+
+			Spacer(Modifier.height(12.dp))
+
+			Text(
+				text = "오픈 알림 신청이 완료되었어요!",
+				style = TextStyle(
+					fontFamily = FontFamily(Font(R.font.pretendard_bold)),
+					fontWeight = FontWeight.Bold,
+					fontSize = 16.sp,
+					color = Color.White,
+					textAlign = TextAlign.Center
+				),
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(horizontal = 26.dp)
+			)
+		}
+	}
+}
+
+
 private fun Modifier.isElementVisible(onVisibilityChanged: (Boolean) -> Unit) = composed {
 	val isVisible by remember { derivedStateOf { mutableStateOf(false) } }
 	LaunchedEffect(isVisible.value) { onVisibilityChanged.invoke(isVisible.value) }
@@ -329,15 +425,17 @@ private fun Modifier.isElementVisible(onVisibilityChanged: (Boolean) -> Unit) = 
 @ThemePreviews
 @Composable
 private fun DetailScreenPreview() {
-	DetailScreen(
-		state = DetailState(
-			resortId = 0,
-			resortName = "용평스키장 모나",
-			temperature = 7,
-			weatherCondition = WeatherCondition.SNOW,
-			openingDate = "2024-08-10",
-			weatherDescription = "눈이 내립니다.",
-			totalResortSnowQualitySurvey = TotalResortSnowQualitySurvey(10, 5, 3, "")
+	WeskiTheme {
+		DetailScreen(
+			state = DetailState(
+				resortId = 0,
+				resortName = "용평스키장 모나",
+				temperature = 7,
+				weatherCondition = WeatherCondition.SNOW,
+				openingDate = "2024-08-10",
+				weatherDescription = "눈이 내립니다.",
+				totalResortSnowQualitySurvey = TotalResortSnowQualitySurvey(10, 5, 3, "")
+			)
 		)
-	)
+	}
 }

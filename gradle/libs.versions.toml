@@ -57,6 +57,7 @@ playServicesAds = "23.6.0"
 firebaseMessagingKtx = "25.0.0"
 firebaseMessaging = "25.0.0"
 media3Exoplayer = "1.8.0"
+firebaseMessagingKtxVersion = "25.0.1"
 
 [libraries]
 # Compose
@@ -128,6 +129,7 @@ play-services-ads = { group = "com.google.android.gms", name = "play-services-ad
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging", version.ref = "firebaseMessaging" }
 androidx-media3-exoplayer = { group = "androidx.media3", name = "media3-exoplayer", version.ref = "media3Exoplayer" }
+google-firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtxVersion" }
 
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

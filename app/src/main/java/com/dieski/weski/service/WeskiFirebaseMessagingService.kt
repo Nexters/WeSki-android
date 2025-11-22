@@ -9,19 +9,19 @@ import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.dieski.weski.MainActivity
+import com.dieski.weski.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import timber.log.Timber
 import java.util.UUID
 
 class WeskiFirebaseMessagingService : FirebaseMessagingService() {
-
-    private val channelId = "fcm_default_channel"
 
     /**
      * FCM 토큰이 새로 생성되거나 갱신될 때 호출
      */
     override fun onNewToken(token: String) {
-        Log.d("FCM_Service", "새로운 FCM 토큰: $token")
+        Timber.d("새로운 FCM 토큰: $token")
 
         // 서버로 새 토큰 전송
         sendTokenToServer(token)
@@ -43,7 +43,6 @@ class WeskiFirebaseMessagingService : FirebaseMessagingService() {
         title: String?,
         message: String?
     ) {
-        Log.w("Test@@@" , "sendNotification: $title / $message")
         NotificationManagerCompat.from(this)
             .notify(UUID.randomUUID().hashCode(), createNotification(title, message))
     }
@@ -59,7 +58,7 @@ class WeskiFirebaseMessagingService : FirebaseMessagingService() {
         val pendingIntent = PendingIntent.getActivity(this,
             0, intent, PendingIntent.FLAG_IMMUTABLE)
 
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+        val notificationBuilder = NotificationCompat.Builder(this, getString(R.string.channel_id))
             .setSmallIcon(com.dieski.weski.presentation.R.drawable.ic_weski_logo)
             .setContentTitle(title)
             .setContentText(message)
