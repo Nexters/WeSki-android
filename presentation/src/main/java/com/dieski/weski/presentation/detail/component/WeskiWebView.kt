@@ -32,6 +32,8 @@ sealed interface WebViewAction {
 	): WebViewAction
 
 	data class GetWebViewUrl(val url: String) : WebViewAction
+
+	data class ShowVideoUrl(val url: String) : WebViewAction
 }
 
 @Composable
@@ -45,12 +47,13 @@ fun WeskiWebView(
 ) {
 	val density = LocalDensity.current
 	val context = LocalContext.current
-	var webViewHeight by remember { mutableIntStateOf(0) }
+
 	val webViewAppInterface by lazy {
 		WebViewAppInterface(
 			onShowToast = { onAction(WebViewAction.ShowToast(it)) },
-			onSetHeight = { webViewHeight = it },
-			onOpenUrl = { onAction(WebViewAction.GetWebViewUrl(it)) }
+			onSetHeight = {},
+			onOpenUrl = { onAction(WebViewAction.GetWebViewUrl(it)) },
+			onShowVideoUrl = { onAction(WebViewAction.ShowVideoUrl(it)) }
 		)
 	}
 
@@ -92,7 +95,6 @@ fun WeskiWebView(
 			factory = { webView },
 			update = { view ->
 				if (view.url != webViewUrl) {
-					Timber.d("WeskiWebView", "update - webViewUrl: $webViewUrl")
 					view.loadUrl(webViewUrl)
 				}
 			}

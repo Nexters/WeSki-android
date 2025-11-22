@@ -40,6 +40,7 @@ dependencies {
 	implementation(libs.kotlin.collections.immutable)
 	implementation(libs.androidx.compose.ui.tooling)
 	debugImplementation(libs.bundles.androidx.compose.debug)
+	implementation(libs.androidx.media3.exoplayer)
 	implementation(libs.coil.compose)
 	implementation(libs.play.services.ads)
 	implementation("androidx.activity:activity-ktx:1.2.2")
@@ -49,4 +50,7 @@ dependencies {
 	androidTestImplementation(libs.androidx.junit)
 	androidTestImplementation(libs.androidx.espresso.core)
 	debugImplementation(libs.androidx.compose.ui.tooling)
+
+	implementation(libs.androidx.media3.ui)
+	implementation(libs.androidx.media3.exoplayer.hls)
 }

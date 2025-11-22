@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Base configuration for all domains -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Debug and Release server domains -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">weski-server-dev-development.up.railway.app</domain>
+        <domain includeSubdomains="true">weski-server-production.up.railway.app</domain>
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </domain-config>
+</network-security-config>

@@ -82,6 +82,7 @@ internal fun CongestionScreen(
 						is WebViewAction.ShowToast -> onShowSnackBar(it.message, null)
 						is WebViewAction.GetHeight -> {}
 						is WebViewAction.GetWebViewUrl -> {}
+						is WebViewAction.ShowVideoUrl -> {}
 					}
 				},
 				updateWebView = updateWebView
